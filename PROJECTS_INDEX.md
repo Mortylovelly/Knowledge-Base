@@ -1,24 +1,25 @@
 # PROJECTS INDEX — каталог модов
 
-Это оглавление всех известных проектов Mortylovelly. Перед работой открой `PROJECT.md` соответствующего проекта и проверь актуальное состояние самого репозитория.
+Это оглавление известных проектов Mortylovelly. Ссылки «Документация» ведут к паспорту проекта в этой базе; ссылки «Код» — к реальному GitHub-репозиторию. Перед работой проверь актуальные ветку, код и Actions.
 
-| Проект | Репозиторий | Известная линия/версия | Что известно | Статус документации |
-|---|---|---|---|---|
-| SkyLimitless | [Mortylovelly/SkyLimitless](https://github.com/Mortylovelly/SkyLimitless) | Fabric 1.20.1: `minecraft-1.20.1-fabric`; `main` отдельно 1.21.1 | Увеличение высоты Overworld; команды; совместимость с Tectonic; исправление реестра 0.3.4 | Подробно зафиксировано |
-| MinecartPlus | [Mortylovelly/MinecartPlus](https://github.com/Mortylovelly/MinecartPlus) | Fabric 1.21.1, Java 21 | Мод вагонеток, зачарования тяги/попутного ветра, GeckoLib | Частично; нужно сверить код |
-| Fauna- | [Mortylovelly/Fauna-](https://github.com/Mortylovelly/Fauna-) | Fabric 1.20.1, Java 17 | Fix — Modpack Compatibility & Balance | Частично; нужна полная инвентаризация |
-| Unique-Relics | [Mortylovelly/Unique-Relics](https://github.com/Mortylovelly/Unique-Relics) | Fabric 1.20.1, Java 17 | Подготовлен технический каркас; механики не реализованы | Концепция зафиксирована |
-| VitalCraft | [Mortylovelly/VitalCraft](https://github.com/Mortylovelly/VitalCraft) | Не установлено | Репозиторий проекта известен, механики пока не восстановлены | Требует изучения |
-| WeatherPlus- | [Mortylovelly/WeatherPlus-](https://github.com/Mortylovelly/WeatherPlus-) | Не установлено | Репозиторий проекта известен | Требует изучения |
-| adastra-create-addon | [Mortylovelly/adastra-create-addon](https://github.com/Mortylovelly/adastra-create-addon) | Известна линия 1.21.1 | Аддон для Ad Astra + Create | Частично; нужно сверить код |
-| enchantmod | [Mortylovelly/enchantmod](https://github.com/Mortylovelly/enchantmod) | Старый проект; точная версия требует сверки | Исторический репозиторий, связанный с ранней разработкой | Требует изучения |
-| harderworld | [Mortylovelly/harderworld](https://github.com/Mortylovelly/harderworld) | Не установлено | Репозиторий проекта известен | Требует изучения |
-| extremedifficulty | [Mortylovelly/extremedifficulty](https://github.com/Mortylovelly/extremedifficulty) | Не установлено | Репозиторий проекта известен | Требует изучения |
-| seasonaldaycycle | [Mortylovelly/seasonaldaycycle](https://github.com/Mortylovelly/seasonaldaycycle) | Forge 1.20.1 (по ранее сохранённым данным) | Сезонный цикл дня | Частично; нужно сверить код |
+| Проект | Документация | Код | Известная линия/версия | Что известно | Статус документации |
+|---|---|---|---|---|---|
+| SkyLimitless | [PROJECT.md](projects/SkyLimitless/PROJECT.md) · [история](projects/SkyLimitless/updates/README.md) | [GitHub](https://github.com/Mortylovelly/SkyLimitless) | Fabric 1.20.1: `minecraft-1.20.1-fabric`; `main` отдельно 1.21.1 | Увеличение высоты Overworld; команды; Tectonic; registry fix 0.3.4 | Подробно зафиксировано |
+| MinecartPlus | [PROJECT.md](projects/MinecartPlus/PROJECT.md) · [история](projects/MinecartPlus/updates/README.md) | [GitHub](https://github.com/Mortylovelly/MinecartPlus) | Fabric 1.21.1, Java 21 | Вагонетки, зачарования тяги/попутного ветра, GeckoLib | Частично; нужно сверить код |
+| Fauna- | [PROJECT.md](projects/Fauna/PROJECT.md) · [история](projects/Fauna/updates/README.md) | [GitHub](https://github.com/Mortylovelly/Fauna-) | Fabric 1.20.1, Java 17 | Fix — Modpack Compatibility & Balance | Частично; нужна полная инвентаризация |
+| Unique-Relics | [PROJECT.md](projects/Unique-Relics/PROJECT.md) · [история](projects/Unique-Relics/updates/README.md) | [GitHub](https://github.com/Mortylovelly/Unique-Relics) | Fabric 1.20.1, Java 17 | Технический каркас; механики не реализованы | Концепция зафиксирована; отложен |
+| VitalCraft | [PROJECT.md](projects/VitalCraft/PROJECT.md) · [история](projects/VitalCraft/updates/README.md) | [GitHub](https://github.com/Mortylovelly/VitalCraft) | Не установлено | Репозиторий известен, подробности не восстановлены | Требует изучения |
+| WeatherPlus- | [PROJECT.md](projects/WeatherPlus/PROJECT.md) · [история](projects/WeatherPlus/updates/README.md) | [GitHub](https://github.com/Mortylovelly/WeatherPlus-) | Не установлено | Репозиторий известен | Требует изучения |
+| adastra-create-addon | [PROJECT.md](projects/AdAstra-Create-Addon/PROJECT.md) · [история](projects/AdAstra-Create-Addon/updates/README.md) | [GitHub](https://github.com/Mortylovelly/adastra-create-addon) | Известна линия 1.21.1 | Аддон для Ad Astra + Create | Частично; нужна инвентаризация |
+| enchantmod | [PROJECT.md](projects/enchantmod/PROJECT.md) · [история](projects/enchantmod/updates/README.md) | [GitHub](https://github.com/Mortylovelly/enchantmod) | Исторический проект | Старый репозиторий; связь с MinecartPlus требует проверки | Требует изучения |
+| harderworld | [PROJECT.md](projects/harderworld/PROJECT.md) · [история](projects/harderworld/updates/README.md) | [GitHub](https://github.com/Mortylovelly/harderworld) | Не установлено | Репозиторий известен | Требует изучения |
+| extremedifficulty | [PROJECT.md](projects/extremedifficulty/PROJECT.md) · [история](projects/extremedifficulty/updates/README.md) | [GitHub](https://github.com/Mortylovelly/extremedifficulty) | Не установлено | Репозиторий известен | Требует изучения |
+| seasonaldaycycle | [PROJECT.md](projects/seasonaldaycycle/PROJECT.md) · [история](projects/seasonaldaycycle/updates/README.md) | [GitHub](https://github.com/Mortylovelly/seasonaldaycycle) | Forge 1.20.1 (сохранённое сведение) | Сезонный цикл дня | Частично; нужно сверить код |
 
 ## Важные замечания
 
-- Список основан на ранее обсуждавшихся и известных репозиториях. Он не означает, что все проекты сейчас активно поддерживаются.
-- Названия репозиториев и точные версии нужно подтвердить через GitHub перед работой.
-- В одном репозитории могут существовать отдельные ветки для разных версий Minecraft. Каждая линия должна иметь собственную документацию или явно обозначенный раздел.
-- Не путать `MinecartPlus` и `enchantmod`: это разные репозитории/этапы истории. Связь между ними требует проверки по коммитам, а не предположения.
+- Список основан на известных репозиториях и ранее сохранённом контексте. Он не означает, что все проекты сейчас активны.
+- Точные версии, названия веток и статус каждого проекта перепроверять через GitHub.
+- В одном репозитории могут быть ветки нескольких версий Minecraft. Не смешивать их документацию и исходники.
+- Не путать `MinecartPlus` и `enchantmod`: это разные репозитории/этапы истории. Связь требует проверки по коммитам, а не предположения.
+- Статус «частично» означает, что здесь есть только то, что сохранилось в контексте; следующая задача для этого проекта — инвентаризация реального кода и перенос полного описания в PROJECT.md.
