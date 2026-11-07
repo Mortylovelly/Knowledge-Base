@@ -1,11 +1,14 @@
-# Ad Astra Create Addon
+# Этот проект переименован в Minecraft AI Agent
 
-- **Репозиторий:** [Mortylovelly/adastra-create-addon](https://github.com/Mortylovelly/adastra-create-addon)
-- **Сохранённое техническое сведение:** обсуждалась линия Minecraft 1.21.1.
-- **Точная версия Java/Loader/API, Mod ID, команды и реализованные функции:** требуют проверки по текущим файлам.
+Ранее папка называлась `AdAstra-Create-Addon`, но название было ошибочным/историческим.
 
-## Правило работы
-Не смешивать API Ad Astra/Create разных Minecraft-версий. Перед изменением изучить оба набора зависимостей, registries, recipes и compatibility hooks.
+Актуальная документация:
+- [Minecraft AI Agent — PROJECT.md](../Minecraft-AI-Agent/PROJECT.md)
+- [История обновлений](../Minecraft-AI-Agent/updates/README.md)
 
-## История
-Подробные этапы разработки в текущей доступной памяти не восстановлены.
+Репозиторий кода пока сохраняет старый URL:
+https://github.com/Mortylovelly/adastra-create-addon
+
+Он больше не является модом-аддоном для Ad Astra или Create. Это самостоятельный AI-агент внутри Minecraft.
+
+Активная линия по текущему стандарту: Minecraft 1.20.1 Fabric / Java 17, ветка `minecraft-1.20.1-fabric`.
