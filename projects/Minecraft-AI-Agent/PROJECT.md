@@ -12,11 +12,11 @@
 - **Archive name:** `minecraft-ai-agent`.
 - **Активная версия для нашей работы:** Minecraft 1.20.1 Fabric, Java 17.
 - **Активная ветка:** `minecraft-1.20.1-fabric`.
-- **mod_version исходников:** `0.3.2` (код опубликован; сборка пока не подтверждена).
-- **Текущий HEAD:** `42b7a0f2e19b79b5a3065d3e444b367e6f3c52ea` в `minecraft-1.20.1-fabric`.
-- **Последняя попытка Actions 0.3.2:** run [42672344378](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42672344378) завершился `failure`, но GitHub вернул 0 jobs и 0 artifacts; вывод Gradle отсутствует, причина не установлена.
-- **Последний подтверждённый успешный build:** версия `0.3.1`, run [42667953958](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42667953958), HEAD `12010fe20872f20f20206acefaf7b16ac1d7cebb`; artifact ID `13696843616`.
-- **Проверка версии 0.3.2 в игре:** не выполнена; сначала требуется успешная сборка.
+- **mod_version:** `0.3.2`.
+- **Текущий HEAD:** `d11654d0b8995211ee23281ec876721a30b94c40` в `minecraft-1.20.1-fabric`.
+- **Последний успешный build 0.3.2:** run [42676207842](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42676207842), conclusion `success`; Build и Upload mod jar завершились успешно для exact HEAD `d11654d0b8995211ee23281ec876721a30b94c40`.
+- **Artifact:** ID `13699458967`, `minecraft-ai-agent-1.20.1`, ZIP 216171 bytes; основной JAR 155219 bytes, SHA256 `1783d584b769f1edba0c6d8e0f2c12b861fea0a71ef50534800488b65426efbf`.
+- **Проверка в игре:** ещё не выполнена; сборка подтверждена, runtime-функции требуют теста.
 
 ## Что это за мод
 
@@ -44,7 +44,7 @@
 - Fabric Loom: `1.9.2`
 - Gradle Wrapper: `8.12`
 - Java compile/source/target: `17`
-- mod_version исходников: `0.3.2` (сборка не подтверждена).
+- mod_version: `0.3.2` (последняя сборка Actions success).
 - mod id: `minecraft_ai_agent`
 - root project: `minecraft-ai-agent`
 
@@ -243,6 +243,8 @@ API keys хранятся локально в конфигурации поль�
 Workflow:
 `.github/workflows/build.yml`
 
+В workflow добавлен `workflow_dispatch`, чтобы можно было вручную запускать сборку из GitHub Actions UI; обычные push и pull_request triggers сохранены.
+
 - Push и pull_request проверяют ветки `main` и `minecraft-1.20.1-fabric`.
 - Для активной 1.20.1 ветки workflow использует JDK 17, `chmod +x gradlew`, `./gradlew build --no-daemon`.
 - Artifact: `minecraft-ai-agent-1.20.1`.
@@ -255,11 +257,17 @@ Workflow:
 - ZIP SHA256: `42006ec6fd98d6f5579575aedbb093cca1639af752169dc8a09bea8918f9e30c`
 - JAR size: 151308 bytes; SHA256: `586c0b4a5f6c9b658ae0ab41f887e152e5784500a1f9d0e32cf51cdedc7603b7`.
 
-Попытка собрать исходники 0.3.2:
-- commit / HEAD: `42b7a0f2e19b79b5a3065d3e444b367e6f3c52ea`;
-- Actions run [42672344378](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42672344378): completed / failure;
-- GitHub API вернул 0 jobs и 0 artifacts; лог Gradle/компилятора отсутствует, поэтому это не подтверждённая ошибка компиляции и не успешная сборка;
-- повторный запуск failed jobs отклонён GitHub, так как в исходном run нет jobs.
+Первая попытка сборки 0.3.2:
+- feature commit: `42b7a0f2e19b79b5a3065d3e444b367e6f3c52ea`;
+- run [42672344378](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42672344378): `failure`, GitHub вернул 0 jobs и 0 artifacts, лог Gradle отсутствовал; причина — сбой создания/запуска job, а не установленная ошибка компиляции.
+
+Повторная сборка после добавления `workflow_dispatch`:
+- build commit / HEAD: `d11654d0b8995211ee23281ec876721a30b94c40` (родитель — feature commit `42b7a0f...`; изменён workflow, исходники 0.3.2 сохранены без изменения);
+- run [42676207842](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42676207842): `completed / success`;
+- job `build`: `success`; шаги `Set up JDK 17`, `Build` и `Upload mod jar` — `success`;
+- artifact ID `13699458967`, name `minecraft-ai-agent-1.20.1`, size 216171 bytes;
+- extracted JAR: `minecraft-ai-agent-0.3.2.jar`, 155219 bytes, SHA256 `1783d584b769f1edba0c6d8e0f2c12b861fea0a71ef50534800488b65426efbf`.
+- Сам JAR проверен: metadata version 0.3.2, Minecraft 1.20.1, Java >=17; присутствует `AiLogFile.class`.
 
 Более ранний port build на SHA `530c2f638c4316f3a57507034698e9dab91dbfe7` завершился failure; затем ошибка renderBackground была исправлена commit `85568e1`, который прошёл успешно. Успешный build не означает полный runtime-тест в игре.
 
@@ -274,19 +282,19 @@ Workflow:
 
 - **Активная платформа:** Minecraft 1.20.1 Fabric / Java 17.
 - **Активная ветка:** minecraft-1.20.1-fabric.
-- **Текущая версия исходников:** 0.3.2 (код опубликован, build не подтверждён).
-- **Текущий HEAD:** `42b7a0f2e19b79b5a3065d3e444b367e6f3c52ea`; Actions run `42672344378` завершился failure с 0 jobs и 0 artifacts.
-- **Последний подтверждённый build:** 0.3.1, SHA `12010fe20872f20f20206acefaf7b16ac1d7cebb`, run `42667953958` success.
-- **Последний подтверждённый artifact:** minecraft-ai-agent-1.20.1, artifact ID `13696843616`, 210665 bytes; JAR SHA256 `586c0b4a5f6c9b658ae0ab41f887e152e5784500a1f9d0e32cf51cdedc7603b7` (это 0.3.1, без новой функции).
+- **Текущая версия:** 0.3.2.
+- **Последний HEAD:** `d11654d0b8995211ee23281ec876721a30b94c40`; Actions run `42676207842` completed / success.
+- **Последний подтверждённый build:** 0.3.2, job `build` и шаг `Upload mod jar` success для exact HEAD `d11654d0b8995211ee23281ec876721a30b94c40`.
+- **Artifact:** `minecraft-ai-agent-1.20.1`, ID `13699458967`, 216171 bytes; основной JAR `minecraft-ai-agent-0.3.2.jar`, 155219 bytes; SHA256 `1783d584b769f1edba0c6d8e0f2c12b861fea0a71ef50534800488b65426efbf`.
 - **Основная архитектура:** client AI provider + UI; server networking/tools; server Log4j → log bridge → client log panel.
-- **Log panel:** Logs / Custom logs / Errors; draggable, resizable, collapsible; экранный буфер 5000; OP2 для серверного потока. В исходниках 0.3.2 добавлены архив `logs/minecraft-ai-agent/` и COPY; build не подтверждён.
+- **Log panel:** Logs / Custom logs / Errors; draggable, resizable, collapsible; экранный буфер 5000; OP2 для серверного потока. В 0.3.2 реализованы архив `logs/minecraft-ai-agent/` и COPY; build success, runtime-тест ещё нужен.
 - **Чат:** локальный JSONL archive до 1800 сообщений, поиск текста/координат, @AI trigger.
 - **NPC/mobs:** создание именованной серверной сущности, навигация follow/move/attack/stop. Полноценное possession с камерой не реализовано.
 - **Skin/player NPC:** копирование скина и полноценная fake-player entity не реализованы.
 - **Токены:** быстрые локальные команды, selective tools, локальный поиск чата; UI статистики API расходов пока нет.
-- **Проверка в Minecraft:** файловый архив и COPY не проверены в игре; сначала нужен успешный build 0.3.2, затем runtime-тест integrated/dedicated server.
+- **Проверка в Minecraft:** JAR 0.3.2 собран; файловый архив и COPY ещё не проверены в игре. Нужен runtime-тест integrated/dedicated server.
 - **GitHub repo:** актуальный slug Mortylovelly/Minecraft-AI-Agent; main — неактивная линия 1.21.1 и не является рабочей 1.20.1 веткой.
-- **Последняя история:** [003 — persistent log archive и кнопка COPY](updates/003-persistent-log-archive-and-copy.md).
+- **Последняя история:** [004 — успешная сборка 0.3.2](updates/004-build-0.3.2-success.md).
 
 ### Открытый roadmap
 
@@ -297,5 +305,5 @@ Workflow:
 5. Расширенный набор инструментов и воспроизводимый test runner для тестирования сторонних модов.
 6. Дальнейшая экономия токенов: локальный parser частых команд, compact context, caching, persistent structured memory и usage/cost dashboard.
 7. Развитие custom log integration для собственных модов; автоматический приём всех произвольных client-side logger сторонних модов пока не реализован.
-8. Подтвердить build 0.3.2, затем проверить persistence после перезапуска, COPY всего архива, rotation >4 MiB, redaction, integrated/dedicated server, OP2, filters и отсутствие lag.
+8. Runtime-тест 0.3.2: persistence после перезапуска, COPY всего архива, rotation >4 MiB, redaction, integrated/dedicated server, OP2, filters и отсутствие lag.
 
