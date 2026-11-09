@@ -17,11 +17,13 @@ Repository: [Mortylovelly/Minecraft-AI-Agent](https://github.com/Mortylovelly/Mi
 
 Рабочая ветка: `minecraft-1.20.1-fabric` (Minecraft 1.20.1 / Fabric / Java 17). Линия `main` 1.21.1 не изменялась.
 
-Текущий HEAD: `853b29c24d2b175791367972f65f49caa53249c3`.
+Текущий HEAD: `e05ce9b677e1f700bd8c29d13a5e401548d51423`.
 
 Коммиты:
 - `f5a1740a17bc89a559c40c2e13d947a0f21d2bb2` — первичная корректировка HUD/mouse, layout и version bump 0.3.4.
 - `165897acf55f62bc5fd85a45bf596359ea428039` — обратное преобразование координат с учётом open/close scale/offset анимации.
+- `082e71deaaf98d21dea90a3d464db01113d49637` — drag/resize использует стабильные raw pointer deltas с компенсацией draw scale.
+- `e05ce9b677e1f700bd8c29d13a5e401548d51423` — header buttons используют преобразованные hit coordinates для анимированной панели.
 - `853b29c24d2b175791367972f65f49caa53249c3` — README поясняет использование внешнего cursor-toggle.
 
 Изменённые файлы:
@@ -76,4 +78,4 @@ Repository: [Mortylovelly/Minecraft-AI-Agent](https://github.com/Mortylovelly/Mi
 - AI panel text spacing;
 - анимация и звуки после изменения hitboxes.
 
-Следующий обязательный шаг — запустить Actions build exact HEAD `853b29c24d2b175791367972f65f49caa53249c3`, получить JAR 0.3.4 и только затем повторить проверку в Minecraft.
+Следующий обязательный шаг — запустить Actions build exact HEAD `e05ce9b677e1f700bd8c29d13a5e401548d51423`, получить JAR 0.3.4 и только затем повторить проверку в Minecraft.

@@ -13,8 +13,8 @@
 - **Активная версия для нашей работы:** Minecraft 1.20.1 Fabric, Java 17.
 - **Активная ветка:** `minecraft-1.20.1-fabric`.
 - **mod_version:** `0.3.4` (исходники в активной ветке; сборка пока не подтверждена).
-- **Текущий HEAD:** `853b29c24d2b175791367972f65f49caa53249c3` в `minecraft-1.20.1-fabric`.
-- **Изменения HUD 0.3.4:** code commit `f5a1740a17bc89a559c40c2e13d947a0f21d2bb2`, дополнительная коррекция анимированных hitboxes `165897acf55f62bc5fd85a45bf596359ea428039`, README commit `853b29c24d2b175791367972f65f49caa53249c3`.
+- **Текущий HEAD:** `e05ce9b677e1f700bd8c29d13a5e401548d51423` в `minecraft-1.20.1-fabric`.
+- **Изменения HUD 0.3.4:** code commit `f5a1740a17bc89a559c40c2e13d947a0f21d2bb2`, inverse animation hitboxes `165897acf55f62bc5fd85a45bf596359ea428039`, стабильные raw pointer deltas при drag/resize `082e71deaaf98d21dea90a3d464db01113d49637`, коррекция header-button hit tests `e05ce9b677e1f700bd8c29d13a5e401548d51423`; README commit `853b29c24d2b175791367972f65f49caa53249c3`.
 - **Последний успешный build остаётся 0.3.3:** run [42682628073](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42682628073), conclusion `success`, для HEAD `e23ef96bfeeadd17c20258eae46edcc93103a0e6`. Для HEAD 0.3.4 нового Actions run/artifact пока нет.
 - **Artifact:** ID `13702743060`, `minecraft-ai-agent-1.20.1`, ZIP 224661 bytes, SHA256 `0b3b9cc450c3e79b3d43b6e70b8e1a5d77feeeb25089595ecd482f88307a81ad`; основной JAR `minecraft-ai-agent-0.3.3.jar`, 161714 bytes, SHA256 `a9a0636394cc9f8363f6d35fccfafa22a0a08d851652444a23233058e02085ce`.
 - **Последний проверенный JAR:** 0.3.3; metadata 0.3.3 / Minecraft 1.20.1 / Java >=17 подтверждена. Это не является проверкой кода 0.3.4.
@@ -288,7 +288,7 @@ Workflow:
 - **Активная платформа:** Minecraft 1.20.1 Fabric / Java 17.
 - **Активная ветка:** minecraft-1.20.1-fabric.
 - **Текущая версия исходников:** 0.3.4 (source-only, build pending).
-- **Последний HEAD:** `853b29c24d2b175791367972f65f49caa53249c3`.
+- **Последний HEAD:** `e05ce9b677e1f700bd8c29d13a5e401548d51423`.
 - **Последний подтверждённый build/artifact:** 0.3.3, run [42682628073](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42682628073), успешен для exact HEAD `e23ef96bfeeadd17c20258eae46edcc93103a0e6`.
 - **Artifact 0.3.3:** ID `13702743060`, ZIP 224661 bytes, SHA256 `0b3b9cc450c3e79b3d43b6e70b8e1a5d77feeeb25089595ecd482f88307a81ad`; основной JAR `minecraft-ai-agent-0.3.3.jar`, 161714 bytes; SHA256 `a9a0636394cc9f8363f6d35fccfafa22a0a08d851652444a23233058e02085ce`.
 - **0.3.4:** Actions run и artifact не созданы/не подтверждены; не переименовывать старый JAR.
