@@ -12,14 +12,14 @@
 - **Archive name:** `minecraft-ai-agent`.
 - **Активная версия для нашей работы:** Minecraft 1.20.1 Fabric, Java 17.
 - **Активная ветка:** `minecraft-1.20.1-fabric`.
-- **mod_version:** `0.3.5` (сборка GitHub Actions подтверждена).
-- **Текущий HEAD:** `7968e4dd8d6b535fb374c031cf9ef8d69aaf53fc` в `minecraft-1.20.1-fabric`.
-- **Восстановление структуры:** commit `10c0ccf05f377435f6eb5c668bffe644befad66f` восстановил полный 63-entry tree из последнего целого коммита 0.3.3 и добавил изменения HUD; commit `7968e4dd8d6b535fb374c031cf9ef8d69aaf53fc` исправил четыре int conversions для drag/resize.
-- **UI/mouse 0.3.5:** внешний cursor-toggle по G поддерживается через native GLFW cursor mode и raw cursor coordinates; Agent не вызывает lock/unlock cursor. Drag/resize используют корректное int conversion. AI panel использует адаптивную раскладку кнопок и раздельные обрезаемые колонки status/chat ID/memory.
-- **Последний успешный build:** run [42687782242](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42687782242), run #305, conclusion `success`, exact HEAD `7968e4dd8d6b535fb374c031cf9ef8d69aaf53fc`.
-- **Artifact 0.3.5:** ID `13706335574`, ZIP 229662 bytes, SHA256 `4b68b0973d4ce7a228936be199fd2eca36efa999cbea6369a18bb99f58eada14`; JAR `minecraft-ai-agent-0.3.5.jar`, 164874 bytes, SHA256 `70c527ffc288a604da7ed26683fb1cce6c1074a7a1e010a72c5277345e51e83d`.
-- **JAR metadata/content:** 0.3.5 / Minecraft 1.20.1 / Java >=17; verified `AiLogOverlay`, `AiChatScreen`, `MouseMixin`, mixin config and refmap.
-- **Проверка в игре:** runtime-тест 0.3.5 ещё не выполнен; успешный Actions build и JAR verification не подтверждают поведение в реальной игре.
+- **mod_version:** `0.3.6` (сборка GitHub Actions подтверждена).
+- **Текущий HEAD:** `51204558b823ec5c6237243758d855fdfbe714cf` в `minecraft-1.20.1-fabric`.
+- **Восстановление структуры:** commit `10c0ccf05f377435f6eb5c668bffe644befad66f` восстановил полный 63-entry tree из последнего целого коммита 0.3.3; последующие изменения 0.3.5 и 0.3.6 применены поверх восстановленного дерева.
+- **UI/mouse 0.3.6:** свободный курсор переключается физической клавишей Э (default `GLFW_KEY_APOSTROPHE`); ESC/прочие Minecraft Screens временно управляют своим курсором, а при возврате в мир free cursor восстанавливается. Повторное Э включает обычный захват мыши. Пока режим включён, указатель не вращает камеру и mouse click/scroll не проходят в игровые действия; Logs HUD получает собственные clicks/drag/resize/scroll. Hover кнопок HUD считывает native GLFW pointer coordinates.
+- **Последний успешный build:** run [42689710703](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42689710703), run #307, conclusion `success`, exact HEAD `51204558b823ec5c6237243758d855fdfbe714cf`.
+- **Artifact 0.3.6:** ID `13704804539`, ZIP 233066 bytes, SHA256 `a211f43e1a0d7a3723235710b1a9ccdbeca756ab383bfc583a778af101cbdef0`; JAR `minecraft-ai-agent-0.3.6.jar`, 166970 bytes, SHA256 `b545bcd4db48170ad6e15df1888a59afc9ee360f7dbab57c0fb3878784dc0aed`.
+- **JAR metadata/content:** 0.3.6 / Minecraft 1.20.1 / Java >=17; verified `AiFreeCursor`, `AiLogOverlay`, `MinecraftAiAgentClient`, `MouseMixin`, mixin config and refmap.
+- **Проверка в игре:** runtime-тест 0.3.6 ещё не выполнен; успешные Actions build и JAR verification не подтверждают поведение в реальной игре.
 
 ## Что это за мод
 
@@ -47,7 +47,7 @@
 - Fabric Loom: `1.9.2`
 - Gradle Wrapper: `8.12`
 - Java compile/source/target: `17`
-- mod_version: `0.3.5`; Actions run 42687782242 completed successfully, artifact JAR 0.3.5 verified. Runtime test remains pending.
+- mod_version: `0.3.6`; Actions run 42689710703 completed successfully, artifact JAR 0.3.6 verified. Runtime test remains pending.
 - mod id: `minecraft_ai_agent`
 - root project: `minecraft-ai-agent`
 
@@ -93,7 +93,7 @@ README.txt обновлён для 0.3.2: Right Shift открывает осн�
 - статус выполнения;
 - показ предыдущих сообщений текущего чата.
 
-Начиная с 0.3.3, log panel — независимый HUD, а не дочерняя часть `AiChatScreen`. Кнопка Logs открывает HUD и плавно закрывает AI-экран; после закрытия AI через ESC окно логов остаётся в игре. При повторном открытии AI HUD временно скрывается, чтобы не лежать поверх AI, и снова появляется после закрытия экрана. В 0.3.5 стартовый размер Logs HUD — 120 × 70 GUI-пикселей; в компактном режиме показаны короткий заголовок, кнопки COPY/свернуть/закрыть и строки логов, а вкладки/счётчики доступны после расширения. Перетаскивание — за заголовок; изменение размера — за нижний правый угол; максимум — половина GUI-ширины/высоты. Фон серо-графитовый, углы слегка закруглены, открытие/закрытие анимировано. INFO — зелёный, WARN — жёлтый, ERROR/FATAL — красный, DEBUG — синий, TRACE — приглушённый серый. В 0.3.5 `MouseMixin` определяет свободный курсор по нативному GLFW cursor mode и получает raw pointer coordinates; внешний пользовательский мод с клавишей G остаётся владельцем видимости курсора, Agent не вызывает `lockCursor()`/`unlockCursor()`. Drag/resize координаты компилируются с явным приведением `Math.round` к int. В AI panel элементы управления перестраиваются на узкой ширине, а status/chat ID/memory размещаются в отдельных ограниченных колонках. Actions build 0.3.5 успешен; реальный runtime-тест ещё не выполнен.
+Начиная с 0.3.3, log panel — независимый HUD, а не дочерняя часть `AiChatScreen`. Кнопка Logs открывает HUD и плавно закрывает AI-экран; после закрытия AI через ESC окно логов остаётся в игре. При повторном открытии AI HUD временно скрывается, чтобы не лежать поверх AI, и снова появляется после закрытия экрана. В 0.3.6 стартовый размер Logs HUD — 120 × 70 GUI-пикселей; в компактном режиме показаны короткий заголовок, кнопки COPY/свернуть/закрыть и строки логов, а вкладки/счётчики доступны после расширения. Перетаскивание — за заголовок; изменение размера — за нижний правый угол; максимум — половина GUI-ширины/высоты. Фон серо-графитовый, углы слегка закруглены, открытие/закрытие анимировано. INFO — зелёный, WARN — жёлтый, ERROR/FATAL — красный, DEBUG — синий, TRACE — приглушённый серый. В 0.3.6 добавлен независимый free-cursor toggle по физической клавише Э. В обычном мире он вызывает `unlockCursor()`; повторное нажатие вызывает `lockCursor()`. Если открыт ESC/pause/options/inventory Screen, курсором управляет стандартный Minecraft Screen; после его закрытия Agent автоматически восстанавливает свободный указатель. В free-cursor mode mouse движение не вращает камеру, кнопки/scroll не проходят в игровые действия, а Logs HUD по-прежнему обрабатывает клики, drag/resize и scroll. GLFW native pointer coordinates используются для hover кнопок, даже если mouse callback перехватывается. Actions build 0.3.6 успешен; реальный runtime-тест ещё не выполнен.
 
 Очистка истории чата не удаляет долговременную память: экран явно сообщает, что история очищена, а память чата сохранена.
 
@@ -229,7 +229,7 @@ API keys хранятся локально в конфигурации поль�
 ## Установка и использование (1.20.1)
 
 1. Установить Minecraft 1.20.1 Fabric / Java 17.
-2. Последний подтверждённый JAR — `minecraft-ai-agent-0.3.5.jar` из Actions artifact `minecraft-ai-agent-1.20.1` (run 42687782242; artifact ID 13706335574). JAR version/MC/Java metadata и обязательные HUD/mixin классы проверены.
+2. Последний подтверждённый JAR — `minecraft-ai-agent-0.3.6.jar` из Actions artifact `minecraft-ai-agent-1.20.1` (run 42689710703; artifact ID 13704804539). JAR version/MC/Java metadata и обязательные cursor/HUD/mixin классы проверены.
 3. Перезапустить сервер; для server tools и просмотра логов игроку нужны OP level 2.
 4. Нажать Right Shift; настроить provider/API key в клиентской панели.
 5. Нажать «Проверить» и отправить запрос.
@@ -287,21 +287,21 @@ Workflow:
 
 - **Активная платформа:** Minecraft 1.20.1 Fabric / Java 17.
 - **Активная ветка:** minecraft-1.20.1-fabric.
-- **Текущая версия исходников:** 0.3.5 (GitHub Actions build success; in-game runtime test pending).
-- **Последний HEAD:** `7968e4dd8d6b535fb374c031cf9ef8d69aaf53fc`.
-- **Последний подтверждённый build/artifact:** 0.3.5, run [42687782242](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42687782242), успешен для exact HEAD `7968e4dd8d6b535fb374c031cf9ef8d69aaf53fc`.
-- **Artifact 0.3.5:** ID `13706335574`, ZIP 229662 bytes, SHA256 `4b68b0973d4ce7a228936be199fd2eca36efa999cbea6369a18bb99f58eada14`; JAR `minecraft-ai-agent-0.3.5.jar`, 164874 bytes; SHA256 `70c527ffc288a604da7ed26683fb1cce6c1074a7a1e010a72c5277345e51e83d`.
-- **0.3.5:** Actions run #305 completed successfully; artifact and JAR verified. Runtime test pending.
+- **Текущая версия исходников:** 0.3.6 (GitHub Actions build success; in-game runtime test pending).
+- **Последний HEAD:** `51204558b823ec5c6237243758d855fdfbe714cf`.
+- **Последний подтверждённый build/artifact:** 0.3.6, run [42689710703](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42689710703), успешен для exact HEAD `51204558b823ec5c6237243758d855fdfbe714cf`.
+- **Artifact 0.3.6:** ID `13704804539`, ZIP 233066 bytes, SHA256 `a211f43e1a0d7a3723235710b1a9ccdbeca756ab383bfc583a778af101cbdef0`; JAR `minecraft-ai-agent-0.3.6.jar`, 166970 bytes; SHA256 `b545bcd4db48170ad6e15df1888a59afc9ee360f7dbab57c0fb3878784dc0aed`.
+- **0.3.6:** Actions run #307 completed successfully; artifact and JAR verified. Runtime test pending.
 - **Основная архитектура:** client AI provider + UI; server networking/tools; server Log4j → log bridge → client disk archive + independent HUD Logs panel.
 - **Log panel 0.3.3:** independent HUD; initial 360 × 210; archive/COPY persisted. Этот build собран успешно.
-- **Log panel 0.3.5:** start 120 × 70 with compact layout; external G cursor-toggle reads native GLFW cursor mode; uses raw cursor coordinates and scaled GUI coordinates; drag/resize conversions compile; AI panel controls reflow at narrow widths and status/chat/memory use separate clipped columns. Build verified; runtime pending.
+- **Log panel 0.3.6:** start 120 × 70 with compact layout; cursor hover uses raw GLFW pointer coordinates; drag/resize and AI panel responsive layout retained from 0.3.5. Build verified; runtime pending.
 - **Чат:** локальный JSONL archive до 1800 сообщений, поиск текста/координат, @AI trigger.
 - **NPC/mobs:** создание именованной серверной сущности, навигация follow/move/attack/stop. Полноценное possession с камерой не реализовано.
 - **Skin/player NPC:** копирование скина и полноценная fake-player entity не реализованы.
 - **Токены:** быстрые локальные команды, selective tools, локальный поиск чата; UI статистики API расходов пока нет.
-- **Проверка в Minecraft:** предыдущий log excerpt относится к Minecraft 1.20.1, Fabric Loader 0.19.5, Java 17 и mod 0.3.3; посторонние warnings Faunify/Mojang auth/Man of Many Planes не являются ошибками Agent. Runtime-тест 0.3.5 ещё не выполнен.
+- **Free cursor 0.3.6:** default physical Russian Э key; unlock/lock cursor toggle, suspend to vanilla Screen and restore on return to world; prevent camera look and world click-through while enabled; Logs HUD remains interactive. Build verified; runtime pending.
 - **GitHub repo:** актуальный slug Mortylovelly/Minecraft-AI-Agent; main — неактивная линия 1.21.1 и не является рабочей 1.20.1 веткой.
-- **Последняя история:** [005 — независимый Logs HUD и обновление интерфейса 0.3.3](updates/005-independent-logs-hud-and-ui-redesign.md).
+- **Проверка в Minecraft:** предыдущий log excerpt относится к Minecraft 1.20.1, Fabric Loader 0.19.5, Java 17 и mod 0.3.3; посторонние warnings Faunify/Mojang auth/Man of Many Planes не являются ошибками Agent. Runtime-тест 0.3.6 ещё не выполнен.
 
 ### Открытый roadmap
 
@@ -312,5 +312,5 @@ Workflow:
 5. Расширенный набор инструментов и воспроизводимый test runner для тестирования сторонних модов.
 6. Дальнейшая экономия токенов: локальный parser частых команд, compact context, caching, persistent structured memory и usage/cost dashboard.
 7. Развитие custom log integration для собственных модов; автоматический приём всех произвольных client-side logger сторонних модов пока не реализован.
-8. Runtime-тест 0.3.5: проверить кнопки/hover и отсутствие дёргания с внешним G cursor-toggle, перетаскивание/resize, стартовый компактный HUD 120 × 70, переход compact→expanded, AI panel layout, ESC / Right Shift, анимации/звуки; затем persistence/COPY/rotation/redaction и integrated/dedicated server OP2.
+8. Runtime-тест 0.3.6: проверить свободный курсор по Э, отсутствие camera rotation и click-through, работу курсора в ESC/AI Screens и восстановление после возврата в мир, повторное выключение по Э, Options→Controls rebinding, Logs HUD buttons/hover/drag/resize/scroll/COPY, disconnect reset; затем persistence/COPY/rotation/redaction и integrated/dedicated server OP2.
 
