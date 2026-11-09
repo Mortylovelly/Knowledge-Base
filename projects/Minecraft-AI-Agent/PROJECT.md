@@ -12,14 +12,14 @@
 - **Archive name:** `minecraft-ai-agent`.
 - **Активная версия для нашей работы:** Minecraft 1.20.1 Fabric, Java 17.
 - **Активная ветка:** `minecraft-1.20.1-fabric`.
-- **mod_version:** `0.3.6` (сборка GitHub Actions подтверждена).
-- **Текущий HEAD:** `51204558b823ec5c6237243758d855fdfbe714cf` в `minecraft-1.20.1-fabric`.
+- **mod_version:** `0.3.7` (сборка GitHub Actions подтверждена).
+- **Текущий HEAD:** `de26b52dd65392c8834f02c68821567e25c4e91d` в `minecraft-1.20.1-fabric`.
 - **Восстановление структуры:** commit `10c0ccf05f377435f6eb5c668bffe644befad66f` восстановил полный 63-entry tree из последнего целого коммита 0.3.3; последующие изменения 0.3.5 и 0.3.6 применены поверх восстановленного дерева.
-- **UI/mouse 0.3.6:** свободный курсор переключается физической клавишей Э (default `GLFW_KEY_APOSTROPHE`); ESC/прочие Minecraft Screens временно управляют своим курсором, а при возврате в мир free cursor восстанавливается. Повторное Э включает обычный захват мыши. Пока режим включён, указатель не вращает камеру и mouse click/scroll не проходят в игровые действия; Logs HUD получает собственные clicks/drag/resize/scroll. Hover кнопок HUD считывает native GLFW pointer coordinates.
-- **Последний успешный build:** run [42689710703](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42689710703), run #307, conclusion `success`, exact HEAD `51204558b823ec5c6237243758d855fdfbe714cf`.
-- **Artifact 0.3.6:** ID `13704804539`, ZIP 233066 bytes, SHA256 `a211f43e1a0d7a3723235710b1a9ccdbeca756ab383bfc583a778af101cbdef0`; JAR `minecraft-ai-agent-0.3.6.jar`, 166970 bytes, SHA256 `b545bcd4db48170ad6e15df1888a59afc9ee360f7dbab57c0fb3878784dc0aed`.
-- **JAR metadata/content:** 0.3.6 / Minecraft 1.20.1 / Java >=17; verified `AiFreeCursor`, `AiLogOverlay`, `MinecraftAiAgentClient`, `MouseMixin`, mixin config and refmap.
-- **Проверка в игре:** runtime-тест 0.3.6 ещё не выполнен; успешные Actions build и JAR verification не подтверждают поведение в реальной игре.
+- **UI/mouse 0.3.7:** свободный курсор переключается клавишей G (default `GLFW_KEY_G`); если в `options.txt` сохранилась предыдущая привязка Э из 0.3.6, она один раз автоматически переносится на G и сохраняется. Другие пользовательские клавиши не сбрасываются. ESC/прочие Minecraft Screens временно управляют своим курсором, а при возврате в мир free cursor восстанавливается. Повторное G включает обычный захват мыши. Пока режим включён, указатель не вращает камеру и mouse click/scroll не проходят в игровые действия; Logs HUD получает собственные clicks/drag/resize/scroll. Hover кнопок HUD считывает native GLFW pointer coordinates.
+- **Последний успешный build:** run [42690986065](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42690986065), run #308, conclusion `success`, exact HEAD `de26b52dd65392c8834f02c68821567e25c4e91d`.
+- **Artifact 0.3.7:** ID `13706533403`, ZIP 233356 bytes, SHA256 `b16002643643048f933156407f0ecd64fbe2447f3c90dbf0b26046e7c670f374`; JAR `minecraft-ai-agent-0.3.7.jar`, 167174 bytes, SHA256 `f0252cd05fbd1c8ca114a9a2cb16aba8cc3bc6cd2e3d2935738bf52f85268b36`.
+- **JAR metadata/content:** 0.3.7 / Minecraft 1.20.1 / Java >=17; verified `AiFreeCursor`, `AiLogOverlay`, `MinecraftAiAgentClient`, `MouseMixin`, mixin config and refmap; bytecode confirms default GLFW keycode G and the legacy-key migration path.
+- **Проверка в игре:** runtime-тест 0.3.7 ещё не выполнен; успешные Actions build и JAR verification не подтверждают поведение в реальной игре.
 
 ## Что это за мод
 
@@ -47,7 +47,7 @@
 - Fabric Loom: `1.9.2`
 - Gradle Wrapper: `8.12`
 - Java compile/source/target: `17`
-- mod_version: `0.3.6`; Actions run 42689710703 completed successfully, artifact JAR 0.3.6 verified. Runtime test remains pending.
+- mod_version: `0.3.7`; Actions run 42690986065 completed successfully, artifact JAR 0.3.7 verified. Runtime test remains pending.
 - mod id: `minecraft_ai_agent`
 - root project: `minecraft-ai-agent`
 
@@ -229,7 +229,7 @@ API keys хранятся локально в конфигурации поль�
 ## Установка и использование (1.20.1)
 
 1. Установить Minecraft 1.20.1 Fabric / Java 17.
-2. Последний подтверждённый JAR — `minecraft-ai-agent-0.3.6.jar` из Actions artifact `minecraft-ai-agent-1.20.1` (run 42689710703; artifact ID 13704804539). JAR version/MC/Java metadata и обязательные cursor/HUD/mixin классы проверены.
+2. Последний подтверждённый JAR — `minecraft-ai-agent-0.3.7.jar` из Actions artifact `minecraft-ai-agent-1.20.1` (run 42690986065; artifact ID 13706533403). JAR version/MC/Java metadata, default key G и обязательные cursor/HUD/mixin классы проверены.
 3. Перезапустить сервер; для server tools и просмотра логов игроку нужны OP level 2.
 4. Нажать Right Shift; настроить provider/API key в клиентской панели.
 5. Нажать «Проверить» и отправить запрос.
@@ -287,11 +287,11 @@ Workflow:
 
 - **Активная платформа:** Minecraft 1.20.1 Fabric / Java 17.
 - **Активная ветка:** minecraft-1.20.1-fabric.
-- **Текущая версия исходников:** 0.3.6 (GitHub Actions build success; in-game runtime test pending).
-- **Последний HEAD:** `51204558b823ec5c6237243758d855fdfbe714cf`.
-- **Последний подтверждённый build/artifact:** 0.3.6, run [42689710703](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42689710703), успешен для exact HEAD `51204558b823ec5c6237243758d855fdfbe714cf`.
-- **Artifact 0.3.6:** ID `13704804539`, ZIP 233066 bytes, SHA256 `a211f43e1a0d7a3723235710b1a9ccdbeca756ab383bfc583a778af101cbdef0`; JAR `minecraft-ai-agent-0.3.6.jar`, 166970 bytes; SHA256 `b545bcd4db48170ad6e15df1888a59afc9ee360f7dbab57c0fb3878784dc0aed`.
-- **0.3.6:** Actions run #307 completed successfully; artifact and JAR verified. Runtime test pending.
+- **Текущая версия исходников:** 0.3.7 (GitHub Actions build success; in-game runtime test pending).
+- **Последний HEAD:** `de26b52dd65392c8834f02c68821567e25c4e91d`.
+- **Последний подтверждённый build/artifact:** 0.3.7, run [42690986065](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42690986065), успешен для exact HEAD `de26b52dd65392c8834f02c68821567e25c4e91d`.
+- **Artifact 0.3.7:** ID `13706533403`, ZIP 233356 bytes, SHA256 `b16002643643048f933156407f0ecd64fbe2447f3c90dbf0b26046e7c670f374`; JAR `minecraft-ai-agent-0.3.7.jar`, 167174 bytes; SHA256 `f0252cd05fbd1c8ca114a9a2cb16aba8cc3bc6cd2e3d2935738bf52f85268b36`.
+- **0.3.7:** Actions run #308 completed successfully; artifact and JAR verified. Runtime test pending.
 - **Основная архитектура:** client AI provider + UI; server networking/tools; server Log4j → log bridge → client disk archive + independent HUD Logs panel.
 - **Log panel 0.3.3:** independent HUD; initial 360 × 210; archive/COPY persisted. Этот build собран успешно.
 - **Log panel 0.3.6:** start 120 × 70 with compact layout; cursor hover uses raw GLFW pointer coordinates; drag/resize and AI panel responsive layout retained from 0.3.5. Build verified; runtime pending.
@@ -299,9 +299,9 @@ Workflow:
 - **NPC/mobs:** создание именованной серверной сущности, навигация follow/move/attack/stop. Полноценное possession с камерой не реализовано.
 - **Skin/player NPC:** копирование скина и полноценная fake-player entity не реализованы.
 - **Токены:** быстрые локальные команды, selective tools, локальный поиск чата; UI статистики API расходов пока нет.
-- **Free cursor 0.3.6:** default physical Russian Э key; unlock/lock cursor toggle, suspend to vanilla Screen and restore on return to world; prevent camera look and world click-through while enabled; Logs HUD remains interactive. Build verified; runtime pending.
+- **Free cursor 0.3.7:** default G key (`GLFW_KEY_G`); upgrades a saved 0.3.6 apostrophe/Э binding to G once, persists with `options.write()`; other custom key bindings are retained. Unlock/lock cursor toggle, suspend to vanilla Screen and restore on return to world; prevent camera look and world click-through while enabled; Logs HUD remains interactive. Build verified; runtime pending.
 - **GitHub repo:** актуальный slug Mortylovelly/Minecraft-AI-Agent; main — неактивная линия 1.21.1 и не является рабочей 1.20.1 веткой.
-- **Проверка в Minecraft:** предыдущий log excerpt относится к Minecraft 1.20.1, Fabric Loader 0.19.5, Java 17 и mod 0.3.3; посторонние warnings Faunify/Mojang auth/Man of Many Planes не являются ошибками Agent. Runtime-тест 0.3.6 ещё не выполнен.
+- **Проверка в Minecraft:** предыдущий log excerpt относится к Minecraft 1.20.1, Fabric Loader 0.19.5, Java 17 и mod 0.3.3; посторонние warnings Faunify/Mojang auth/Man of Many Planes не являются ошибками Agent. Runtime-тест 0.3.7 ещё не выполнен.
 
 ### Открытый roadmap
 
@@ -312,5 +312,5 @@ Workflow:
 5. Расширенный набор инструментов и воспроизводимый test runner для тестирования сторонних модов.
 6. Дальнейшая экономия токенов: локальный parser частых команд, compact context, caching, persistent structured memory и usage/cost dashboard.
 7. Развитие custom log integration для собственных модов; автоматический приём всех произвольных client-side logger сторонних модов пока не реализован.
-8. Runtime-тест 0.3.6: проверить свободный курсор по Э, отсутствие camera rotation и click-through, работу курсора в ESC/AI Screens и восстановление после возврата в мир, повторное выключение по Э, Options→Controls rebinding, Logs HUD buttons/hover/drag/resize/scroll/COPY, disconnect reset; затем persistence/COPY/rotation/redaction и integrated/dedicated server OP2.
+8. Runtime-тест 0.3.7: проверить свободный курсор по G, миграцию старой сохранённой Э-привязки в G, отсутствие camera rotation и click-through, работу курсора в ESC/AI Screens и восстановление после возврата в мир, повторное выключение по G, Options→Controls rebinding, Logs HUD buttons/hover/drag/resize/scroll/COPY, disconnect reset; затем persistence/COPY/rotation/redaction и integrated/dedicated server OP2.
 
