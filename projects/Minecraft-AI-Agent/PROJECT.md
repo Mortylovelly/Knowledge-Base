@@ -12,12 +12,14 @@
 - **Archive name:** `minecraft-ai-agent`.
 - **Активная версия для нашей работы:** Minecraft 1.20.1 Fabric, Java 17.
 - **Активная ветка:** `minecraft-1.20.1-fabric`.
-- **mod_version:** `0.3.3`.
-- **Текущий HEAD:** `e23ef96bfeeadd17c20258eae46edcc93103a0e6` в `minecraft-1.20.1-fabric` (последний коммит обновил только размер в README после сборки кода).
-- **Последний успешный build 0.3.3:** run [42682628073](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42682628073), conclusion `success`; Build и Upload mod jar завершились успешно для exact HEAD `e23ef96bfeeadd17c20258eae46edcc93103a0e6`.
+- **mod_version:** `0.3.4` (исходники в активной ветке; сборка пока не подтверждена).
+- **Текущий HEAD:** `853b29c24d2b175791367972f65f49caa53249c3` в `minecraft-1.20.1-fabric`.
+- **Изменения HUD 0.3.4:** code commit `f5a1740a17bc89a559c40c2e13d947a0f21d2bb2`, дополнительная коррекция анимированных hitboxes `165897acf55f62bc5fd85a45bf596359ea428039`, README commit `853b29c24d2b175791367972f65f49caa53249c3`.
+- **Последний успешный build остаётся 0.3.3:** run [42682628073](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42682628073), conclusion `success`, для HEAD `e23ef96bfeeadd17c20258eae46edcc93103a0e6`. Для HEAD 0.3.4 нового Actions run/artifact пока нет.
 - **Artifact:** ID `13702743060`, `minecraft-ai-agent-1.20.1`, ZIP 224661 bytes, SHA256 `0b3b9cc450c3e79b3d43b6e70b8e1a5d77feeeb25089595ecd482f88307a81ad`; основной JAR `minecraft-ai-agent-0.3.3.jar`, 161714 bytes, SHA256 `a9a0636394cc9f8363f6d35fccfafa22a0a08d851652444a23233058e02085ce`.
-- **Проверка JAR:** metadata 0.3.3 / Minecraft 1.20.1 / Java >=17 подтверждена; присутствуют `AiLogOverlay`, `AiUiSound`, `MouseMixin`, mixin config и refmap.
-- **Проверка в игре:** ещё не выполнена; сборка и содержимое JAR проверены, поведение HUD/Mixin требует runtime-теста.
+- **Последний проверенный JAR:** 0.3.3; metadata 0.3.3 / Minecraft 1.20.1 / Java >=17 подтверждена. Это не является проверкой кода 0.3.4.
+- **Сборка 0.3.4:** не подтверждена. Actions не создал новый run для текущего HEAD; локальный clone/build не выполнен из-за DNS/network failure при обращении к github.com.
+- **Проверка в игре:** runtime-тест 0.3.4 не выполнен; сначала нужен успешный Actions build и JAR.
 
 ## Что это за мод
 
@@ -45,7 +47,7 @@
 - Fabric Loom: `1.9.2`
 - Gradle Wrapper: `8.12`
 - Java compile/source/target: `17`
-- mod_version: `0.3.3` (Actions Build + Upload artifact success; run 42682628073).
+- mod_version: `0.3.4` in source (build not yet confirmed; last successful artifact remains 0.3.3 / run 42682628073).
 - mod id: `minecraft_ai_agent`
 - root project: `minecraft-ai-agent`
 
@@ -91,7 +93,7 @@ README.txt обновлён для 0.3.2: Right Shift открывает осн�
 - статус выполнения;
 - показ предыдущих сообщений текущего чата.
 
-Начиная с 0.3.3, log panel — независимый HUD, а не дочерняя часть `AiChatScreen`. Кнопка Logs открывает HUD и плавно закрывает AI-экран; после закрытия AI через ESC окно логов остаётся в игре. При повторном открытии AI HUD временно скрывается, чтобы не лежать поверх AI, и снова появляется после закрытия экрана. Стартовый размер 360 × 210 GUI-пикселей; перетаскивание за заголовок; изменение размера за нижний правый угол с ограничением до половины ширины/высоты GUI-экрана; сворачивание; закрытие X. Фон полностью непрозрачный серо-графитовый, углы слегка закруглены. Открытие/закрытие анимировано. INFO — зелёный, WARN — жёлтый, ERROR/FATAL — красный, DEBUG — синий, TRACE — приглушённый серый. Кнопки Logs получают стандартный UI click sound Minecraft; custom controls HUD используют тот же звук через `AiUiSound`. Кнопка COPY по-прежнему копирует весь архив с диска, не только активную вкладку или экранный буфер.
+Начиная с 0.3.3, log panel — независимый HUD, а не дочерняя часть `AiChatScreen`. Кнопка Logs открывает HUD и плавно закрывает AI-экран; после закрытия AI через ESC окно логов остаётся в игре. При повторном открытии AI HUD временно скрывается, чтобы не лежать поверх AI, и снова появляется после закрытия экрана. В 0.3.3 стартовый размер был 360 × 210 GUI-пикселей; в исходниках 0.3.4 он уменьшен до 120 × 70, а раскладка адаптируется под компактный режим (короткий заголовок, кнопки COPY/свернуть/закрыть и строки логов; вкладки/счётчики доступны в расширенном режиме). Перетаскивание — за заголовок; изменение размера — за нижний правый угол; максимум — половина GUI-ширины/высоты. Фон полностью непрозрачный серо-графитовый, углы слегка закруглены. Открытие/закрытие анимировано. INFO — зелёный, WARN — жёлтый, ERROR/FATAL — красный, DEBUG — синий, TRACE — приглушённый серый. Важное исправление 0.3.4: `MouseMixin` использует GUI Y от верхнего края, а не перевёрнутую координату; mouse hitboxes преобразуются обратно с учётом open/close animation. Agent больше не вызывает `unlockCursor()`/`lockCursor()` ни при открытии, ни в tick, ни при закрытии HUD: видимость курсора и клавиша G принадлежат отдельному пользовательскому моду. Mouse input HUD обрабатывается только при свободном курсоре и отсутствии активного Screen. Надписи status/chat/memory в `AiChatScreen` обрезаются по доступной ширине, чтобы не наезжать друг на друга. Эти изменения пока source-only: Actions build 0.3.4 и runtime ещё не подтверждены.
 
 Очистка истории чата не удаляет долговременную память: экран явно сообщает, что история очищена, а память чата сохранена.
 
@@ -222,12 +224,12 @@ API keys хранятся локально в конфигурации поль�
 
 В репозитории также присутствуют `backend/` и `scripts/` с Python/FastAPI/uvicorn и старой схемой локального backend на портах 8765/8787. Но текущий Java flow активной ветки непосредственно использует HTTP API провайдеров и не вызывает этот локальный backend.
 
-В репозитории остаются старые каталоги `backend/` и `scripts/` с Python/FastAPI prototype; активная Java реализация 1.20.1 их не использует. README.txt для версии 0.3.3 описывает Right Shift, independent Logs HUD, стартовый размер 360 × 210 и ограничение resize до половины экрана.
+В репозитории остаются старые каталоги `backend/` и `scripts/` с Python/FastAPI prototype; активная Java реализация 1.20.1 их не использует. README.txt в HEAD 0.3.4 описывает Right Shift, независимый Logs HUD, стартовый размер 120 × 70, компактный режим, resize до половины экрана и использование внешнего cursor-toggle мода. Сборка этой редакции ещё не подтверждена.
 
 ## Установка и использование (1.20.1)
 
 1. Установить Minecraft 1.20.1 Fabric / Java 17.
-2. Установить JAR `minecraft-ai-agent-0.3.3.jar` из Actions artifact `minecraft-ai-agent-1.20.1` (run 42682628073; artifact ID 13702743060).
+2. Последний подтверждённый JAR — `minecraft-ai-agent-0.3.3.jar` из Actions artifact `minecraft-ai-agent-1.20.1` (run 42682628073; artifact ID 13702743060). HEAD 0.3.4 уже содержит изменения исходников, но готовый JAR 0.3.4 пока не подтверждён.
 3. Перезапустить сервер; для server tools и просмотра логов игроку нужны OP level 2.
 4. Нажать Right Shift; настроить provider/API key в клиентской панели.
 5. Нажать «Проверить» и отправить запрос.
@@ -285,17 +287,19 @@ Workflow:
 
 - **Активная платформа:** Minecraft 1.20.1 Fabric / Java 17.
 - **Активная ветка:** minecraft-1.20.1-fabric.
-- **Текущая версия:** 0.3.3.
-- **Последний HEAD:** `e23ef96bfeeadd17c20258eae46edcc93103a0e6` (после source build добавлено README-only уточнение размеров; исходный код собран на `9a98f66af642af528fcc406346b1a16a4add09db`).
-- **Последний подтверждённый build:** 0.3.3, run [42682628073](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42682628073), job `build` и `Upload mod jar` success для exact HEAD `e23ef96bfeeadd17c20258eae46edcc93103a0e6`.
-- **Artifact:** `minecraft-ai-agent-1.20.1`, ID `13702743060`, ZIP 224661 bytes, SHA256 `0b3b9cc450c3e79b3d43b6e70b8e1a5d77feeeb25089595ecd482f88307a81ad`; основной JAR `minecraft-ai-agent-0.3.3.jar`, 161714 bytes; SHA256 `a9a0636394cc9f8363f6d35fccfafa22a0a08d851652444a23233058e02085ce`.
+- **Текущая версия исходников:** 0.3.4 (source-only, build pending).
+- **Последний HEAD:** `853b29c24d2b175791367972f65f49caa53249c3`.
+- **Последний подтверждённый build/artifact:** 0.3.3, run [42682628073](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42682628073), успешен для exact HEAD `e23ef96bfeeadd17c20258eae46edcc93103a0e6`.
+- **Artifact 0.3.3:** ID `13702743060`, ZIP 224661 bytes, SHA256 `0b3b9cc450c3e79b3d43b6e70b8e1a5d77feeeb25089595ecd482f88307a81ad`; основной JAR `minecraft-ai-agent-0.3.3.jar`, 161714 bytes; SHA256 `a9a0636394cc9f8363f6d35fccfafa22a0a08d851652444a23233058e02085ce`.
+- **0.3.4:** Actions run и artifact не созданы/не подтверждены; не переименовывать старый JAR.
 - **Основная архитектура:** client AI provider + UI; server networking/tools; server Log4j → log bridge → client disk archive + independent HUD Logs panel.
-- **Log panel 0.3.3:** independent HUD via `HudRenderCallback` + `MouseMixin`; 360 × 210 initial size; resize up to half screen; opaque rounded grey; open/close animations; level colors; click sounds; does not draw over AI and returns after ESC. Archive/COPY from 0.3.2 preserved. Build success, runtime test pending.
+- **Log panel 0.3.3:** independent HUD; initial 360 × 210; archive/COPY persisted. Этот build собран успешно.
+- **Log panel 0.3.4 source:** start 120 × 70 with compact layout; corrected top-origin GUI Y; inverse animation transform for hit testing; no mouse lock/unlock so external G cursor-toggle mod remains authoritative; only processes mouse events when pointer is free; AI panel text clipped to prevent overlap. Source updated; build/runtime unverified.
 - **Чат:** локальный JSONL archive до 1800 сообщений, поиск текста/координат, @AI trigger.
 - **NPC/mobs:** создание именованной серверной сущности, навигация follow/move/attack/stop. Полноценное possession с камерой не реализовано.
 - **Skin/player NPC:** копирование скина и полноценная fake-player entity не реализованы.
 - **Токены:** быстрые локальные команды, selective tools, локальный поиск чата; UI статистики API расходов пока нет.
-- **Проверка в Minecraft:** JAR 0.3.3 собран и содержимое проверено; поведение independent HUD, MouseMixin, colors, animation, sound, drag/resize и сохранения logs ещё не тестировалось в реальной игре.
+- **Проверка в Minecraft:** пользователь прислал log excerpt с Minecraft 1.20.1, Fabric Loader 0.19.5, Java 17 и mod `minecraft_ai_agent 0.3.3`; в просмотренных строках нет ошибок `MouseMixin`/`AiLogOverlay` или Mixin application failure. Видны независимые сообщения других компонентов (Faunify missing entity attributes, Mojang auth 401, Man of Many Planes malformed/empty recipe JSON). Это не runtime-тест новой версии. HUD 0.3.4 не проверялся в игре.
 - **GitHub repo:** актуальный slug Mortylovelly/Minecraft-AI-Agent; main — неактивная линия 1.21.1 и не является рабочей 1.20.1 веткой.
 - **Последняя история:** [005 — независимый Logs HUD и обновление интерфейса 0.3.3](updates/005-independent-logs-hud-and-ui-redesign.md).
 
@@ -308,5 +312,5 @@ Workflow:
 5. Расширенный набор инструментов и воспроизводимый test runner для тестирования сторонних модов.
 6. Дальнейшая экономия токенов: локальный parser частых команд, compact context, caching, persistent structured memory и usage/cost dashboard.
 7. Развитие custom log integration для собственных модов; автоматический приём всех произвольных client-side logger сторонних модов пока не реализован.
-8. Runtime-тест 0.3.2/0.3.3: persistence после перезапуска, COPY всего архива, rotation >4 MiB, redaction, integrated/dedicated server, OP2, filters, независимый HUD после ESC, корректный Mixin Mouse input, цвета уровней, click sounds, drag/resize до половины экрана и отсутствие lag.
+8. Runtime-тест 0.3.4 после получения успешного JAR: кнопки COPY/свернуть/закрыть и вкладки, hover без дёргания, работа с внешним G cursor-toggle, перетаскивание за заголовок, resize из 120 × 70 в крупное окно, compact→expanded, AI panel layout no-overlap, ESC/Right Shift transitions, анимация/звуки; затем persistence/COPY/rotation/redaction и integrated/dedicated server OP2.
 
