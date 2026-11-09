@@ -4,8 +4,8 @@
 
 - **Актуальное название проекта:** Minecraft AI Agent.
 - **Старое имя/ошибочный исторический label:** Ad Astra Create Addon; больше не отражает назначение проекта.
-- **Текущий GitHub URL:** [Mortylovelly/adastra-create-addon](https://github.com/Mortylovelly/Minecraft-AI-Agent).
-- **Желаемое новое имя GitHub-репозитория:** `Minecraft-AI-Agent`. Сам GitHub rename ещё не выполнен: доступные инструменты интеграции не имеют операции переименования репозитория. Код и документация пока остаются в старом slug.
+- **Текущий GitHub URL:** [Mortylovelly/Minecraft-AI-Agent](https://github.com/Mortylovelly/Minecraft-AI-Agent).
+- **Исторический slug:** `adastra-create-addon`; актуальный slug `Minecraft-AI-Agent` уже подтверждён GitHub API.
 - **Mod ID:** `minecraft_ai_agent`.
 - **Название в Fabric metadata:** `Minecraft AI Agent`.
 - **Maven group:** `com.mortylovelly.minecraftai`.
@@ -14,7 +14,7 @@
 - **Активная ветка:** `minecraft-1.20.1-fabric`.
 - **mod_version:** `0.3.1`.
 - **Последний известный commit ветки:** `12010fe20872f20f20206acefaf7b16ac1d7cebb` (metadata URL update; build проверяется).
-- **Последний известный успешный build:** GitHub Actions run [34707123137](https://github.com/Mortylovelly/adastra-create-addon/actions/runs/34707123137), success для того же SHA.
+- **Последний успешный build:** GitHub Actions run [42667953958](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42667953958), success для HEAD `12010fe20872f20f20206acefaf7b16ac1d7cebb`; artifact ID `13696843616`.
 - **Проверка в игре после последнего билда:** в доступном контексте не подтверждена.
 
 ## Что это за мод
@@ -268,9 +268,9 @@ Workflow:
 - **Активная платформа:** Minecraft 1.20.1 Fabric / Java 17.
 - **Активная ветка:** minecraft-1.20.1-fabric.
 - **Текущая версия:** 0.3.1.
-- **Последний известный HEAD:** 12010fe20872f20f20206acefaf7b16ac1d7cebb (metadata source URL update; build run 42667953958 ожидал завершения при записи).
-- **Последний подтверждённый build панели логов:** SHA 3b126cd07913dedec498db525378c8d3470953c5, run 42667571908 success.
-- **Текущий artifact на момент записи:** minecraft-ai-agent-1.20.1, artifact ID 13696089169.
+- **Последний HEAD:** 12010fe20872f20f20206acefaf7b16ac1d7cebb; Actions run 42667953958 completed / success.
+- **Последний подтверждённый build 0.3.1:** SHA 12010fe20872f20f20206acefaf7b16ac1d7cebb, run 42667953958 success.
+- **Текущий artifact:** minecraft-ai-agent-1.20.1, artifact ID 13696843616, 210665 bytes.
 - **Основная архитектура:** client AI provider + UI; server networking/tools; server Log4j → log bridge → client log panel.
 - **Log panel:** Logs / Custom logs / Errors; draggable, resizable, collapsible; X/Logs close; 5000 in-memory events; счётчики; OP2; credentials redaction.
 - **Чат:** локальный JSONL archive до 1800 сообщений, поиск текста/координат, @AI trigger.
