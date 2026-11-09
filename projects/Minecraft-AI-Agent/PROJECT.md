@@ -13,7 +13,7 @@
 - **Активная версия для нашей работы:** Minecraft 1.20.1 Fabric, Java 17.
 - **Активная ветка:** `minecraft-1.20.1-fabric`.
 - **mod_version:** `0.3.1`.
-- **Последний известный commit ветки:** `12010fe20872f20f20206acefaf7b16ac1d7cebb` (metadata URL update; build проверяется).
+- **Последний HEAD:** `12010fe20872f20f20206acefaf7b16ac1d7cebb`; GitHub Actions run `42667953958` completed / success.
 - **Последний успешный build:** GitHub Actions run [42667953958](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42667953958), success для HEAD `12010fe20872f20f20206acefaf7b16ac1d7cebb`; artifact ID `13696843616`.
 - **Проверка в игре после последнего билда:** в доступном контексте не подтверждена.
 
@@ -246,13 +246,13 @@ Workflow:
 - Для активной 1.20.1 ветки workflow использует JDK 17, `chmod +x gradlew`, `./gradlew build --no-daemon`.
 - Artifact: `minecraft-ai-agent-1.20.1`.
 
-Последний подтверждённый build с live log panel:
-- commit: `3b126cd07913dedec498db525378c8d3470953c5`
-- Actions run: [42667571908](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42667571908)
-- result: completed / success; Build + Upload artifact successful
-- artifact ID: `13696089169`, `minecraft-ai-agent-1.20.1`, 210723 bytes
-- JAR SHA256: `2f6f40bd82148ddda3d7e512490cf3df9a7a11eab21952e8a5bb6fba1ab8528d`
-- metadata URL commit: `12010fe20872f20f20206acefaf7b16ac1d7cebb`, Actions [42667953958](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42667953958) ещё выполнялся при последней проверке.
+Последний подтверждённый build версии 0.3.1:
+- commit / HEAD: `12010fe20872f20f20206acefaf7b16ac1d7cebb`
+- Actions run: [42667953958](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42667953958)
+- result: completed / success; Build + Upload artifact successful для exact HEAD
+- artifact ID: `13696843616`, `minecraft-ai-agent-1.20.1`, 210665 bytes
+- ZIP SHA256: `42006ec6fd98d6f5579575aedbb093cca1639af752169dc8a09bea8918f9e30c`
+- JAR size: 151308 bytes; SHA256: `586c0b4a5f6c9b658ae0ab41f887e152e5784500a1f9d0e32cf51cdedc7603b7`.
 
 Более ранний port build на SHA `530c2f638c4316f3a57507034698e9dab91dbfe7` завершился failure; затем ошибка renderBackground была исправлена commit `85568e1`, который прошёл успешно. Успешный build не означает полный runtime-тест в игре.
 
@@ -270,7 +270,7 @@ Workflow:
 - **Текущая версия:** 0.3.1.
 - **Последний HEAD:** 12010fe20872f20f20206acefaf7b16ac1d7cebb; Actions run 42667953958 completed / success.
 - **Последний подтверждённый build 0.3.1:** SHA 12010fe20872f20f20206acefaf7b16ac1d7cebb, run 42667953958 success.
-- **Текущий artifact:** minecraft-ai-agent-1.20.1, artifact ID 13696843616, 210665 bytes.
+- **Текущий artifact:** minecraft-ai-agent-1.20.1, artifact ID 13696843616, 210665 bytes; JAR SHA256 `586c0b4a5f6c9b658ae0ab41f887e152e5784500a1f9d0e32cf51cdedc7603b7`.
 - **Основная архитектура:** client AI provider + UI; server networking/tools; server Log4j → log bridge → client log panel.
 - **Log panel:** Logs / Custom logs / Errors; draggable, resizable, collapsible; X/Logs close; 5000 in-memory events; счётчики; OP2; credentials redaction.
 - **Чат:** локальный JSONL archive до 1800 сообщений, поиск текста/координат, @AI trigger.
