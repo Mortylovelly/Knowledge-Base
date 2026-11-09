@@ -12,14 +12,14 @@
 - **Archive name:** `minecraft-ai-agent`.
 - **Активная версия для нашей работы:** Minecraft 1.20.1 Fabric, Java 17.
 - **Активная ветка:** `minecraft-1.20.1-fabric`.
-- **mod_version:** `0.3.4` (исходники в активной ветке; сборка пока не подтверждена).
-- **Текущий HEAD:** `e05ce9b677e1f700bd8c29d13a5e401548d51423` в `minecraft-1.20.1-fabric`.
-- **Изменения HUD 0.3.4:** code commit `f5a1740a17bc89a559c40c2e13d947a0f21d2bb2`, inverse animation hitboxes `165897acf55f62bc5fd85a45bf596359ea428039`, стабильные raw pointer deltas при drag/resize `082e71deaaf98d21dea90a3d464db01113d49637`, коррекция header-button hit tests `e05ce9b677e1f700bd8c29d13a5e401548d51423`; README commit `853b29c24d2b175791367972f65f49caa53249c3`.
-- **Последний успешный build остаётся 0.3.3:** run [42682628073](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42682628073), conclusion `success`, для HEAD `e23ef96bfeeadd17c20258eae46edcc93103a0e6`. Для HEAD 0.3.4 нового Actions run/artifact пока нет.
-- **Artifact:** ID `13702743060`, `minecraft-ai-agent-1.20.1`, ZIP 224661 bytes, SHA256 `0b3b9cc450c3e79b3d43b6e70b8e1a5d77feeeb25089595ecd482f88307a81ad`; основной JAR `minecraft-ai-agent-0.3.3.jar`, 161714 bytes, SHA256 `a9a0636394cc9f8363f6d35fccfafa22a0a08d851652444a23233058e02085ce`.
-- **Последний проверенный JAR:** 0.3.3; metadata 0.3.3 / Minecraft 1.20.1 / Java >=17 подтверждена. Это не является проверкой кода 0.3.4.
-- **Сборка 0.3.4:** не подтверждена. Actions не создал новый run для текущего HEAD; локальный clone/build не выполнен из-за DNS/network failure при обращении к github.com.
-- **Проверка в игре:** runtime-тест 0.3.4 не выполнен; сначала нужен успешный Actions build и JAR.
+- **mod_version:** `0.3.5` (сборка GitHub Actions подтверждена).
+- **Текущий HEAD:** `7968e4dd8d6b535fb374c031cf9ef8d69aaf53fc` в `minecraft-1.20.1-fabric`.
+- **Восстановление структуры:** commit `10c0ccf05f377435f6eb5c668bffe644befad66f` восстановил полный 63-entry tree из последнего целого коммита 0.3.3 и добавил изменения HUD; commit `7968e4dd8d6b535fb374c031cf9ef8d69aaf53fc` исправил четыре int conversions для drag/resize.
+- **UI/mouse 0.3.5:** внешний cursor-toggle по G поддерживается через native GLFW cursor mode и raw cursor coordinates; Agent не вызывает lock/unlock cursor. Drag/resize используют корректное int conversion. AI panel использует адаптивную раскладку кнопок и раздельные обрезаемые колонки status/chat ID/memory.
+- **Последний успешный build:** run [42687782242](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42687782242), run #305, conclusion `success`, exact HEAD `7968e4dd8d6b535fb374c031cf9ef8d69aaf53fc`.
+- **Artifact 0.3.5:** ID `13706335574`, ZIP 229662 bytes, SHA256 `4b68b0973d4ce7a228936be199fd2eca36efa999cbea6369a18bb99f58eada14`; JAR `minecraft-ai-agent-0.3.5.jar`, 164874 bytes, SHA256 `70c527ffc288a604da7ed26683fb1cce6c1074a7a1e010a72c5277345e51e83d`.
+- **JAR metadata/content:** 0.3.5 / Minecraft 1.20.1 / Java >=17; verified `AiLogOverlay`, `AiChatScreen`, `MouseMixin`, mixin config and refmap.
+- **Проверка в игре:** runtime-тест 0.3.5 ещё не выполнен; успешный Actions build и JAR verification не подтверждают поведение в реальной игре.
 
 ## Что это за мод
 
@@ -47,7 +47,7 @@
 - Fabric Loom: `1.9.2`
 - Gradle Wrapper: `8.12`
 - Java compile/source/target: `17`
-- mod_version: `0.3.4` in source (build not yet confirmed; last successful artifact remains 0.3.3 / run 42682628073).
+- mod_version: `0.3.5`; Actions run 42687782242 completed successfully, artifact JAR 0.3.5 verified. Runtime test remains pending.
 - mod id: `minecraft_ai_agent`
 - root project: `minecraft-ai-agent`
 
@@ -229,7 +229,7 @@ API keys хранятся локально в конфигурации поль�
 ## Установка и использование (1.20.1)
 
 1. Установить Minecraft 1.20.1 Fabric / Java 17.
-2. Последний подтверждённый JAR — `minecraft-ai-agent-0.3.3.jar` из Actions artifact `minecraft-ai-agent-1.20.1` (run 42682628073; artifact ID 13702743060). HEAD 0.3.4 уже содержит изменения исходников, но готовый JAR 0.3.4 пока не подтверждён.
+2. Последний подтверждённый JAR — `minecraft-ai-agent-0.3.5.jar` из Actions artifact `minecraft-ai-agent-1.20.1` (run 42687782242; artifact ID 13706335574). JAR version/MC/Java metadata и обязательные HUD/mixin классы проверены.
 3. Перезапустить сервер; для server tools и просмотра логов игроку нужны OP level 2.
 4. Нажать Right Shift; настроить provider/API key в клиентской панели.
 5. Нажать «Проверить» и отправить запрос.
@@ -287,19 +287,19 @@ Workflow:
 
 - **Активная платформа:** Minecraft 1.20.1 Fabric / Java 17.
 - **Активная ветка:** minecraft-1.20.1-fabric.
-- **Текущая версия исходников:** 0.3.4 (source-only, build pending).
-- **Последний HEAD:** `e05ce9b677e1f700bd8c29d13a5e401548d51423`.
-- **Последний подтверждённый build/artifact:** 0.3.3, run [42682628073](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42682628073), успешен для exact HEAD `e23ef96bfeeadd17c20258eae46edcc93103a0e6`.
-- **Artifact 0.3.3:** ID `13702743060`, ZIP 224661 bytes, SHA256 `0b3b9cc450c3e79b3d43b6e70b8e1a5d77feeeb25089595ecd482f88307a81ad`; основной JAR `minecraft-ai-agent-0.3.3.jar`, 161714 bytes; SHA256 `a9a0636394cc9f8363f6d35fccfafa22a0a08d851652444a23233058e02085ce`.
-- **0.3.4:** Actions run и artifact не созданы/не подтверждены; не переименовывать старый JAR.
+- **Текущая версия исходников:** 0.3.5 (GitHub Actions build success; in-game runtime test pending).
+- **Последний HEAD:** `7968e4dd8d6b535fb374c031cf9ef8d69aaf53fc`.
+- **Последний подтверждённый build/artifact:** 0.3.5, run [42687782242](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42687782242), успешен для exact HEAD `7968e4dd8d6b535fb374c031cf9ef8d69aaf53fc`.
+- **Artifact 0.3.5:** ID `13706335574`, ZIP 229662 bytes, SHA256 `4b68b0973d4ce7a228936be199fd2eca36efa999cbea6369a18bb99f58eada14`; JAR `minecraft-ai-agent-0.3.5.jar`, 164874 bytes; SHA256 `70c527ffc288a604da7ed26683fb1cce6c1074a7a1e010a72c5277345e51e83d`.
+- **0.3.5:** Actions run #305 completed successfully; artifact and JAR verified. Runtime test pending.
 - **Основная архитектура:** client AI provider + UI; server networking/tools; server Log4j → log bridge → client disk archive + independent HUD Logs panel.
 - **Log panel 0.3.3:** independent HUD; initial 360 × 210; archive/COPY persisted. Этот build собран успешно.
-- **Log panel 0.3.4 source:** start 120 × 70 with compact layout; corrected top-origin GUI Y; inverse animation transform for hit testing; no mouse lock/unlock so external G cursor-toggle mod remains authoritative; only processes mouse events when pointer is free; AI panel text clipped to prevent overlap. Source updated; build/runtime unverified.
+- **Log panel 0.3.5:** start 120 × 70 with compact layout; external G cursor-toggle reads native GLFW cursor mode; uses raw cursor coordinates and scaled GUI coordinates; drag/resize conversions compile; AI panel controls reflow at narrow widths and status/chat/memory use separate clipped columns. Build verified; runtime pending.
 - **Чат:** локальный JSONL archive до 1800 сообщений, поиск текста/координат, @AI trigger.
 - **NPC/mobs:** создание именованной серверной сущности, навигация follow/move/attack/stop. Полноценное possession с камерой не реализовано.
 - **Skin/player NPC:** копирование скина и полноценная fake-player entity не реализованы.
 - **Токены:** быстрые локальные команды, selective tools, локальный поиск чата; UI статистики API расходов пока нет.
-- **Проверка в Minecraft:** пользователь прислал log excerpt с Minecraft 1.20.1, Fabric Loader 0.19.5, Java 17 и mod `minecraft_ai_agent 0.3.3`; в просмотренных строках нет ошибок `MouseMixin`/`AiLogOverlay` или Mixin application failure. Видны независимые сообщения других компонентов (Faunify missing entity attributes, Mojang auth 401, Man of Many Planes malformed/empty recipe JSON). Это не runtime-тест новой версии. HUD 0.3.4 не проверялся в игре.
+- **Проверка в Minecraft:** предыдущий log excerpt относится к Minecraft 1.20.1, Fabric Loader 0.19.5, Java 17 и mod 0.3.3; посторонние warnings Faunify/Mojang auth/Man of Many Planes не являются ошибками Agent. Runtime-тест 0.3.5 ещё не выполнен.
 - **GitHub repo:** актуальный slug Mortylovelly/Minecraft-AI-Agent; main — неактивная линия 1.21.1 и не является рабочей 1.20.1 веткой.
 - **Последняя история:** [005 — независимый Logs HUD и обновление интерфейса 0.3.3](updates/005-independent-logs-hud-and-ui-redesign.md).
 
@@ -312,5 +312,5 @@ Workflow:
 5. Расширенный набор инструментов и воспроизводимый test runner для тестирования сторонних модов.
 6. Дальнейшая экономия токенов: локальный parser частых команд, compact context, caching, persistent structured memory и usage/cost dashboard.
 7. Развитие custom log integration для собственных модов; автоматический приём всех произвольных client-side logger сторонних модов пока не реализован.
-8. Runtime-тест 0.3.4 после получения успешного JAR: кнопки COPY/свернуть/закрыть и вкладки, hover без дёргания, работа с внешним G cursor-toggle, перетаскивание за заголовок, resize из 120 × 70 в крупное окно, compact→expanded, AI panel layout no-overlap, ESC/Right Shift transitions, анимация/звуки; затем persistence/COPY/rotation/redaction и integrated/dedicated server OP2.
+8. Runtime-тест 0.3.5: проверить кнопки/hover и отсутствие дёргания с внешним G cursor-toggle, перетаскивание/resize, компактный стартовый 120 × 70, AI panel layout, ESC / Right Shift transitions, animations/sounds; затем persistence/COPY/rotation/redaction и integrated/dedicated server OP2. Runtime test 0.3.4 после получения успешного JAR: кнопки COPY/свернуть/закрыть и вкладки, hover без дёргания, работа с внешним G cursor-toggle, перетаскивание за заголовок, resize из 120 × 70 в крупное окно, compact→expanded, AI panel layout no-overlap, ESC/Right Shift transitions, анимация/звуки; затем persistence/COPY/rotation/redaction и integrated/dedicated server OP2.
 
