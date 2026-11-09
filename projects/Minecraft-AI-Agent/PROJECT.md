@@ -4,7 +4,7 @@
 
 - **Актуальное название проекта:** Minecraft AI Agent.
 - **Старое имя/ошибочный исторический label:** Ad Astra Create Addon; больше не отражает назначение проекта.
-- **Текущий GitHub URL:** [Mortylovelly/adastra-create-addon](https://github.com/Mortylovelly/adastra-create-addon).
+- **Текущий GitHub URL:** [Mortylovelly/adastra-create-addon](https://github.com/Mortylovelly/Minecraft-AI-Agent).
 - **Желаемое новое имя GitHub-репозитория:** `Minecraft-AI-Agent`. Сам GitHub rename ещё не выполнен: доступные инструменты интеграции не имеют операции переименования репозитория. Код и документация пока остаются в старом slug.
 - **Mod ID:** `minecraft_ai_agent`.
 - **Название в Fabric metadata:** `Minecraft AI Agent`.
@@ -12,8 +12,8 @@
 - **Archive name:** `minecraft-ai-agent`.
 - **Активная версия для нашей работы:** Minecraft 1.20.1 Fabric, Java 17.
 - **Активная ветка:** `minecraft-1.20.1-fabric`.
-- **mod_version:** `0.2.2`.
-- **Последний известный commit ветки:** `85568e18c7eab3dc1055e0ba3e2434e0c8d17d6a`.
+- **mod_version:** `0.3.1`.
+- **Последний известный commit ветки:** `12010fe20872f20f20206acefaf7b16ac1d7cebb` (metadata URL update; build проверяется).
 - **Последний известный успешный build:** GitHub Actions run [34707123137](https://github.com/Mortylovelly/adastra-create-addon/actions/runs/34707123137), success для того же SHA.
 - **Проверка в игре после последнего билда:** в доступном контексте не подтверждена.
 
@@ -43,7 +43,7 @@
 - Fabric Loom: `1.9.2`
 - Gradle Wrapper: `8.12`
 - Java compile/source/target: `17`
-- mod_version: `0.2.2`
+- mod_version: `0.3.1`
 - mod id: `minecraft_ai_agent`
 - root project: `minecraft-ai-agent`
 
@@ -60,7 +60,7 @@ Fabric metadata:
 - Открывается экран `AiChatScreen`.
 - В панели можно писать запросы на русском языке.
 
-**Несоответствие README:** README.txt в ветке до сих пор утверждает, что экран открывается клавишей backtick (`), но фактический `MinecraftAiAgentClient.java` регистрирует `GLFW_KEY_RIGHT_SHIFT`. Следовать коду, пока README отдельно не обновлён.
+README.txt обновлён для 0.3.1: Right Shift открывает основную панель, отдельная кнопка Logs показывает плавающее окно диагностики.
 
 ## Команды Minecraft
 
@@ -85,8 +85,11 @@ Fabric metadata:
 - Очистить историю текущего чата;
 - поле сообщения и Отправить;
 - Стоп для отмены активного запроса;
+- отдельная кнопка Logs для плавающей панели серверных логов;
 - статус выполнения;
 - показ предыдущих сообщений текущего чата.
+
+Плавающая log panel перемещается drag-ом по заголовку, меняет размер за нижний правый угол, сворачивается/разворачивается и закрывается крестиком либо повторным нажатием Logs. Внутри есть Logs / Custom logs / Errors и счётчики total/warn/error.
 
 Очистка истории чата не удаляет долговременную память: экран явно сообщает, что история очищена, а память чата сохранена.
 
@@ -125,6 +128,8 @@ API keys хранятся локально в конфигурации поль�
 | `config/minecraft_ai_agent_history.json` | История отдельных чатов и Gemini interaction IDs | До 120 сообщений и 60 000 символов на чат |
 | `config/minecraft_ai_agent_memory.json` | Долговременные заметки AI по чатам | До 80 заметок, до 500 символов каждая; в prompt до 5 000 символов |
 | `config/minecraft_ai_agent.log` | TOOL CALL и другие записи AI Agent | При размере >1 000 000 байт переименовывается в `minecraft_ai_agent.log.old` |
+| `config/minecraft_ai_agent_game_chat.jsonl` | Локальный архив полученных игровых сообщений | До 1800 сообщений; только то, что клиент реально получил во время подключения |
+| В памяти клиента `AiLogClient` | Live server/client log buffer для панели Logs | До 5000 событий текущего соединения; сбрасывается при JOIN/DISCONNECT; не сохраняется на диск |
 | `config/minecraft_ai_agent.json` | provider и API keys | Содержит секреты — не публиковать |
 
 Новый чат получает отдельный chat ID. Очистка истории удаляет сообщения выбранного чата, но не очищает автоматически память.
@@ -174,53 +179,58 @@ API keys хранятся локально в конфигурации поль�
 
 ## Ограничения и безопасность исполнения
 
-- В текущем коде `runOnServer()` получает сервер через `MinecraftClient.getInstance().getServer()`. Значит AI tools работают через локальный integrated server одиночного мира. Это не реализация для dedicated server: если локального сервера нет, tool вернёт ошибку.
+- В версии 0.3.0+ инструменты выполняются на стороне сервера через Fabric networking (AiAgentNetwork → AiAgentServerNetworking → AiAgentServerTools), поэтому архитектура рассчитана на dedicated Fabric server и integrated server. На сервере должен быть установлен тот же JAR.
 - Один запрос ограничен 4 раундами tool calls и 8 вызовами инструментов.
 - `MAX_PLACE_BLOCKS=512`, `MAX_BLUEPRINT_OPS=96`, `MAX_BUILD_VOLUME=20000`, `MAX_CLEAR_VOLUME=32768`, `MAX_OBSERVE_RADIUS=10`, `MAX_ENTITY_RESULTS=20`.
 - `AiBuildTool`: максимум 40 частей, 60 000 изменённых блоков, горизонтальный предел 96, вертикальный 64; начало постройки обычно 4 блока впереди игрока; локальные координаты: +X вправо, +Y вверх, +Z вперёд.
 - Для строительства текущая system instruction просит использовать `build_structure`, а если не указаны стиль/материалы, сначала предложить план и дождаться подтверждения пользователя.
 - Результат инструмента должен быть подтверждён tool result; агенту запрещено заявлять об успехе, если tool не подтвердил действие.
+- Изменяющие мир операции и просмотр серверных логов требуют OP level 2; read-only инструменты доступны без OP.
+- Серверный log stream ограничен очередью и размером пакетов; client buffer — 5000 событий. Подписка на логи включается при JOIN и требует OP 2.
+- Типовые API key/token patterns маскируются перед передачей логов клиенту.
 
 ## Реальная архитектура активной ветки
 
 `Minecraft Client GUI (AiChatScreen)`
 → `AiAgentService`
-→ HTTP request к выбранному provider API
+→ HTTP request выбранному provider API
 → function/tool call модели
-→ Minecraft integrated server через `server.execute(...)`
-→ результат инструмента модели
+→ `AiAgentNetwork` (Fabric C2S packet)
+→ `AiAgentServerNetworking`
+→ `AiAgentServerTools` на серверном потоке
+→ tool result модели
 → ответ пользователю.
 
-Это подтверждено прямым чтением Java-кода:
-- `AiClientConfig` читает API keys из `config/minecraft_ai_agent.json`.
-- `AiAgentService` содержит HTTP endpoints, провайдеры, tool schema и диспетчер действий.
-- `runOnServer` вызывает сервер клиента (singleplayer integrated server).
+Отдельный поток логов:
+`Log4j root logger server`
+→ `AiAgentServerLogBridge` (queue + batches + OP2)
+→ `log_batch` packets
+→ `AiAgentNetwork`
+→ `AiLogClient` (bounded ring buffer)
+→ `AiLogOverlay` поверх `AiChatScreen`.
+
+Дополнительно:
+- `AiGameChatHistory` локально сохраняет до 1800 полученных сообщений и выдаёт модели только результаты поиска/короткие recent messages.
+- `AiAgentLog` пишет локальный файл и зеркалирует custom diagnostics в live buffer.
+- API keys хранятся только в клиентской конфигурации и не отправляются серверу.
 
 ## Устаревшие/неподключённые файлы
 
 В репозитории также присутствуют `backend/` и `scripts/` с Python/FastAPI/uvicorn и старой схемой локального backend на портах 8765/8787. Но текущий Java flow активной ветки непосредственно использует HTTP API провайдеров и не вызывает этот локальный backend.
 
-README.txt ошибочно описывает:
-- Minecraft 1.21.1 вместо активной ветки 1.20.1;
-- запуск Python backend через `backend/start.bat`;
-- открытие панели по backtick;
-- модель `gpt-5.6-luna`.
-
-Эти сведения не совпадают с реальными файлами активной ветки 1.20.1. Для текущей версии следовать коду: Right Shift, API provider/key в экранной панели, Java direct HTTP. Сам README пока не исправляли; это отдельная документационная задача в репозитории мода.
+В репозитории остаются старые каталоги `backend/` и `scripts/` с Python/FastAPI prototype; активная Java реализация 1.20.1 их не использует. README.txt для версии 0.3.1 теперь описывает правильные требования, Right Shift, server install, OP2 и live log panel.
 
 ## Установка и использование (1.20.1)
 
-1. Установить Minecraft 1.20.1 Fabric с Java 17.
-2. Собрать мод из правильной ветки или скачать JAR из успешного artifact.
-3. Поместить `minecraft-ai-agent-0.2.2.jar` в клиентскую папку `mods`.
-4. Запустить singleplayer мир.
-5. Нажать Right Shift.
-6. Выбрать provider, вставить соответствующий API key, нажать «Сохранить».
-7. Нажать «Проверить» для теста подключения.
-8. Написать запрос обычным языком.
-9. Для прерывания активного задания нажать «Стоп».
+1. Установить Minecraft 1.20.1 Fabric / Java 17.
+2. Установить одинаковый `minecraft-ai-agent-0.3.1.jar` в `mods` клиента и dedicated Fabric server.
+3. Перезапустить сервер; для server tools и просмотра логов игроку нужны OP level 2.
+4. Нажать Right Shift; настроить provider/API key в клиентской панели.
+5. Нажать «Проверить» и отправить запрос.
+6. Нажать Logs для просмотра серверных логов.
+7. Проверить `/aiagent status`.
 
-Не запускать `backend/start.bat` для текущей Java-реализации, пока архитектура не будет явно изменена.
+Старый Python `backend/start.bat` не требуется для активной Java-реализации.
 
 ## Сборка и Actions
 
@@ -236,11 +246,13 @@ Workflow:
 - Для активной 1.20.1 ветки workflow использует JDK 17, `chmod +x gradlew`, `./gradlew build --no-daemon`.
 - Artifact: `minecraft-ai-agent-1.20.1`.
 
-Последний известный 1.20.1 build:
-- commit: `85568e18c7eab3dc1055e0ba3e2434e0c8d17d6a`
-- Actions run: [34707123137](https://github.com/Mortylovelly/adastra-create-addon/actions/runs/34707123137)
-- result: completed / success
-- artifact: `minecraft-ai-agent-1.20.1` (не истёк на момент проверки).
+Последний подтверждённый build с live log panel:
+- commit: `3b126cd07913dedec498db525378c8d3470953c5`
+- Actions run: [42667571908](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42667571908)
+- result: completed / success; Build + Upload artifact successful
+- artifact ID: `13696089169`, `minecraft-ai-agent-1.20.1`, 210723 bytes
+- JAR SHA256: `2f6f40bd82148ddda3d7e512490cf3df9a7a11eab21952e8a5bb6fba1ab8528d`
+- metadata URL commit: `12010fe20872f20f20206acefaf7b16ac1d7cebb`, Actions [42667953958](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42667953958) ещё выполнялся при последней проверке.
 
 Более ранний port build на SHA `530c2f638c4316f3a57507034698e9dab91dbfe7` завершился failure; затем ошибка renderBackground была исправлена commit `85568e1`, который прошёл успешно. Успешный build не означает полный runtime-тест в игре.
 
@@ -251,15 +263,32 @@ Workflow:
 3. CI проверка 1.20.1 сначала падала, затем после исправления сигнатуры `AiChatScreen.renderBackground` последний build прошёл.
 4. Точные детали старых разговоров/тестов, не отражённые в GitHub commits, пока не восстановлены.
 
-## Текущее состояние
+## Текущее состояние (2026-11-09)
 
 - **Активная платформа:** Minecraft 1.20.1 Fabric / Java 17.
-- **Активная ветка:** `minecraft-1.20.1-fabric`.
-- **Последняя известная версия:** 0.2.2.
-- **HEAD:** `85568e18c7eab3dc1055e0ba3e2434e0c8d17d6a`.
-- **Последняя известная сборка:** run 34707123137, success.
-- **Последний игровой тест:** не подтверждён в доступном контексте.
-- **Dedicated server:** текущий код не поддерживает AI tools на dedicated server; execution зависит от локального integrated server.
-- **GitHub repo rename:** желаемое имя `Minecraft-AI-Agent`, пока не выполнено.
-- **Открытые задачи:** обновить README.txt под фактическую 1.20.1 реализацию; после ручного GitHub rename обновить URL в metadata/документации, если потребуется; получить от владельца реальный runtime-тест.
-- **Следующая история:** [001 — инвентаризация AI Agent и версий](updates/001-initial-inventory-and-version-lines.md).
+- **Активная ветка:** minecraft-1.20.1-fabric.
+- **Текущая версия:** 0.3.1.
+- **Последний известный HEAD:** 12010fe20872f20f20206acefaf7b16ac1d7cebb (metadata source URL update; build run 42667953958 ожидал завершения при записи).
+- **Последний подтверждённый build панели логов:** SHA 3b126cd07913dedec498db525378c8d3470953c5, run 42667571908 success.
+- **Текущий artifact на момент записи:** minecraft-ai-agent-1.20.1, artifact ID 13696089169.
+- **Основная архитектура:** client AI provider + UI; server networking/tools; server Log4j → log bridge → client log panel.
+- **Log panel:** Logs / Custom logs / Errors; draggable, resizable, collapsible; X/Logs close; 5000 in-memory events; счётчики; OP2; credentials redaction.
+- **Чат:** локальный JSONL archive до 1800 сообщений, поиск текста/координат, @AI trigger.
+- **NPC/mobs:** создание именованной серверной сущности, навигация follow/move/attack/stop. Полноценное possession с камерой не реализовано.
+- **Skin/player NPC:** копирование скина и полноценная fake-player entity не реализованы.
+- **Токены:** быстрые локальные команды, selective tools, локальный поиск чата; UI статистики API расходов пока нет.
+- **Проверка в Minecraft:** runtime-тест log panel на integrated/dedicated server ещё не подтверждён. Build success не равен in-game test.
+- **GitHub repo:** актуальный slug Mortylovelly/Minecraft-AI-Agent; main — неактивная линия 1.21.1 и не является рабочей 1.20.1 веткой.
+- **Следующая история:** [002 — dedicated-server bridge, live log panel и roadmap](updates/002-live-server-logs-panel-and-roadmap.md).
+
+### Открытый roadmap
+
+1. Полная система чтения/поиска чата, нормализация координат и структурированная память; текущее ограничение — клиент архивирует только реально полученные сообщения за время подключения.
+2. Расширение сообщений с пользовательскими видимыми именами. Системная подпись не является подписанной идентичностью другого игрока; не подделывать authenticated chat.
+3. Полноценное possession моба, включая камеру и управление, а не только server navigation.
+4. NPC со скином/внешностью/именем выбранного игрока без отдельного входа аккаунта.
+5. Расширенный набор инструментов и воспроизводимый test runner для тестирования сторонних модов.
+6. Дальнейшая экономия токенов: локальный parser частых команд, compact context, caching, persistent structured memory и usage/cost dashboard.
+7. Развитие custom log integration для всех собственных модов, export/copy logs и runtime testing на dedicated server.
+8. Получить реальные тестовые логи владельца после установки 0.3.1, проверить разрешения OP2, live stream, filtering, resizing, scroll и отсутствие lag.
+
