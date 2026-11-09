@@ -12,10 +12,11 @@
 - **Archive name:** `minecraft-ai-agent`.
 - **Активная версия для нашей работы:** Minecraft 1.20.1 Fabric, Java 17.
 - **Активная ветка:** `minecraft-1.20.1-fabric`.
-- **mod_version:** `0.3.1`.
-- **Последний HEAD:** `12010fe20872f20f20206acefaf7b16ac1d7cebb`; GitHub Actions run `42667953958` completed / success.
-- **Последний успешный build:** GitHub Actions run [42667953958](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42667953958), success для HEAD `12010fe20872f20f20206acefaf7b16ac1d7cebb`; artifact ID `13696843616`.
-- **Проверка в игре после последнего билда:** в доступном контексте не подтверждена.
+- **mod_version исходников:** `0.3.2` (код опубликован; сборка пока не подтверждена).
+- **Текущий HEAD:** `42b7a0f2e19b79b5a3065d3e444b367e6f3c52ea` в `minecraft-1.20.1-fabric`.
+- **Последняя попытка Actions 0.3.2:** run [42672344378](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42672344378) завершился `failure`, но GitHub вернул 0 jobs и 0 artifacts; вывод Gradle отсутствует, причина не установлена.
+- **Последний подтверждённый успешный build:** версия `0.3.1`, run [42667953958](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42667953958), HEAD `12010fe20872f20f20206acefaf7b16ac1d7cebb`; artifact ID `13696843616`.
+- **Проверка версии 0.3.2 в игре:** не выполнена; сначала требуется успешная сборка.
 
 ## Что это за мод
 
@@ -43,7 +44,7 @@
 - Fabric Loom: `1.9.2`
 - Gradle Wrapper: `8.12`
 - Java compile/source/target: `17`
-- mod_version: `0.3.1`
+- mod_version исходников: `0.3.2` (сборка не подтверждена).
 - mod id: `minecraft_ai_agent`
 - root project: `minecraft-ai-agent`
 
@@ -60,7 +61,7 @@ Fabric metadata:
 - Открывается экран `AiChatScreen`.
 - В панели можно писать запросы на русском языке.
 
-README.txt обновлён для 0.3.1: Right Shift открывает основную панель, отдельная кнопка Logs показывает плавающее окно диагностики.
+README.txt обновлён для 0.3.2: Right Shift открывает основную панель, кнопка Logs показывает плавающую панель, а COPY копирует сохранённый архив.
 
 ## Команды Minecraft
 
@@ -89,7 +90,7 @@ README.txt обновлён для 0.3.1: Right Shift открывает осн�
 - статус выполнения;
 - показ предыдущих сообщений текущего чата.
 
-Плавающая log panel перемещается drag-ом по заголовку, меняет размер за нижний правый угол, сворачивается/разворачивается и закрывается крестиком либо повторным нажатием Logs. Внутри есть Logs / Custom logs / Errors и счётчики total/warn/error.
+Плавающая log panel перемещается drag-ом по заголовку, меняет размер за нижний правый угол, сворачивается/разворачивается и закрывается крестиком либо повторным нажатием Logs. Внутри есть Logs / Custom logs / Errors и счётчики total/warn/error. В заголовке есть COPY: копирует весь архив с диска, а не только активную вкладку или 5000 элементов экранного буфера.
 
 Очистка истории чата не удаляет долговременную память: экран явно сообщает, что история очищена, а память чата сохранена.
 
@@ -127,9 +128,9 @@ API keys хранятся локально в конфигурации поль�
 |---|---|---|
 | `config/minecraft_ai_agent_history.json` | История отдельных чатов и Gemini interaction IDs | До 120 сообщений и 60 000 символов на чат |
 | `config/minecraft_ai_agent_memory.json` | Долговременные заметки AI по чатам | До 80 заметок, до 500 символов каждая; в prompt до 5 000 символов |
-| `config/minecraft_ai_agent.log` | TOOL CALL и другие записи AI Agent | При размере >1 000 000 байт переименовывается в `minecraft_ai_agent.log.old` |
+| `logs/minecraft-ai-agent/latest.log`, `.1`, `.2` | Полученный панелью поток серверных Log4j events и локальная диагностика AI Agent | До 4 MiB на каждый из 3 файлов; ротация; common API key/token patterns redacted |
 | `config/minecraft_ai_agent_game_chat.jsonl` | Локальный архив полученных игровых сообщений | До 1800 сообщений; только то, что клиент реально получил во время подключения |
-| В памяти клиента `AiLogClient` | Live server/client log buffer для панели Logs | До 5000 событий текущего соединения; сбрасывается при JOIN/DISCONNECT; не сохраняется на диск |
+| В памяти клиента `AiLogClient` | Экранный буфер панели Logs | До 5000 событий текущего соединения; сбрасывается при JOIN/DISCONNECT; отдельно от постоянного дискового архива |
 | `config/minecraft_ai_agent.json` | provider и API keys | Содержит секреты — не публиковать |
 
 Новый чат получает отдельный chat ID. Очистка истории удаляет сообщения выбранного чата, но не очищает автоматически память.
@@ -211,7 +212,7 @@ API keys хранятся локально в конфигурации поль�
 
 Дополнительно:
 - `AiGameChatHistory` локально сохраняет до 1800 полученных сообщений и выдаёт модели только результаты поиска/короткие recent messages.
-- `AiAgentLog` пишет локальный файл и зеркалирует custom diagnostics в live buffer.
+- `AiAgentLog` отправляет локальные диагностические записи через `AiLogClient`; тот пишет их в `logs/minecraft-ai-agent/latest.log` вместе с полученными логами сервера.
 - API keys хранятся только в клиентской конфигурации и не отправляются серверу.
 
 ## Устаревшие/неподключённые файлы
@@ -223,7 +224,7 @@ API keys хранятся локально в конфигурации поль�
 ## Установка и использование (1.20.1)
 
 1. Установить Minecraft 1.20.1 Fabric / Java 17.
-2. Установить одинаковый `minecraft-ai-agent-0.3.1.jar` в `mods` клиента и dedicated Fabric server.
+2. Для новой функции нужен JAR `minecraft-ai-agent-0.3.2.jar`, но Actions пока не опубликовал успешный artifact; последний подтверждённый JAR — 0.3.1.
 3. Перезапустить сервер; для server tools и просмотра логов игроку нужны OP level 2.
 4. Нажать Right Shift; настроить provider/API key в клиентской панели.
 5. Нажать «Проверить» и отправить запрос.
@@ -254,6 +255,12 @@ Workflow:
 - ZIP SHA256: `42006ec6fd98d6f5579575aedbb093cca1639af752169dc8a09bea8918f9e30c`
 - JAR size: 151308 bytes; SHA256: `586c0b4a5f6c9b658ae0ab41f887e152e5784500a1f9d0e32cf51cdedc7603b7`.
 
+Попытка собрать исходники 0.3.2:
+- commit / HEAD: `42b7a0f2e19b79b5a3065d3e444b367e6f3c52ea`;
+- Actions run [42672344378](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42672344378): completed / failure;
+- GitHub API вернул 0 jobs и 0 artifacts; лог Gradle/компилятора отсутствует, поэтому это не подтверждённая ошибка компиляции и не успешная сборка;
+- повторный запуск failed jobs отклонён GitHub, так как в исходном run нет jobs.
+
 Более ранний port build на SHA `530c2f638c4316f3a57507034698e9dab91dbfe7` завершился failure; затем ошибка renderBackground была исправлена commit `85568e1`, который прошёл успешно. Успешный build не означает полный runtime-тест в игре.
 
 ## Известная история разработки по commits
@@ -267,19 +274,19 @@ Workflow:
 
 - **Активная платформа:** Minecraft 1.20.1 Fabric / Java 17.
 - **Активная ветка:** minecraft-1.20.1-fabric.
-- **Текущая версия:** 0.3.1.
-- **Последний HEAD:** 12010fe20872f20f20206acefaf7b16ac1d7cebb; Actions run 42667953958 completed / success.
-- **Последний подтверждённый build 0.3.1:** SHA 12010fe20872f20f20206acefaf7b16ac1d7cebb, run 42667953958 success.
-- **Текущий artifact:** minecraft-ai-agent-1.20.1, artifact ID 13696843616, 210665 bytes; JAR SHA256 `586c0b4a5f6c9b658ae0ab41f887e152e5784500a1f9d0e32cf51cdedc7603b7`.
+- **Текущая версия исходников:** 0.3.2 (код опубликован, build не подтверждён).
+- **Текущий HEAD:** `42b7a0f2e19b79b5a3065d3e444b367e6f3c52ea`; Actions run `42672344378` завершился failure с 0 jobs и 0 artifacts.
+- **Последний подтверждённый build:** 0.3.1, SHA `12010fe20872f20f20206acefaf7b16ac1d7cebb`, run `42667953958` success.
+- **Последний подтверждённый artifact:** minecraft-ai-agent-1.20.1, artifact ID `13696843616`, 210665 bytes; JAR SHA256 `586c0b4a5f6c9b658ae0ab41f887e152e5784500a1f9d0e32cf51cdedc7603b7` (это 0.3.1, без новой функции).
 - **Основная архитектура:** client AI provider + UI; server networking/tools; server Log4j → log bridge → client log panel.
-- **Log panel:** Logs / Custom logs / Errors; draggable, resizable, collapsible; X/Logs close; 5000 in-memory events; счётчики; OP2; credentials redaction.
+- **Log panel:** Logs / Custom logs / Errors; draggable, resizable, collapsible; экранный буфер 5000; OP2 для серверного потока. В исходниках 0.3.2 добавлены архив `logs/minecraft-ai-agent/` и COPY; build не подтверждён.
 - **Чат:** локальный JSONL archive до 1800 сообщений, поиск текста/координат, @AI trigger.
 - **NPC/mobs:** создание именованной серверной сущности, навигация follow/move/attack/stop. Полноценное possession с камерой не реализовано.
 - **Skin/player NPC:** копирование скина и полноценная fake-player entity не реализованы.
 - **Токены:** быстрые локальные команды, selective tools, локальный поиск чата; UI статистики API расходов пока нет.
-- **Проверка в Minecraft:** runtime-тест log panel на integrated/dedicated server ещё не подтверждён. Build success не равен in-game test.
+- **Проверка в Minecraft:** файловый архив и COPY не проверены в игре; сначала нужен успешный build 0.3.2, затем runtime-тест integrated/dedicated server.
 - **GitHub repo:** актуальный slug Mortylovelly/Minecraft-AI-Agent; main — неактивная линия 1.21.1 и не является рабочей 1.20.1 веткой.
-- **Следующая история:** [002 — dedicated-server bridge, live log panel и roadmap](updates/002-live-server-logs-panel-and-roadmap.md).
+- **Последняя история:** [003 — persistent log archive и кнопка COPY](updates/003-persistent-log-archive-and-copy.md).
 
 ### Открытый roadmap
 
@@ -289,6 +296,6 @@ Workflow:
 4. NPC со скином/внешностью/именем выбранного игрока без отдельного входа аккаунта.
 5. Расширенный набор инструментов и воспроизводимый test runner для тестирования сторонних модов.
 6. Дальнейшая экономия токенов: локальный parser частых команд, compact context, caching, persistent structured memory и usage/cost dashboard.
-7. Развитие custom log integration для всех собственных модов, export/copy logs и runtime testing на dedicated server.
-8. Получить реальные тестовые логи владельца после установки 0.3.1, проверить разрешения OP2, live stream, filtering, resizing, scroll и отсутствие lag.
+7. Развитие custom log integration для собственных модов; автоматический приём всех произвольных client-side logger сторонних модов пока не реализован.
+8. Подтвердить build 0.3.2, затем проверить persistence после перезапуска, COPY всего архива, rotation >4 MiB, redaction, integrated/dedicated server, OP2, filters и отсутствие lag.
 
