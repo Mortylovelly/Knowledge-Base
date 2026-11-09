@@ -68,13 +68,12 @@
 
 ## Сборка и артефакт
 
-- Commit с панелью логов: 3b126cd07913dedec498db525378c8d3470953c5.
-- Actions run 42667571908: completed / success; Build и Upload mod jar успешны.
-- Artifact ID 13696089169, minecraft-ai-agent-1.20.1, 210723 bytes.
-- SHA256 ZIP: 8a4a2479cec9b57e48a2ccf1503d999fb60d937aec45ed26f72735c9345ae7d1.
-- Проверен JAR: metadata version 0.3.1, Minecraft 1.20.1, Java >=17; внутри присутствуют AiLogClient, AiLogOverlay, AiAgentServerLogBridge.
-- SHA256 JAR: 2f6f40bd82148ddda3d7e512490cf3df9a7a11eab21952e8a5bb6fba1ab8528d.
-- После успешной сборки source URL в metadata обновлён commit 12010fe20872f20f20206acefaf7b16ac1d7cebb. Actions run 42667953958 для него ожидал завершения при подготовке этой записи; результат требуется дописать после проверки.
+- Final commit / HEAD: 12010fe20872f20f20206acefaf7b16ac1d7cebb (включает обновление source URL в Fabric metadata).
+- GitHub Actions run [42667953958](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42667953958): completed / success; Build и Upload mod jar успешны для exact HEAD.
+- Artifact ID 13696843616, minecraft-ai-agent-1.20.1, 210665 bytes.
+- SHA256 ZIP: 42006ec6fd98d6f5579575aedbb093cca1639af752169dc8a09bea8918f9e30c.
+- Внутри JAR metadata version 0.3.1, Minecraft 1.20.1, Java >=17; присутствуют AiLogClient, AiLogOverlay и AiAgentServerLogBridge.
+- Финальный JAR: 151308 bytes; SHA256 586c0b4a5f6c9b658ae0ab41f887e152e5784500a1f9d0e32cf51cdedc7603b7.
 - Реальный runtime-тест в Minecraft, integrated server и dedicated server пока не подтверждён.
 
 ## Исправление ошибочного размещения файлов
