@@ -86,16 +86,17 @@
 - Исправление звука: commit \`934812330045c73275eddc007d635e86947131eb\`, вызов использует \`.value()\`; run [42681832149](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42681832149) — success.
 - Промежуточный commit с размерами/resize: \`27e6a0954de189ab6967ffb3735a44067f05835f\`; его tree ошибочно был построен от старой основы и вернул прежнюю версию AiUiSound; run [42682033214](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42682033214) — failure по той же ошибке.
 - Восстановление corrected sound поверх актуального дерева + финальная компактная панель: commit \`9a98f66af642af528fcc406346b1a16a4add09db\`.
-- Actions run [42682270795](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42682270795) — completed / success; job \`build\`, \`Build\` и \`Upload mod jar\` — success.
-- После проверки кода README-only commit \`e23ef96bfeeadd17c20258eae46edcc93103a0e6\` синхронизировал размер в документации с 360 × 210. Java-код и JAR соответствуют успешно собранному source commit \`9a98f66...\`.
+- Actions run [42682270795](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42682270795) — completed / success для source commit `9a98f66...`.
+- Final exact-HEAD run [42682628073](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42682628073) — completed / success; job `build`, `Build` и `Upload mod jar` — success для `e23ef96bfeeadd17c20258eae46edcc93103a0e6`.
+- README-only commit `e23ef96bfeeadd17c20258eae46edcc93103a0e6` синхронизировал размер в документации с 360 × 210; Actions run `42682628073` подтвердил успешную сборку exact HEAD.
 
 ## Проверка артефакта
 
 Actions artifact:
-- ID: \`13702812625\`.
+- Final artifact ID: `13702743060`.
 - Имя: \`minecraft-ai-agent-1.20.1\`.
-- ZIP: 224681 bytes.
-- ZIP SHA256: \`36ed0f8392378426a9ca7f6d2369c0be023fe22efe4471e198e30b34c4b5c541\`.
+- ZIP: 224661 bytes.
+- ZIP SHA256: `0b3b9cc450c3e79b3d43b6e70b8e1a5d77feeeb25089595ecd482f88307a81ad`.
 - Основной JAR: \`minecraft-ai-agent-0.3.3.jar\`, 161714 bytes.
 - JAR SHA256: \`a9a0636394cc9f8363f6d35fccfafa22a0a08d851652444a23233058e02085ce\`.
 

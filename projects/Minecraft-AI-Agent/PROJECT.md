@@ -14,8 +14,8 @@
 - **Активная ветка:** `minecraft-1.20.1-fabric`.
 - **mod_version:** `0.3.3`.
 - **Текущий HEAD:** `e23ef96bfeeadd17c20258eae46edcc93103a0e6` в `minecraft-1.20.1-fabric` (последний коммит обновил только размер в README после сборки кода).
-- **Последний успешный build 0.3.3:** run [42682270795](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42682270795), conclusion `success`; Build и Upload mod jar завершились успешно для кода commit `9a98f66af642af528fcc406346b1a16a4add09db`.
-- **Artifact:** ID `13702812625`, `minecraft-ai-agent-1.20.1`, ZIP 224681 bytes, SHA256 `36ed0f8392378426a9ca7f6d2369c0be023fe22efe4471e198e30b34c4b5c541`; основной JAR `minecraft-ai-agent-0.3.3.jar`, 161714 bytes, SHA256 `a9a0636394cc9f8363f6d35fccfafa22a0a08d851652444a23233058e02085ce`.
+- **Последний успешный build 0.3.3:** run [42682628073](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42682628073), conclusion `success`; Build и Upload mod jar завершились успешно для exact HEAD `e23ef96bfeeadd17c20258eae46edcc93103a0e6`.
+- **Artifact:** ID `13702743060`, `minecraft-ai-agent-1.20.1`, ZIP 224661 bytes, SHA256 `0b3b9cc450c3e79b3d43b6e70b8e1a5d77feeeb25089595ecd482f88307a81ad`; основной JAR `minecraft-ai-agent-0.3.3.jar`, 161714 bytes, SHA256 `a9a0636394cc9f8363f6d35fccfafa22a0a08d851652444a23233058e02085ce`.
 - **Проверка JAR:** metadata 0.3.3 / Minecraft 1.20.1 / Java >=17 подтверждена; присутствуют `AiLogOverlay`, `AiUiSound`, `MouseMixin`, mixin config и refmap.
 - **Проверка в игре:** ещё не выполнена; сборка и содержимое JAR проверены, поведение HUD/Mixin требует runtime-теста.
 
@@ -45,7 +45,7 @@
 - Fabric Loom: `1.9.2`
 - Gradle Wrapper: `8.12`
 - Java compile/source/target: `17`
-- mod_version: `0.3.3` (Actions Build + Upload artifact success; run 42682270795).
+- mod_version: `0.3.3` (Actions Build + Upload artifact success; run 42682628073).
 - mod id: `minecraft_ai_agent`
 - root project: `minecraft-ai-agent`
 
@@ -227,7 +227,7 @@ API keys хранятся локально в конфигурации поль�
 ## Установка и использование (1.20.1)
 
 1. Установить Minecraft 1.20.1 Fabric / Java 17.
-2. Установить JAR `minecraft-ai-agent-0.3.3.jar` из Actions artifact `minecraft-ai-agent-1.20.1` (run 42682270795).
+2. Установить JAR `minecraft-ai-agent-0.3.3.jar` из Actions artifact `minecraft-ai-agent-1.20.1` (run 42682628073; artifact ID 13702743060).
 3. Перезапустить сервер; для server tools и просмотра логов игроку нужны OP level 2.
 4. Нажать Right Shift; настроить provider/API key в клиентской панели.
 5. Нажать «Проверить» и отправить запрос.
@@ -287,8 +287,8 @@ Workflow:
 - **Активная ветка:** minecraft-1.20.1-fabric.
 - **Текущая версия:** 0.3.3.
 - **Последний HEAD:** `e23ef96bfeeadd17c20258eae46edcc93103a0e6` (после source build добавлено README-only уточнение размеров; исходный код собран на `9a98f66af642af528fcc406346b1a16a4add09db`).
-- **Последний подтверждённый build:** 0.3.3, run [42682270795](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42682270795), job `build` и `Upload mod jar` success для exact code commit `9a98f66af642af528fcc406346b1a16a4add09db`.
-- **Artifact:** `minecraft-ai-agent-1.20.1`, ID `13702812625`, 224681 bytes; основной JAR `minecraft-ai-agent-0.3.3.jar`, 161714 bytes; SHA256 `a9a0636394cc9f8363f6d35fccfafa22a0a08d851652444a23233058e02085ce`.
+- **Последний подтверждённый build:** 0.3.3, run [42682628073](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42682628073), job `build` и `Upload mod jar` success для exact HEAD `e23ef96bfeeadd17c20258eae46edcc93103a0e6`.
+- **Artifact:** `minecraft-ai-agent-1.20.1`, ID `13702743060`, ZIP 224661 bytes, SHA256 `0b3b9cc450c3e79b3d43b6e70b8e1a5d77feeeb25089595ecd482f88307a81ad`; основной JAR `minecraft-ai-agent-0.3.3.jar`, 161714 bytes; SHA256 `a9a0636394cc9f8363f6d35fccfafa22a0a08d851652444a23233058e02085ce`.
 - **Основная архитектура:** client AI provider + UI; server networking/tools; server Log4j → log bridge → client disk archive + independent HUD Logs panel.
 - **Log panel 0.3.3:** independent HUD via `HudRenderCallback` + `MouseMixin`; 360 × 210 initial size; resize up to half screen; opaque rounded grey; open/close animations; level colors; click sounds; does not draw over AI and returns after ESC. Archive/COPY from 0.3.2 preserved. Build success, runtime test pending.
 - **Чат:** локальный JSONL archive до 1800 сообщений, поиск текста/координат, @AI trigger.
