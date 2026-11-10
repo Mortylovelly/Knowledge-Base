@@ -12,16 +12,17 @@
 - **Archive name:** `minecraft-ai-agent`.
 - **Активная версия для нашей работы:** Minecraft 1.20.1 Fabric, Java 17.
 - **Активная ветка:** `minecraft-1.20.1-fabric`.
-- **mod_version:** `0.3.11` (GitHub Actions run #314 completed successfully).
-- **Текущий HEAD:** `708297c594af3dce64537e20b06a059678ec19ac` в `minecraft-1.20.1-fabric`.
-- **Восстановление структуры:** commit `10c0ccf05f377435f6eb5c668bffe644befad66f` восстановил полный 63-entry tree из последнего целого коммита 0.3.3; последующие изменения применены поверх восстановленного дерева без удаления остальных файлов.
-- **UI/mouse 0.3.11:** сохранены G free cursor и масштабируемая Logs HUD 0.3.10. Кнопка сворачивания заменена шестерёнкой: она открывает отдельный экран SETTINGS с единственным переключателем DIAGNOSTICS; повторное нажатие шестерёнки возвращает основную панель. Включённая диагностика добавляется снизу в ту же панель под логами, счётчиками и вкладками; отдельного окна нет, весь блок масштабируется и изменяет размер вместе с панелью. Строки показывают ping, измеренные серверные TPS и средний интервал тика, текущий/средний/максимальный FPS, AVG ON, разрешение, GPU/CPU/RAM, координаты и измерение; внизу отображаются компактные графики FPS и ping.
-- **Цвета диагностики:** FPS <30 красный, 30–59 жёлтый, >=60 зелёный; ping <=80 мс зелёный, <=160 мс жёлтый, выше красный; TPS >=19 зелёный, >=15 жёлтый, ниже красный; время тика <=50 мс зелёный, <=65 мс жёлтый, выше красный. Для CPU/GPU/RAM используются пороги <=60% зелёный, <=85% жёлтый, выше красный.
-- **Сбор метрик:** FPS и ping берутся на клиенте; server TPS и средний интервал измеряются на сервере по времени между началами последовательных тиков и отправляются совместимому клиенту раз в 10 тиков. Для TPS/tick metrics новая версия мода должна стоять и на сервере, и на клиенте. GPU utilization читается через локальный `nvidia-smi`; если инструмент/драйвер недоступен, выводится `—`, а не придуманный процент. CPU и RAM показывают системную нагрузку/память, а не только процесс Minecraft.
-- **Последний успешный build:** run [42896146890](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42896146890), run #314, conclusion `success`, exact HEAD `708297c594af3dce64537e20b06a059678ec19ac`.
-- **Artifact 0.3.11:** ID `13800697149`, ZIP 252076 bytes, SHA256 `98a5884bd69255758bd74240ca04106d06a1e0d016f0cf7a4874694035b80c2d`; JAR `minecraft-ai-agent-0.3.11.jar`, 180586 bytes, SHA256 `c23a8271439bd6f8842756d4b312a8d87e3091b15770d8ecc4d4c6082bb9cfbf`.
-- **JAR metadata/content:** 0.3.11 / Minecraft 1.20.1 / Java >=17; verified `AiDiagnostics`, `AiServerDiagnostics`, `AiLogOverlay`, `AiAgentNetwork`, `MinecraftAiAgentClient` and `MinecraftAiAgent`. Bytecode includes server start-to-start tick interval sampling, sending two diagnostic floats, CPU/memory MXBean metrics and optional `nvidia-smi` support.
-- **Проверка в игре:** GitHub Actions build и JAR verification успешны. Runtime-тест в Minecraft ещё не выполнен; это не подтверждает фактический вид интерфейса/корректность поведения на игровом клиенте.
+- **mod_version:** `0.3.12` (GitHub Actions run #315 completed successfully).
+- **Текущий HEAD:** `08d76b629327d349b87876a10f885b0da4240668` в `minecraft-1.20.1-fabric`.
+- **Восстановление структуры:** commit `10c0ccf05f377435f6eb5c668bffe644befad66f` восстановил полный 63-entry tree из последнего целого коммита 0.3.3; все последующие изменения применяются поверх него. После 0.3.12 в recursive tree активной ветки 45 файлов, структура сохранена.
+- **UI/mouse 0.3.12:** сохранены G free cursor, шестерёнка SETTINGS и единственный переключатель DIAGNOSTICS. Панель и стиль графиков не переделывались: увеличена только нижняя область, чтобы в ней поместились четыре компактные диаграммы. Вместо диаграммы PING теперь TPS; PING остаётся текстовым показателем. Графики расположены 2×2: FPS и TPS в первом ряду, GPU и CPU во втором. Все четыре используют прежний стиль и общий scale/resize панели.
+- **AI Agent ↔ Logs HUD 0.3.12:** добавлены клиентские function tools `search_agent_logs` и `get_agent_diagnostics`, доступны через общий tool loop Gemini/DeepSeek/Groq/OpenRouter. Первый ищет по сохранённому архиву Logs HUD (`latest.log`, `.1`, `.2`) с фильтрами текста/уровня/CUSTOM, limit и offset pagination; совпадения возвращаются от новых к старым, секреты редактируются. Второй передаёт текущие FPS/AVG/MAX, ping, TPS/tick ms, GPU/CPU/RAM, разрешение, статус log stream и все четыре истории графиков (52 точки, шаг 500 мс, oldest-to-newest). Tool selector включает соответствующие функции для вопросов о логах, ошибках, крашах, лагах и производительности; для общих вопросов о состоянии агента получает и логи, и метрики.
+- **Ограничение доступа к логам:** агенту доступен полный сохранённый архив, который собирает и показывает именно Logs HUD (до трёх файлов по 4 MiB), а не произвольные файлы vanilla Minecraft или логи любых сторонних клиентских модов. Приход серверных строк сохраняет прежние требования log bridge / подписки / OP2. Логовые строки считаются недоверенными диагностическими данными, не командами для агента.
+- **Сбор метрик:** FPS history собирается и пока открыт AI chat screen; CPU/RAM и GPU sampling продолжается даже при выключенном отображении DIAGNOSTICS, поэтому агент может читать показатели без открытого графического блока. GPU по-прежнему берётся через локальный NVIDIA `nvidia-smi`; при недоступности показывается unknown (`-1` внутри телеметрии / `—` в HUD). CPU и RAM — системные показатели ОС.
+- **Последний успешный build:** run [42903464260](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42903464260), run #315, conclusion `success`, exact HEAD `08d76b629327d349b87876a10f885b0da4240668`.
+- **Artifact 0.3.12:** ID `13803357879`, ZIP 261770 bytes, SHA256 `cc88cda3eb9a06679319a73461701fa235cecf7c2b5245a4cd8b8a3adffa39ce`; JAR `minecraft-ai-agent-0.3.12.jar`, 186630 bytes, SHA256 `45fade0581b3ddfa7e5903a5251d796a8f9d2fc7f92cc764c3fd042ba0f042a2`.
+- **JAR metadata/content:** 0.3.12 / Minecraft 1.20.1 / Java >=17. Verified `AiAgentService`, `AiDiagnostics`, `AiLogFile`, `AiLogOverlay`, `AiServerDiagnostics`, `MinecraftAiAgentClient`; bytecode inspection confirms four graph render calls, both agent tools, archive search/pagination and four metric histories.
+- **Проверка в игре:** GitHub Actions build и JAR verification успешны, но runtime-тест 0.3.12 непосредственно в Minecraft ещё не выполнялся.
 
 ## Что это за мод
 
@@ -49,7 +50,7 @@
 - Fabric Loom: `1.9.2`
 - Gradle Wrapper: `8.12`
 - Java compile/source/target: `17`
-- mod_version: `0.3.11`; Actions run 42896146890 completed successfully for HEAD 708297c594af3dce64537e20b06a059678ec19ac; artifact JAR verified. In-game runtime test remains pending.
+- mod_version: `0.3.12`; Actions run 42903464260 completed successfully for HEAD 08d76b629327d349b87876a10f885b0da4240668; artifact JAR verified. In-game runtime test remains pending.
 - mod id: `minecraft_ai_agent`
 - root project: `minecraft-ai-agent`
 
@@ -128,6 +129,48 @@ README.txt обновлён для 0.3.2: Right Shift открывает осн�
 - JAR: `minecraft-ai-agent-0.3.11.jar`, 180586 bytes; SHA256 `c23a8271439bd6f8842756d4b312a8d87e3091b15770d8ecc4d4c6082bb9cfbf`.
 - JAR metadata checked: version 0.3.11, Minecraft 1.20.1, Java >=17. New client/server diagnostics classes and packet paths confirmed in JAR; bytecode inspected for tick interval measurement, packet sending, CPU/RAM and optional NVIDIA GPU lookup.
 - Runtime test in Minecraft has not yet been performed. In particular, test the gear/settings switch, diagnostics toggle, chart drawing, resize at minimum scale, and server TPS display with the matching mod installed on both sides.
+
+## AI Agent access to Logs HUD and performance telemetry (0.3.12)
+
+В версии 0.3.12 агент получил два дополнительных client-local инструмента, зарегистрированных в общем списке функций и используемых тем же tool-calling циклом, что и остальные возможности всех поддерживаемых провайдеров.
+
+### `search_agent_logs`
+
+Ищет по сохранённому архиву, который Logs HUD получает/записывает: `logs/minecraft-ai-agent/latest.log`, `latest.log.1` и `latest.log.2`. Поиск идёт от новых записей к старым. Доступны фильтры:
+- необязательная строка/имя logger;
+- уровень `all`, `error`, `warning`, `info`, `debug`, `trace`;
+- только строки с маркером `[CUSTOM]`;
+- ограничение количества строк и `offset` для перехода к более старым совпадениям.
+
+Все три файла вместе дают до 12 MiB сохранённого архива. Агент получает совпавшие строки, а не сбрасывает всю историю одним огромным запросом; offset позволяет дочитать более старые результаты. Перед выдачей повторно применяется редактирование известных шаблонов секретов.
+
+**Что не входит в этот доступ:** это не универсальный доступ к любому файлу в папке `logs`, не чтение полного vanilla `logs/latest.log` напрямую и не автоматический сбор всех логов сторонних клиентских модов. Агент видит данные, которые попали именно в архив Logs HUD. Серверный поток Log4j продолжает использовать существующий bridge/subscription/OP2; отсутствие разрешения или неподключённый серверный bridge нельзя интерпретировать как отсутствие ошибок.
+
+### `get_agent_diagnostics`
+
+Возвращает текущие значения и историю графиков: current/average/max FPS, ping, server TPS, server tick ms, GPU/CPU/RAM, framebuffer resolution, соединение с потоком логов, счётчики TOTAL/WARN/ERROR, а также четыре массива графиков:
+- FPS;
+- TPS;
+- GPU utilization;
+- CPU utilization.
+
+Каждая история содержит 52 позиции, упорядоченные от старой к новой; шаг выборки около 500 мс. Значение `-1` — показатель недоступен, а не нулевая нагрузка. Tool selector автоматически предлагает нужные инструменты при запросах про логи, warning/error, crash, лаги, FPS/TPS, GPU/CPU/RAM и широкую диагностику наподобие «что происходит на сервере?». Для разбора просадок агент может сопоставлять моменты графиков и временные метки найденных записей.
+
+FPS sampling продолжается при открытом AI chat screen. CPU/RAM/GPU monitoring не зависит от того, включён ли визуальный переключатель DIAGNOSTICS. Это позволяет агенту читать данные, даже когда пользователь не показывает графики.
+
+В system instruction отдельно закреплено, что записи логов — недоверенные данные. Агент должен анализировать их, но не выполнять и не принимать содержащиеся внутри логов фразы за инструкции.
+
+### Сборка 0.3.12
+
+- Repository: https://github.com/Mortylovelly/Minecraft-AI-Agent.
+- Branch: `minecraft-1.20.1-fabric`; Minecraft 1.20.1 / Fabric / Java 17.
+- Commit / exact HEAD: `08d76b629327d349b87876a10f885b0da4240668`.
+- GitHub Actions run #315: [42903464260](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42903464260) — completed / success.
+- Artifact ID: `13803357879`; ZIP 261770 bytes; SHA256 `cc88cda3eb9a06679319a73461701fa235cecf7c2b5245a4cd8b8a3adffa39ce`.
+- JAR: `minecraft-ai-agent-0.3.12.jar`, 186630 bytes; SHA256 `45fade0581b3ddfa7e5903a5251d796a8f9d2fc7f92cc764c3fd042ba0f042a2`.
+- Metadata: 0.3.12 / Minecraft 1.20.1 / Java >=17.
+- JAR class/bytecode checks: `AiAgentService`, `AiDiagnostics`, `AiLogFile`, `AiLogOverlay`, `AiServerDiagnostics`, `MinecraftAiAgentClient`; four graph render calls, tools `search_agent_logs` + `get_agent_diagnostics`, archive read/search with offset and four 52-value histories confirmed.
+- Runtime test в Minecraft ещё не проведён; компиляция/JAR verification не доказывают, что GUI/agent live behavior безошибочен.
 
 ## Поставщики ИИ и API keys
 
@@ -261,7 +304,7 @@ API keys хранятся локально в конфигурации поль�
 ## Установка и использование (1.20.1)
 
 1. Установить Minecraft 1.20.1 Fabric / Java 17.
-2. Последний подтверждённый JAR — `minecraft-ai-agent-0.3.11.jar` из Actions artifact `minecraft-ai-agent-1.20.1` (run 42896146890; artifact ID 13800697149). JAR version/MC/Java metadata и клиентские/серверные классы диагностики проверены.
+2. Последний подтверждённый JAR — `minecraft-ai-agent-0.3.12.jar` из Actions artifact `minecraft-ai-agent-1.20.1` (run 42903464260; artifact ID 13803357879). JAR version/MC/Java metadata, четыре графика, поиск Logs HUD и инструменты телеметрии агента проверены.
 3. Перезапустить сервер; для server tools и просмотра логов игроку нужны OP level 2.
 4. Нажать Right Shift; настроить provider/API key в клиентской панели.
 5. Нажать «Проверить» и отправить запрос.
@@ -319,22 +362,23 @@ Workflow:
 
 - **Активная платформа:** Minecraft 1.20.1 Fabric / Java 17.
 - **Активная ветка:** minecraft-1.20.1-fabric.
-- **Текущая версия исходников:** 0.3.11 (GitHub Actions build success; in-game runtime test pending).
-- **Последний HEAD:** `708297c594af3dce64537e20b06a059678ec19ac`.
-- **Последний подтверждённый build/artifact:** 0.3.11, run [42896146890](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42896146890), успешен для exact HEAD `708297c594af3dce64537e20b06a059678ec19ac`.
-- **Artifact 0.3.11:** ID `13800697149`, ZIP 252076 bytes, SHA256 `98a5884bd69255758bd74240ca04106d06a1e0d016f0cf7a4874694035b80c2d`; JAR `minecraft-ai-agent-0.3.11.jar`, 180586 bytes, SHA256 `c23a8271439bd6f8842756d4b312a8d87e3091b15770d8ecc4d4c6082bb9cfbf`.
-- **0.3.11:** Actions run #314 completed successfully; artifact and JAR verified. Runtime test pending.
+- **Текущая версия исходников:** 0.3.12 (GitHub Actions build success; in-game runtime test pending).
+- **Последний HEAD:** `08d76b629327d349b87876a10f885b0da4240668`.
+- **Последний подтверждённый build/artifact:** 0.3.12, run [42903464260](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42903464260), успешен для exact HEAD `08d76b629327d349b87876a10f885b0da4240668`.
+- **Artifact 0.3.12:** ID `13803357879`, ZIP 261770 bytes, SHA256 `cc88cda3eb9a06679319a73461701fa235cecf7c2b5245a4cd8b8a3adffa39ce`; JAR `minecraft-ai-agent-0.3.12.jar`, 186630 bytes, SHA256 `45fade0581b3ddfa7e5903a5251d796a8f9d2fc7f92cc764c3fd042ba0f042a2`.
+- **0.3.12:** Actions run #315 completed successfully; artifact and JAR verified. Runtime test pending.
 - **Основная архитектура:** client AI provider + UI; server networking/tools; server Log4j → log bridge → client disk archive + independent HUD Logs panel.
 - **Log panel 0.3.3:** independent HUD; initial 360 × 210; archive/COPY persisted. Этот build собран успешно.
 - **Log panel 0.3.10:** same UI as 0.3.9, but log text no longer uses fixed GUI `enableScissor`/`disableScissor` clipping under scaled matrices. Text is line-wrapped to the logical width; render loop draws only the calculated visible rows. This removes the fixed-coordinate clip area that covered most log content at small panel scales. Build verified; runtime pending.
-- **Diagnostics HUD 0.3.11:** gear opens SETTINGS, one DIAGNOSTICS toggle enables a bottom-attached monitoring area in the same scalable panel. Includes ping, server TPS/tick ms, FPS current/average/max, resolution, GPU/CPU/RAM, XYZ/dimension and FPS/ping history charts. Server TPS requires matching mod on server and client; GPU percent requires NVIDIA `nvidia-smi`.
+- **Diagnostics HUD 0.3.12:** retained 0.3.11 layout/style; ping remains a text metric, while four same-style charts are arranged 2×2 as FPS/TPS and GPU/CPU. HUD panel layout was kept otherwise unchanged.
+- **AI log/telemetry tools 0.3.12:** `search_agent_logs` queries the saved three-file Logs HUD archive with level/text/CUSTOM/offset filters; `get_agent_diagnostics` returns current metrics plus four 52-point histories. Relevant questions automatically select these tools. Scope is the retained Agent Logs HUD archive, not all vanilla or third-party log files; server bridge permissions remain applicable.
 - **Чат:** локальный JSONL archive до 1800 сообщений, поиск текста/координат, @AI trigger.
 - **NPC/mobs:** создание именованной серверной сущности, навигация follow/move/attack/stop. Полноценное possession с камерой не реализовано.
 - **Skin/player NPC:** копирование скина и полноценная fake-player entity не реализованы.
 - **Токены:** быстрые локальные команды, selective tools, локальный поиск чата; UI статистики API расходов пока нет.
 - **Free cursor 0.3.7:** default G key (`GLFW_KEY_G`); upgrades a saved 0.3.6 apostrophe/Э binding to G once, persists with `options.write()`; other custom key bindings are retained. Unlock/lock cursor toggle, suspend to vanilla Screen and restore on return to world; prevent camera look and world click-through while enabled; Logs HUD remains interactive. Build verified; runtime pending.
 - **GitHub repo:** актуальный slug Mortylovelly/Minecraft-AI-Agent; main — неактивная линия 1.21.1 и не является рабочей 1.20.1 веткой.
-- **Проверка в Minecraft:** предыдущий log excerpt относится к Minecraft 1.20.1, Fabric Loader 0.19.5, Java 17 и mod 0.3.3; посторонние warnings Faunify/Mojang auth/Man of Many Planes не являются ошибками Agent. Runtime-тест 0.3.11 ещё не выполнен.
+- **Проверка в Minecraft:** предыдущий log excerpt относится к Minecraft 1.20.1, Fabric Loader 0.19.5, Java 17 и mod 0.3.3; посторонние warnings Faunify/Mojang auth/Man of Many Planes не являются ошибками Agent. Runtime-тест 0.3.12 ещё не выполнен.
 
 ### Открытый roadmap
 
@@ -345,5 +389,5 @@ Workflow:
 5. Расширенный набор инструментов и воспроизводимый test runner для тестирования сторонних модов.
 6. Дальнейшая экономия токенов: локальный parser частых команд, compact context, caching, persistent structured memory и usage/cost dashboard.
 7. Развитие custom log integration для собственных модов; автоматический приём всех произвольных client-side logger сторонних модов пока не реализован.
-8. Runtime-тест 0.3.11: проверить gear → SETTINGS → DIAGNOSTICS ON/OFF → gear back; убедиться, что нижний блок остаётся внутри той же панели и корректно масштабируется/изменяет размер, а графики FPS/ping обновляются. Проверить серверные TPS/tick ms с 0.3.11 на клиенте и сервере, а также поведение GPU на системе с NVIDIA NVSMI. Повторно проверить уменьшенную Logs HUD, scroll, filters, counters, G free cursor, drag, resize, disconnect и COPY.
+8. Runtime-тест 0.3.12: проверить четыре графика (FPS/TPS/GPU/CPU), сохранённый текстовый ping, визуальную компоновку 2×2 и resize на разных масштабах. В AI chat проверить вопросы «покажи ошибки в логах», «что сейчас происходит?», «почему лагает?» и «что с FPS/TPS/GPU/CPU?» — агент должен вызвать соответствующий tool и обосновать ответ реальными строками/значениями. Проверить offset pagination для более старых логов, secret redaction, что содержимое логов не воспринимается как команды, и что телеметрия доступна при выключенном DIAGNOSTICS/открытом AI chat screen. Проверить server bridge subscription/OP2 и показатели TPS, а также отсутствие доступа к произвольным vanilla/third-party log files. Повторно проверить G free cursor, drag/resize, filters, counters, disconnect и COPY.
 
