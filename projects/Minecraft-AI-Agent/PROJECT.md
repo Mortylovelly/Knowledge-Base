@@ -12,14 +12,16 @@
 - **Archive name:** `minecraft-ai-agent`.
 - **Активная версия для нашей работы:** Minecraft 1.20.1 Fabric, Java 17.
 - **Активная ветка:** `minecraft-1.20.1-fabric`.
-- **mod_version:** `0.3.10` (сборка GitHub Actions подтверждена).
-- **Текущий HEAD:** `81e031ca7cb936ee4ef2ba2101dcdb125061a817` в `minecraft-1.20.1-fabric`.
-- **Восстановление структуры:** commit `10c0ccf05f377435f6eb5c668bffe644befad66f` восстановил полный 63-entry tree из последнего целого коммита 0.3.3; последующие изменения 0.3.5 и 0.3.6 применены поверх восстановленного дерева.
-- **UI/mouse 0.3.10:** G free cursor и масштабируемая Logs HUD 0.3.9 сохранены. Исправлен clipping: удалён GUI scissor-прямоугольник, который не масштабировался вместе с MatrixStack transform и образовывал невидимую стенку над строками логов при уменьшении окна. Область текста ограничивается переносом строк по логической ширине и расчётом числа видимых строк; прокрутка и фильтры остаются.
-- **Последний успешный build:** run [42891079487](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42891079487), run #312, conclusion `success`, exact HEAD `81e031ca7cb936ee4ef2ba2101dcdb125061a817`.
-- **Artifact 0.3.10:** ID `13799370169`, ZIP 233525 bytes, SHA256 `2ac548865098d056dcd523d3e7d4b9d8ba555b2d20fd8bc4dbeab2eac63a3d41`; JAR `minecraft-ai-agent-0.3.10.jar`, 166931 bytes, SHA256 `c44026b6c1087effe65a079dbd592e69522a49d1a2ccba6e62ce4731fc7be4f1`.
-- **JAR metadata/content:** 0.3.10 / Minecraft 1.20.1 / Java >=17; verified `AiFreeCursor`, `AiLogOverlay`, `MinecraftAiAgentClient`, `MouseMixin`, mixin config and refmap. Bytecode inspection confirms the overlay has no `enableScissor`/`disableScissor` calls while wrapped log lines and visible-line selection remain; G cursor classes remain present.
-- **Проверка в игре:** runtime-тест 0.3.10 ещё не выполнен; успешные Actions build и JAR verification не подтверждают поведение в реальной игре.
+- **mod_version:** `0.3.11` (GitHub Actions run #314 completed successfully).
+- **Текущий HEAD:** `708297c594af3dce64537e20b06a059678ec19ac` в `minecraft-1.20.1-fabric`.
+- **Восстановление структуры:** commit `10c0ccf05f377435f6eb5c668bffe644befad66f` восстановил полный 63-entry tree из последнего целого коммита 0.3.3; последующие изменения применены поверх восстановленного дерева без удаления остальных файлов.
+- **UI/mouse 0.3.11:** сохранены G free cursor и масштабируемая Logs HUD 0.3.10. Кнопка сворачивания заменена шестерёнкой: она открывает отдельный экран SETTINGS с единственным переключателем DIAGNOSTICS; повторное нажатие шестерёнки возвращает основную панель. Включённая диагностика добавляется снизу в ту же панель под логами, счётчиками и вкладками; отдельного окна нет, весь блок масштабируется и изменяет размер вместе с панелью. Строки показывают ping, измеренные серверные TPS и средний интервал тика, текущий/средний/максимальный FPS, AVG ON, разрешение, GPU/CPU/RAM, координаты и измерение; внизу отображаются компактные графики FPS и ping.
+- **Цвета диагностики:** FPS <30 красный, 30–59 жёлтый, >=60 зелёный; ping <=80 мс зелёный, <=160 мс жёлтый, выше красный; TPS >=19 зелёный, >=15 жёлтый, ниже красный; время тика <=50 мс зелёный, <=65 мс жёлтый, выше красный. Для CPU/GPU/RAM используются пороги <=60% зелёный, <=85% жёлтый, выше красный.
+- **Сбор метрик:** FPS и ping берутся на клиенте; server TPS и средний интервал измеряются на сервере по времени между началами последовательных тиков и отправляются совместимому клиенту раз в 10 тиков. Для TPS/tick metrics новая версия мода должна стоять и на сервере, и на клиенте. GPU utilization читается через локальный `nvidia-smi`; если инструмент/драйвер недоступен, выводится `—`, а не придуманный процент. CPU и RAM показывают системную нагрузку/память, а не только процесс Minecraft.
+- **Последний успешный build:** run [42896146890](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42896146890), run #314, conclusion `success`, exact HEAD `708297c594af3dce64537e20b06a059678ec19ac`.
+- **Artifact 0.3.11:** ID `13800697149`, ZIP 252076 bytes, SHA256 `98a5884bd69255758bd74240ca04106d06a1e0d016f0cf7a4874694035b80c2d`; JAR `minecraft-ai-agent-0.3.11.jar`, 180586 bytes, SHA256 `c23a8271439bd6f8842756d4b312a8d87e3091b15770d8ecc4d4c6082bb9cfbf`.
+- **JAR metadata/content:** 0.3.11 / Minecraft 1.20.1 / Java >=17; verified `AiDiagnostics`, `AiServerDiagnostics`, `AiLogOverlay`, `AiAgentNetwork`, `MinecraftAiAgentClient` and `MinecraftAiAgent`. Bytecode includes server start-to-start tick interval sampling, sending two diagnostic floats, CPU/memory MXBean metrics and optional `nvidia-smi` support.
+- **Проверка в игре:** GitHub Actions build и JAR verification успешны. Runtime-тест в Minecraft ещё не выполнен; это не подтверждает фактический вид интерфейса/корректность поведения на игровом клиенте.
 
 ## Что это за мод
 
@@ -47,7 +49,7 @@
 - Fabric Loom: `1.9.2`
 - Gradle Wrapper: `8.12`
 - Java compile/source/target: `17`
-- mod_version: `0.3.10`; Actions run 42891079487 completed successfully, artifact JAR 0.3.10 verified. Runtime test remains pending.
+- mod_version: `0.3.11`; Actions run 42896146890 completed successfully for HEAD 708297c594af3dce64537e20b06a059678ec19ac; artifact JAR verified. In-game runtime test remains pending.
 - mod id: `minecraft_ai_agent`
 - root project: `minecraft-ai-agent`
 
@@ -96,6 +98,36 @@ README.txt обновлён для 0.3.2: Right Shift открывает осн�
 Начиная с 0.3.3, log panel — независимый HUD, а не дочерняя часть `AiChatScreen`. Кнопка Logs открывает HUD и плавно закрывает AI-экран; после закрытия AI через ESC окно логов остаётся в игре. При повторном открытии AI HUD временно скрывается, чтобы не лежать поверх AI, и снова появляется после закрытия экрана. В 0.3.6 стартовый размер Logs HUD — 120 × 70 GUI-пикселей; в компактном режиме показаны короткий заголовок, кнопки COPY/свернуть/закрыть и строки логов, а вкладки/счётчики доступны после расширения. Перетаскивание — за заголовок; изменение размера — за нижний правый угол; максимум — половина GUI-ширины/высоты. Фон серо-графитовый, углы слегка закруглены, открытие/закрытие анимировано. INFO — зелёный, WARN — жёлтый, ERROR/FATAL — красный, DEBUG — синий, TRACE — приглушённый серый. В 0.3.6 добавлен независимый free-cursor toggle по физической клавише Э. В обычном мире он вызывает `unlockCursor()`; повторное нажатие вызывает `lockCursor()`. Если открыт ESC/pause/options/inventory Screen, курсором управляет стандартный Minecraft Screen; после его закрытия Agent автоматически восстанавливает свободный указатель. В free-cursor mode mouse движение не вращает камеру, кнопки/scroll не проходят в игровые действия, а Logs HUD по-прежнему обрабатывает клики, drag/resize и scroll. GLFW native pointer coordinates используются для hover кнопок, даже если mouse callback перехватывается. Actions build 0.3.6 успешен; реальный runtime-тест ещё не выполнен.
 
 Очистка истории чата не удаляет долговременную память: экран явно сообщает, что история очищена, а память чата сохранена.
+
+## Диагностика Logs HUD (0.3.11)
+
+В версии 0.3.11 кнопка «свернуть» заменена кнопкой-шестерёнкой. Она переключает обычную Logs HUD на отдельный простой экран SETTINGS. На этом экране есть только один переключатель DIAGNOSTICS; повторное нажатие шестерёнки возвращает обычный экран логов. Бывший режим узкой свёрнутой полосы в этой версии удалён.
+
+При включённом переключателе диагностика появляется **в нижней части той же Logs HUD**, под логами, счётчиками и фильтрами. Это не отдельная панель и не popup. Нижняя область входит в общую геометрию: перетаскивание, resize и пропорциональное масштабирование применяются ко всему окну.
+
+Показатели:
+- PING — latency игрока из Minecraft player-list entry, мс.
+- TPS и TICK — фактически измеряемая частота сервера и средний интервал между началами последовательных тиков в миллисекундах. Сервер передаёт два float примерно дважды в секунду. Оба конца соединения должны использовать мод 0.3.11 или более новую совместимую версию.
+- FPS — текущий, средний за сессию после включения диагностики и максимальный; рядом отображается AVG ON.
+- RES — разрешение framebuffer Minecraft.
+- GPU — текущая загрузка через NVIDIA `nvidia-smi`, если он установлен и доступен локально. Для AMD/Intel или недоступного NVSMI пока выводится `—`.
+- CPU и RAM — системные показатели ОС, а не отдельные показатели процесса Java.
+- XYZ и DIM — координаты игрока и ID измерения.
+- Два компактных графика показывают историю FPS и ping; история обновляется примерно раз в 0,5 секунды.
+
+Цвета: FPS меньше 30 — красный, 30–59 — жёлтый, 60 и выше — зелёный. Ping до 80 мс — зелёный, до 160 мс — жёлтый, выше — красный. TPS от 19 — зелёный, от 15 — жёлтый, ниже — красный. Средний тик до 50 мс — зелёный, до 65 мс — жёлтый, выше — красный. CPU/GPU/RAM до 60% — зелёный, до 85% — жёлтый, выше — красный. Для недоступных показателей отображается `—`.
+
+### Сборка 0.3.11
+
+- Repository: [Mortylovelly/Minecraft-AI-Agent](https://github.com/Mortylovelly/Minecraft-AI-Agent).
+- Branch: `minecraft-1.20.1-fabric`; Minecraft 1.20.1 / Fabric / Java 17.
+- Feature commit: `ad44fe7ff38979d7408a33e34fc8c1df97356b0f`.
+- Final TPS measurement commit / exact HEAD: `708297c594af3dce64537e20b06a059678ec19ac`.
+- GitHub Actions run #314: [42896146890](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42896146890) — completed / success.
+- Artifact ID: `13800697149`; ZIP 252076 bytes; SHA256 `98a5884bd69255758bd74240ca04106d06a1e0d016f0cf7a4874694035b80c2d`.
+- JAR: `minecraft-ai-agent-0.3.11.jar`, 180586 bytes; SHA256 `c23a8271439bd6f8842756d4b312a8d87e3091b15770d8ecc4d4c6082bb9cfbf`.
+- JAR metadata checked: version 0.3.11, Minecraft 1.20.1, Java >=17. New client/server diagnostics classes and packet paths confirmed in JAR; bytecode inspected for tick interval measurement, packet sending, CPU/RAM and optional NVIDIA GPU lookup.
+- Runtime test in Minecraft has not yet been performed. In particular, test the gear/settings switch, diagnostics toggle, chart drawing, resize at minimum scale, and server TPS display with the matching mod installed on both sides.
 
 ## Поставщики ИИ и API keys
 
@@ -229,7 +261,7 @@ API keys хранятся локально в конфигурации поль�
 ## Установка и использование (1.20.1)
 
 1. Установить Minecraft 1.20.1 Fabric / Java 17.
-2. Последний подтверждённый JAR — `minecraft-ai-agent-0.3.10.jar` из Actions artifact `minecraft-ai-agent-1.20.1` (run 42891079487; artifact ID 13799370169). JAR version/MC/Java metadata, отсутствие scissor clipping, свободная мышь, Logs HUD и обязательные mixin классы проверены.
+2. Последний подтверждённый JAR — `minecraft-ai-agent-0.3.11.jar` из Actions artifact `minecraft-ai-agent-1.20.1` (run 42896146890; artifact ID 13800697149). JAR version/MC/Java metadata и клиентские/серверные классы диагностики проверены.
 3. Перезапустить сервер; для server tools и просмотра логов игроку нужны OP level 2.
 4. Нажать Right Shift; настроить provider/API key в клиентской панели.
 5. Нажать «Проверить» и отправить запрос.
@@ -283,25 +315,26 @@ Workflow:
 3. CI проверка 1.20.1 сначала падала, затем после исправления сигнатуры `AiChatScreen.renderBackground` последний build прошёл.
 4. Точные детали старых разговоров/тестов, не отражённые в GitHub commits, пока не восстановлены.
 
-## Текущее состояние (2026-11-09)
+## Текущее состояние (2026-11-10)
 
 - **Активная платформа:** Minecraft 1.20.1 Fabric / Java 17.
 - **Активная ветка:** minecraft-1.20.1-fabric.
-- **Текущая версия исходников:** 0.3.10 (GitHub Actions build success; in-game runtime test pending).
-- **Последний HEAD:** `81e031ca7cb936ee4ef2ba2101dcdb125061a817`.
-- **Последний подтверждённый build/artifact:** 0.3.10, run [42891079487](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42891079487), успешен для exact HEAD `81e031ca7cb936ee4ef2ba2101dcdb125061a817`.
-- **Artifact 0.3.10:** ID `13799370169`, ZIP 233525 bytes, SHA256 `2ac548865098d056dcd523d3e7d4b9d8ba555b2d20fd8bc4dbeab2eac63a3d41`; JAR `minecraft-ai-agent-0.3.10.jar`, 166931 bytes, SHA256 `c44026b6c1087effe65a079dbd592e69522a49d1a2ccba6e62ce4731fc7be4f1`.
-- **0.3.10:** Actions run #312 completed successfully; artifact and JAR verified. Runtime test pending.
+- **Текущая версия исходников:** 0.3.11 (GitHub Actions build success; in-game runtime test pending).
+- **Последний HEAD:** `708297c594af3dce64537e20b06a059678ec19ac`.
+- **Последний подтверждённый build/artifact:** 0.3.11, run [42896146890](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42896146890), успешен для exact HEAD `708297c594af3dce64537e20b06a059678ec19ac`.
+- **Artifact 0.3.11:** ID `13800697149`, ZIP 252076 bytes, SHA256 `98a5884bd69255758bd74240ca04106d06a1e0d016f0cf7a4874694035b80c2d`; JAR `minecraft-ai-agent-0.3.11.jar`, 180586 bytes, SHA256 `c23a8271439bd6f8842756d4b312a8d87e3091b15770d8ecc4d4c6082bb9cfbf`.
+- **0.3.11:** Actions run #314 completed successfully; artifact and JAR verified. Runtime test pending.
 - **Основная архитектура:** client AI provider + UI; server networking/tools; server Log4j → log bridge → client disk archive + independent HUD Logs panel.
 - **Log panel 0.3.3:** independent HUD; initial 360 × 210; archive/COPY persisted. Этот build собран успешно.
 - **Log panel 0.3.10:** same UI as 0.3.9, but log text no longer uses fixed GUI `enableScissor`/`disableScissor` clipping under scaled matrices. Text is line-wrapped to the logical width; render loop draws only the calculated visible rows. This removes the fixed-coordinate clip area that covered most log content at small panel scales. Build verified; runtime pending.
+- **Diagnostics HUD 0.3.11:** gear opens SETTINGS, one DIAGNOSTICS toggle enables a bottom-attached monitoring area in the same scalable panel. Includes ping, server TPS/tick ms, FPS current/average/max, resolution, GPU/CPU/RAM, XYZ/dimension and FPS/ping history charts. Server TPS requires matching mod on server and client; GPU percent requires NVIDIA `nvidia-smi`.
 - **Чат:** локальный JSONL archive до 1800 сообщений, поиск текста/координат, @AI trigger.
 - **NPC/mobs:** создание именованной серверной сущности, навигация follow/move/attack/stop. Полноценное possession с камерой не реализовано.
 - **Skin/player NPC:** копирование скина и полноценная fake-player entity не реализованы.
 - **Токены:** быстрые локальные команды, selective tools, локальный поиск чата; UI статистики API расходов пока нет.
 - **Free cursor 0.3.7:** default G key (`GLFW_KEY_G`); upgrades a saved 0.3.6 apostrophe/Э binding to G once, persists with `options.write()`; other custom key bindings are retained. Unlock/lock cursor toggle, suspend to vanilla Screen and restore on return to world; prevent camera look and world click-through while enabled; Logs HUD remains interactive. Build verified; runtime pending.
 - **GitHub repo:** актуальный slug Mortylovelly/Minecraft-AI-Agent; main — неактивная линия 1.21.1 и не является рабочей 1.20.1 веткой.
-- **Проверка в Minecraft:** предыдущий log excerpt относится к Minecraft 1.20.1, Fabric Loader 0.19.5, Java 17 и mod 0.3.3; посторонние warnings Faunify/Mojang auth/Man of Many Planes не являются ошибками Agent. Runtime-тест 0.3.9 ещё не выполнен.
+- **Проверка в Minecraft:** предыдущий log excerpt относится к Minecraft 1.20.1, Fabric Loader 0.19.5, Java 17 и mod 0.3.3; посторонние warnings Faunify/Mojang auth/Man of Many Planes не являются ошибками Agent. Runtime-тест 0.3.11 ещё не выполнен.
 
 ### Открытый roadmap
 
@@ -312,5 +345,5 @@ Workflow:
 5. Расширенный набор инструментов и воспроизводимый test runner для тестирования сторонних модов.
 6. Дальнейшая экономия токенов: локальный parser частых команд, compact context, caching, persistent structured memory и usage/cost dashboard.
 7. Развитие custom log integration для собственных модов; автоматический приём всех произвольных client-side logger сторонних модов пока не реализован.
-8. Runtime-тест 0.3.10: дополнительно проверить на нескольких малых масштабах, что все строки логов видны и не обрезаются невидимой областью; scroll и line wrapping должны работать при минимальном масштабе. Затем перепроверить G free cursor, кнопки, collapsed strip, filters, text counters, resize, hover, drag, disconnect, COPY и integrated/dedicated server OP2.
+8. Runtime-тест 0.3.11: проверить gear → SETTINGS → DIAGNOSTICS ON/OFF → gear back; убедиться, что нижний блок остаётся внутри той же панели и корректно масштабируется/изменяет размер, а графики FPS/ping обновляются. Проверить серверные TPS/tick ms с 0.3.11 на клиенте и сервере, а также поведение GPU на системе с NVIDIA NVSMI. Повторно проверить уменьшенную Logs HUD, scroll, filters, counters, G free cursor, drag, resize, disconnect и COPY.
 
