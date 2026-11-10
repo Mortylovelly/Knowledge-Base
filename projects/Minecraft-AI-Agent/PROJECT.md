@@ -12,14 +12,14 @@
 - **Archive name:** `minecraft-ai-agent`.
 - **Активная версия для нашей работы:** Minecraft 1.20.1 Fabric, Java 17.
 - **Активная ветка:** `minecraft-1.20.1-fabric`.
-- **mod_version:** `0.3.8` (сборка GitHub Actions подтверждена).
-- **Текущий HEAD:** `a19cfd96be0c4de4cddc8d0ff435ce2c06300aba` в `minecraft-1.20.1-fabric`.
+- **mod_version:** `0.3.9` (сборка GitHub Actions подтверждена).
+- **Текущий HEAD:** `d68aaafb1e73323cd1c8e1ae4d889e794c0b13e1` в `minecraft-1.20.1-fabric`.
 - **Восстановление структуры:** commit `10c0ccf05f377435f6eb5c668bffe644befad66f` восстановил полный 63-entry tree из последнего целого коммита 0.3.3; последующие изменения 0.3.5 и 0.3.6 применены поверх восстановленного дерева.
-- **UI/mouse 0.3.8:** свободный курсор переключается G (`GLFW_KEY_G`); старая сохранённая привязка Э из 0.3.6 мигрирует на G один раз. ESC/прочие Minecraft Screens временно управляют курсором, после возврата в мир free cursor восстанавливается. Повторное G возвращает обычный захват. Пока режим включён, указатель не вращает камеру и клики/scroll не проходят в игровые действия; Logs HUD получает clicks/drag/resize/scroll, hover берётся из native GLFW coordinates. Панель Logs HUD теперь открывается размером 360 × 210 GUI-пикселей; минимальный размер полного режима — 240 × 140. В полной компоновке видны COPY/свернуть/закрыть, три фильтра Logs/Custom logs/Errors и три счётчика с настоящими предметами Minecraft: emerald, glowstone dust и redstone. Компактный fallback остаётся только для очень маленького viewport.
-- **Последний успешный build:** run [42883023714](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42883023714), run #309, conclusion `success`, exact HEAD `a19cfd96be0c4de4cddc8d0ff435ce2c06300aba`.
-- **Artifact 0.3.8:** ID `13795396525`, ZIP 233398 bytes, SHA256 `7877a4cd9ed883956d9086071b571880ebac8c0d9869b906c22d24d43305f837`; JAR `minecraft-ai-agent-0.3.8.jar`, 167183 bytes, SHA256 `aeb690d4033f6faca77cf9030827d034c137b9c984ebe046cc7267ae17b24c53`.
-- **JAR metadata/content:** 0.3.8 / Minecraft 1.20.1 / Java >=17; verified `AiFreeCursor`, `AiLogOverlay`, `MinecraftAiAgentClient`, `MouseMixin`, mixin config and refmap. Bytecode confirms default HUD size 360 × 210, `drawStats` and `drawTabs` calls, and vanilla item rendering through `DrawContext.drawItem`; G cursor path and mouse mixin remain present.
-- **Проверка в игре:** runtime-тест 0.3.8 ещё не выполнен; успешные Actions build и JAR verification не подтверждают поведение в реальной игре.
+- **UI/mouse 0.3.9:** свободный курсор G (GLFW_KEY_G) сохранён; старая Э-привязка из 0.3.6 мигрирует на G один раз. ESC/прочие Minecraft Screens временно управляют курсором, возврат в мир восстанавливает free cursor. Logs HUD по умолчанию 300 × 175 GUI px; внутренний layout 360 × 210 масштабируется единым пропорциональным transform вместе с текстом, строками, кнопками и вкладками. Resize сохраняет пропорции, допускает масштаб 25%–160% (ограничение экраном). Внешняя рамка — 1 px. Счётчики TOTAL/WARN/ERROR — текстовые, Minecraft item icons удалены. Нажатие «−» сворачивает окно в тонкую полоску с последней строкой лога без кнопок/счётчиков; щелчок по полоске восстанавливает полную панель. COPY и три фильтра Logs/Custom logs/Errors сохранены. MouseMixin/hover работают через GLFW и не передают клики в игровой мир.
+- **Последний успешный build:** run [42888056019](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42888056019), run #311, conclusion `success`, exact HEAD `d68aaafb1e73323cd1c8e1ae4d889e794c0b13e1`.
+- **Artifact 0.3.9:** ID `13798075042`, ZIP 233427 bytes, SHA256 `2530fb214fbde3282ef8e3f223f32d422551753395cfefdb8cc9dddc52abaf93`; JAR `minecraft-ai-agent-0.3.9.jar`, 166988 bytes, SHA256 `4e49cbfe7bed7bbda6e2c8e59304012f3fcd9d58e70cc75b25bd06d07ad2e839`.
+- **JAR metadata/content:** 0.3.9 / Minecraft 1.20.1 / Java >=17; verified `AiFreeCursor`, `AiLogOverlay`, `MinecraftAiAgentClient`, `MouseMixin`, mixin config and refmap. Bytecode confirms `drawStats`/`drawTabs` calls; overlay no longer renders item stacks for counters; G cursor path and mouse mixin remain present.
+- **Проверка в игре:** runtime-тест 0.3.9 ещё не выполнен; успешные Actions build и JAR verification не подтверждают поведение в реальной игре.
 
 ## Что это за мод
 
@@ -47,7 +47,7 @@
 - Fabric Loom: `1.9.2`
 - Gradle Wrapper: `8.12`
 - Java compile/source/target: `17`
-- mod_version: `0.3.8`; Actions run 42883023714 completed successfully, artifact JAR 0.3.8 verified. Runtime test remains pending.
+- mod_version: `0.3.9`; Actions run 42888056019 completed successfully, artifact JAR 0.3.9 verified. Runtime test remains pending.
 - mod id: `minecraft_ai_agent`
 - root project: `minecraft-ai-agent`
 
@@ -229,7 +229,7 @@ API keys хранятся локально в конфигурации поль�
 ## Установка и использование (1.20.1)
 
 1. Установить Minecraft 1.20.1 Fabric / Java 17.
-2. Последний подтверждённый JAR — `minecraft-ai-agent-0.3.8.jar` из Actions artifact `minecraft-ai-agent-1.20.1` (run 42883023714; artifact ID 13795396525). JAR version/MC/Java metadata, полноценная компоновка Logs HUD, vanilla counters и обязательные cursor/HUD/mixin классы проверены.
+2. Последний подтверждённый JAR — `minecraft-ai-agent-0.3.9.jar` из Actions artifact `minecraft-ai-agent-1.20.1` (run 42888056019; artifact ID 13798075042). JAR version/MC/Java metadata, пропорциональное масштабирование Logs HUD, минимальная collapsed strip, текстовые счётчики и обязательные cursor/HUD/mixin классы проверены.
 3. Перезапустить сервер; для server tools и просмотра логов игроку нужны OP level 2.
 4. Нажать Right Shift; настроить provider/API key в клиентской панели.
 5. Нажать «Проверить» и отправить запрос.
@@ -287,21 +287,21 @@ Workflow:
 
 - **Активная платформа:** Minecraft 1.20.1 Fabric / Java 17.
 - **Активная ветка:** minecraft-1.20.1-fabric.
-- **Текущая версия исходников:** 0.3.8 (GitHub Actions build success; in-game runtime test pending).
-- **Последний HEAD:** `a19cfd96be0c4de4cddc8d0ff435ce2c06300aba`.
-- **Последний подтверждённый build/artifact:** 0.3.8, run [42883023714](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42883023714), успешен для exact HEAD `a19cfd96be0c4de4cddc8d0ff435ce2c06300aba`.
-- **Artifact 0.3.8:** ID `13795396525`, ZIP 233398 bytes, SHA256 `7877a4cd9ed883956d9086071b571880ebac8c0d9869b906c22d24d43305f837`; JAR `minecraft-ai-agent-0.3.8.jar`, 167183 bytes; SHA256 `aeb690d4033f6faca77cf9030827d034c137b9c984ebe046cc7267ae17b24c53`.
-- **0.3.8:** Actions run #309 completed successfully; artifact and JAR verified. Runtime test pending.
+- **Текущая версия исходников:** 0.3.9 (GitHub Actions build success; in-game runtime test pending).
+- **Последний HEAD:** `d68aaafb1e73323cd1c8e1ae4d889e794c0b13e1`.
+- **Последний подтверждённый build/artifact:** 0.3.9, run [42888056019](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42888056019), успешен для exact HEAD `d68aaafb1e73323cd1c8e1ae4d889e794c0b13e1`.
+- **Artifact 0.3.9:** ID `13798075042`, ZIP 233427 bytes, SHA256 `2530fb214fbde3282ef8e3f223f32d422551753395cfefdb8cc9dddc52abaf93`; JAR `minecraft-ai-agent-0.3.9.jar`, 166988 bytes; SHA256 `4e49cbfe7bed7bbda6e2c8e59304012f3fcd9d58e70cc75b25bd06d07ad2e839`.
+- **0.3.9:** Actions run #311 completed successfully; artifact and JAR verified. Runtime test pending.
 - **Основная архитектура:** client AI provider + UI; server networking/tools; server Log4j → log bridge → client disk archive + independent HUD Logs panel.
 - **Log panel 0.3.3:** independent HUD; initial 360 × 210; archive/COPY persisted. Этот build собран успешно.
-- **Log panel 0.3.8:** default 360 × 210; minimum full-layout size 240 × 140; vertical resize limit up to 75% of GUI height. Full view renders COPY/collapse/close buttons, Logs/Custom logs/Errors filters and three counter cards. Counter item icons use Minecraft's own item renderer for emerald, glowstone dust and redstone. Compact fallback remains for viewports too small for the full layout. Build verified; runtime pending.
+- **Log panel 0.3.9:** default 300 × 175; entire 360 × 210 logical canvas scales uniformly (including text and controls), 25% minimum and 160% maximum subject to viewport; aspect ratio is preserved during resize. One-pixel outer border. Minus collapses to a 24-logical-pixel strip showing only the latest log line with no other controls; click the strip to restore. Full panel keeps COPY, collapse, close, Logs/Custom logs/Errors and text-only TOTAL/WARN/ERROR counters. Minecraft item icons are removed. Build verified; runtime pending.
 - **Чат:** локальный JSONL archive до 1800 сообщений, поиск текста/координат, @AI trigger.
 - **NPC/mobs:** создание именованной серверной сущности, навигация follow/move/attack/stop. Полноценное possession с камерой не реализовано.
 - **Skin/player NPC:** копирование скина и полноценная fake-player entity не реализованы.
 - **Токены:** быстрые локальные команды, selective tools, локальный поиск чата; UI статистики API расходов пока нет.
 - **Free cursor 0.3.7:** default G key (`GLFW_KEY_G`); upgrades a saved 0.3.6 apostrophe/Э binding to G once, persists with `options.write()`; other custom key bindings are retained. Unlock/lock cursor toggle, suspend to vanilla Screen and restore on return to world; prevent camera look and world click-through while enabled; Logs HUD remains interactive. Build verified; runtime pending.
 - **GitHub repo:** актуальный slug Mortylovelly/Minecraft-AI-Agent; main — неактивная линия 1.21.1 и не является рабочей 1.20.1 веткой.
-- **Проверка в Minecraft:** предыдущий log excerpt относится к Minecraft 1.20.1, Fabric Loader 0.19.5, Java 17 и mod 0.3.3; посторонние warnings Faunify/Mojang auth/Man of Many Planes не являются ошибками Agent. Runtime-тест 0.3.8 ещё не выполнен.
+- **Проверка в Minecraft:** предыдущий log excerpt относится к Minecraft 1.20.1, Fabric Loader 0.19.5, Java 17 и mod 0.3.3; посторонние warnings Faunify/Mojang auth/Man of Many Planes не являются ошибками Agent. Runtime-тест 0.3.9 ещё не выполнен.
 
 ### Открытый roadmap
 
@@ -312,5 +312,5 @@ Workflow:
 5. Расширенный набор инструментов и воспроизводимый test runner для тестирования сторонних модов.
 6. Дальнейшая экономия токенов: локальный parser частых команд, compact context, caching, persistent structured memory и usage/cost dashboard.
 7. Развитие custom log integration для собственных модов; автоматический приём всех произвольных client-side logger сторонних модов пока не реализован.
-8. Runtime-тест 0.3.8: проверить G free cursor и миграцию старой Э-привязки, отсутствие camera rotation и click-through, ESC/AI Screen suspend/restore, повторное выключение по G, все кнопки Logs HUD (COPY/collapse/close), все три фильтра, отображение emerald/glowstone dust/redstone counters, drag/resize/scroll/hover, disconnect reset; затем persistence/COPY/rotation/redaction и integrated/dedicated server OP2.
+8. Runtime-тест 0.3.9: проверить G free cursor и миграцию старой Э-привязки, отсутствие camera rotation и click-through, ESC/AI Screen suspend/restore, повторное выключение по G, все кнопки Logs HUD, collapsed strip (только последняя строка лога и click-to-restore), фильтры, текстовые TOTAL/WARN/ERROR counters, пропорциональный resize по горизонтали и вертикали, равномерное масштабирование текста/контролов, 1px border, scroll/hover/drag и disconnect reset; затем persistence/COPY/rotation/redaction и integrated/dedicated server OP2.
 
