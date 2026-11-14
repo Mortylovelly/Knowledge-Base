@@ -1,64 +1,74 @@
 # MinecartPlus
 
-## Кратко
 - **Репозиторий:** [Mortylovelly/MinecartPlus](https://github.com/Mortylovelly/MinecartPlus)
-- **Minecraft:** 1.21.1
-- **Fabric**
-- **Java:** 21
-- **Fabric Loader:** ранее зафиксировано 0.19.3
-- **Fabric API:** ранее зафиксировано 0.116.15+1.21.1
-- **Gradle Wrapper:** 8.12
-- **Loom:** 1.9-SNAPSHOT (в просмотренном build.gradle)
-- **GeckoLib:** 4.9.2
-- **MixinExtras:** 0.5.4
-- **Mod ID:** ранее в fabric.mod.json был `minecartmagic` (проверять текущий код перед использованием).
+- **Активная целевая линия:** Minecraft 1.20.1 Fabric / Java 17.
+- **Подтверждённая ветка:** `minecraft-1.20.1-fabric`. Ветка `main` не проверялась; не выбирать её автоматически.
+- **Mod ID:** `minecartmagic`.
+- **Версия в активной ветке:** `1.0.3-mc1.20.1`.
+- **Последний проверенный HEAD:** `a1d031844a63b86c5748fad9cf1536116062d7b3`.
+- **Последний Actions build:** [run 34774665071](https://github.com/Mortylovelly/MinecartPlus/actions/runs/34774665071), success для exact HEAD.
+- **Artifact:** `minecartmagic-1.20.1`, ID `10322843551`.
+- **Runtime:** подтверждённый игровой/dedicated-server тест этой версии не найден.
 
-## Назначение и известный контекст
+## Линия 1.20.1 — среда сборки
 
-Проект развивается из раннего enchantmod-подхода в мод с зачарованиями/улучшениями вагонеток. Основная цель — механики тяги и попутного ветра, а визуальные/анимационные изменения в ряде задач пользователь хотел делать преимущественно через GeckoLib.
+| Компонент | Значение |
+|---|---|
+| Minecraft | 1.20.1 |
+| Yarn | 1.20.1+build.10 |
+| Fabric Loader | 0.17.2 |
+| Fabric API | 0.92.11+1.20.1 |
+| Java source/target | 17 |
+| Fabric Loom | 1.9.2 |
+| Gradle wrapper | 8.12 |
+| GeckoLib | geckolib-fabric-1.20.1:4.8.4 |
+| mod_version | 1.0.3-mc1.20.1 |
 
-### Известные значения механики
-- Magic Traction I: 1.75
-- Magic Traction II: 2.40
-- Magic Traction III: 3.10
+`build.gradle` не подключает MixinExtras. `README.md` в этой ветке всё ещё говорит про 1.21.1 и должен быть исправлен при следующей задаче в кодовом репозитории; фактические `gradle.properties` и `fabric.mod.json` подтверждают 1.20.1.
 
-Эти значения сохранены из ранее обсуждавшегося контекста. Перед изменениями сверять реализацию и реальные параметры в текущих файлах.
+## Подтверждённые механики
 
-### Attachments
-Ранее обсуждались attachments:
-- `traction_level`
-- `tailwind_level`
+- Регистрируются зачарования `traction` и `tailwind`, максимум III.
+- Magic Traction I / II / III увеличивает максимальную скорость вагонетки в 1.75 / 2.40 / 3.10 раза.
+- Tailwind применяется к лодке при движении вперёд по воде: множители 1.08 / 1.14 / 1.20, максимальная горизонтальная скорость 0.55 / 0.65 / 0.75.
+- Зачарованная вагонетка переносит уровень тяги из предмета в созданную сущность при установке на рельс.
+- В 1.20.1 `MinecartMagicAttachments.init()` — no-op. Для уровня тяги/попутного ветра используются DataTracker values и command-tag fallback; не переносить сюда attachment-архитектуру другой версии.
+- В дереве есть self-propelling boat/minecart entities, items и screens; полноценное поведение требует runtime-теста.
 
-В памяти проекта зафиксировано использование VAR_INT и настройки predicate/synchronization, но точная текущая декларация attachment и её sync flags требуют повторного чтения кода. Не переносить предположение в код без сверки.
+## Команды и конфигурация
 
-## Архитектурные предпочтения
-- Не использовать старый DataTracker там, где текущая архитектура проекта перешла на attachments.
-- Избегать полной переделки механики без необходимости.
-- Для моделей/текстур/анимаций в основном использовать GeckoLib, если это соответствует текущим классам.
-- Вносить минимальные изменения, проверять client/server behavior и синхронизацию attachment values.
+В активном entrypoint/дереве исходников не обнаружена регистрация slash-команд. Отдельные config-классы и config-файлы не обнаружены.
 
-## Среда сборки
-Ранее просмотрено:
-- Minecraft 1.21.1
-- Java 21
-- Loader 0.19.3
-- Fabric API 0.116.15+1.21.1
-- Gradle 8.12
-- GeckoLib 4.9.2
-- MixinExtras 0.5.4
-- Loom 1.9-SNAPSHOT
-- Workflow/Gradle-команду и актуальный статус нужно подтвердить в репозитории.
+## Ключевые исходники
 
-## Правила изменения
-Перед каждой задачей:
-1. Проверить целевую ветку и последние commits.
-2. Изучить все файлы, связанные с вагонеткой, enchantments/attachments, регистрацией, client render и network sync.
-3. Не менять код без понимания всех мест, где читаются уровни тяги.
-4. Собрать проект на Java 21.
-5. Проверить actions run именно для последнего SHA.
+- `MinecartMagicMod.java` — регистрация attachments compatibility holder, entities, enchantments, items, placement, screens и networking.
+- `LegacyEnchantments.java` — регистрация `traction` и `tailwind`.
+- `ModEnchantments.java` — чтение уровней, DataTracker и command tags.
+- `MinecartMaxSpeedMixin.java` — множители тяги.
+- `MinecartTractionDataMixin.java` — синхронизация уровня через DataTracker.
+- `BoatTailwindSpeedMixin.java` — ускорение лодок.
+- `MinecartPlacementHandler.java` — размещение зачарованной вагонетки на рельсе.
+- `minecartmagic.mixins.json` — mixin list.
+
+## GitHub Actions
+
+Workflow `.github/workflows/build.yml` использует JDK 17 и `./gradlew build --no-daemon`, artifact name `minecartmagic-1.20.1`.
+
+Последний проверенный commit:
+- SHA: `a1d031844a63b86c5748fad9cf1536116062d7b3`
+- Message: `Fix advanced minecart orientation using original main implementation`
+- Actions push run [34774665071](https://github.com/Mortylovelly/MinecartPlus/actions/runs/34774665071): `completed / success`, SHA совпадает с HEAD.
+- Artifact ID: `10322843551`, присутствует, не истёк на момент аудита.
 
 ## Текущее состояние
-Полная история механик, классов, команд и последних сборок в доступной памяти не сохранена. Этот файл — начальный паспорт из контекста предыдущих чатов. Нужно пополнить его после инвентаризации кода.
+
+- Активная рабочая линия для дальнейших задач — `minecraft-1.20.1-fabric`.
+- Сборка текущего HEAD проходит.
+- README в ветке содержит устаревшее упоминание 1.21.1.
+- Runtime-проверка зачарований, синхронизации DataTracker и self-propelling vehicles не подтверждена.
+- Старый паспорт и update 001 описывали 1.21.1 по сохранённому контексту; update 002 фиксирует фактическую отдельную линию 1.20.1.
 
 ## История
-Пока нет достоверно восстановленных отдельных numbered update-файлов. Следующий существенный этап — [инвентаризация репозитория](updates/001-repository-inventory.md).
+
+- [001 — Первичная инвентаризация по сохранённому контексту](updates/001-repository-inventory.md)
+- [002 — Подтверждена отдельная линия MinecartPlus для 1.20.1](updates/002-current-1.20.1-branch-audit.md)
