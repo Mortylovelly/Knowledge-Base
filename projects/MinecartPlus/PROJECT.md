@@ -33,7 +33,7 @@
 - Tailwind применяется к лодке при движении вперёд по воде: множители 1.08 / 1.14 / 1.20, максимальная горизонтальная скорость 0.55 / 0.65 / 0.75.
 - Зачарованная вагонетка переносит уровень тяги из предмета в созданную сущность при установке на рельс.
 - В 1.20.1 `MinecartMagicAttachments.init()` — no-op. Для уровня тяги/попутного ветра используются DataTracker values и command-tag fallback; не переносить сюда attachment-архитектуру другой версии.
-- В дереве есть self-propelling boat/minecart entities, items и screens; полноценное поведение требует runtime-теста.
+- В дереве есть `AdvancedMinecartEntity` и `SelfPropellingBoatEntity`, а также соответствующие items/screens; полноценное поведение требует runtime-теста.
 
 ## Команды и конфигурация
 
