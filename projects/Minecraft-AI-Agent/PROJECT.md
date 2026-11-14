@@ -12,15 +12,15 @@
 - **Archive name:** `minecraft-ai-agent`.
 - **Активная версия для нашей работы:** Minecraft 1.20.1 Fabric, Java 17.
 - **Активная ветка:** `minecraft-1.20.1-fabric`.
-- **mod_version:** `0.3.12` (GitHub Actions run #315 completed successfully).
-- **Текущий HEAD:** `08d76b629327d349b87876a10f885b0da4240668` в `minecraft-1.20.1-fabric`.
+- **mod_version:** `0.3.17` (GitHub Actions run #336 completed successfully).
+- **Текущий HEAD:** `b15dd07889f732e2b195e166d8f1c98e1ba4e76b` в `minecraft-1.20.1-fabric`.
 - **Восстановление структуры:** commit `10c0ccf05f377435f6eb5c668bffe644befad66f` восстановил полный 63-entry tree из последнего целого коммита 0.3.3; все последующие изменения применяются поверх него. После 0.3.12 в recursive tree активной ветки 45 файлов, структура сохранена.
 - **UI/mouse 0.3.12:** сохранены G free cursor, шестерёнка SETTINGS и единственный переключатель DIAGNOSTICS. Панель и стиль графиков не переделывались: увеличена только нижняя область, чтобы в ней поместились четыре компактные диаграммы. Вместо диаграммы PING теперь TPS; PING остаётся текстовым показателем. Графики расположены 2×2: FPS и TPS в первом ряду, GPU и CPU во втором. Все четыре используют прежний стиль и общий scale/resize панели.
 - **AI Agent ↔ Logs HUD 0.3.12:** добавлены клиентские function tools `search_agent_logs` и `get_agent_diagnostics`, доступны через общий tool loop Gemini/DeepSeek/Groq/OpenRouter. Первый ищет по сохранённому архиву Logs HUD (`latest.log`, `.1`, `.2`) с фильтрами текста/уровня/CUSTOM, limit и offset pagination; совпадения возвращаются от новых к старым, секреты редактируются. Второй передаёт текущие FPS/AVG/MAX, ping, TPS/tick ms, GPU/CPU/RAM, разрешение, статус log stream и все четыре истории графиков (52 точки, шаг 500 мс, oldest-to-newest). Tool selector включает соответствующие функции для вопросов о логах, ошибках, крашах, лагах и производительности; для общих вопросов о состоянии агента получает и логи, и метрики.
 - **Ограничение доступа к логам:** агенту доступен полный сохранённый архив, который собирает и показывает именно Logs HUD (до трёх файлов по 4 MiB), а не произвольные файлы vanilla Minecraft или логи любых сторонних клиентских модов. Приход серверных строк сохраняет прежние требования log bridge / подписки / OP2. Логовые строки считаются недоверенными диагностическими данными, не командами для агента.
 - **Сбор метрик:** FPS history собирается и пока открыт AI chat screen; CPU/RAM и GPU sampling продолжается даже при выключенном отображении DIAGNOSTICS, поэтому агент может читать показатели без открытого графического блока. GPU по-прежнему берётся через локальный NVIDIA `nvidia-smi`; при недоступности показывается unknown (`-1` внутри телеметрии / `—` в HUD). CPU и RAM — системные показатели ОС.
-- **Последний успешный build:** run [42903464260](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42903464260), run #315, conclusion `success`, exact HEAD `08d76b629327d349b87876a10f885b0da4240668`.
-- **Artifact 0.3.12:** ID `13803357879`, ZIP 261770 bytes, SHA256 `cc88cda3eb9a06679319a73461701fa235cecf7c2b5245a4cd8b8a3adffa39ce`; JAR `minecraft-ai-agent-0.3.12.jar`, 186630 bytes, SHA256 `45fade0581b3ddfa7e5903a5251d796a8f9d2fc7f92cc764c3fd042ba0f042a2`.
+- **Последний успешный build:** run [43091757637](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/43091757637), run #336, conclusion `success`, exact HEAD `b15dd07889f732e2b195e166d8f1c98e1ba4e76b`.
+- **Artifact 0.3.17:** ID `13890200194`, name `minecraft-ai-agent-1.20.1`, size 270735 bytes; JAR hash/size не проверялись в этом аудите.
 - **JAR metadata/content:** 0.3.12 / Minecraft 1.20.1 / Java >=17. Verified `AiAgentService`, `AiDiagnostics`, `AiLogFile`, `AiLogOverlay`, `AiServerDiagnostics`, `MinecraftAiAgentClient`; bytecode inspection confirms four graph render calls, both agent tools, archive search/pagination and four metric histories.
 - **Проверка в игре:** GitHub Actions build и JAR verification успешны, но runtime-тест 0.3.12 непосредственно в Minecraft ещё не выполнялся.
 
@@ -77,7 +77,7 @@ README.txt обновлён для 0.3.2: Right Shift открывает осн�
 /aiagent status
 ```
 
-Она отвечает текстом `Minecraft AI Agent: direct in-game AI service`.
+Текущий исходник отвечает текстом `Minecraft AI Agent 0.3.3: server tools, chat archive and log bridge active`. Это устаревшая строка: версия в `gradle.properties`, `fabric.mod.json` и README.txt уже 0.3.17.
 
 Других команд мода в проверенном entrypoint нет. Инструмент `run_minecraft_command` — это отдельный AI tool, а не отдельная команда мода.
 
@@ -358,14 +358,17 @@ Workflow:
 3. CI проверка 1.20.1 сначала падала, затем после исправления сигнатуры `AiChatScreen.renderBackground` последний build прошёл.
 4. Точные детали старых разговоров/тестов, не отражённые в GitHub commits, пока не восстановлены.
 
-## Текущее состояние (2026-11-10)
+## Текущее состояние (2026-11-14)
+
+**Аудит команды status (2026-11-14):** версия в тексте ответа `/aiagent status` остаётся жёстко заданной как 0.3.3, хотя текущая версия исходников — 0.3.17. Код не менялся в рамках аудита.
+
 
 - **Активная платформа:** Minecraft 1.20.1 Fabric / Java 17.
 - **Активная ветка:** minecraft-1.20.1-fabric.
-- **Текущая версия исходников:** 0.3.12 (GitHub Actions build success; in-game runtime test pending).
-- **Последний HEAD:** `08d76b629327d349b87876a10f885b0da4240668`.
-- **Последний подтверждённый build/artifact:** 0.3.12, run [42903464260](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/42903464260), успешен для exact HEAD `08d76b629327d349b87876a10f885b0da4240668`.
-- **Artifact 0.3.12:** ID `13803357879`, ZIP 261770 bytes, SHA256 `cc88cda3eb9a06679319a73461701fa235cecf7c2b5245a4cd8b8a3adffa39ce`; JAR `minecraft-ai-agent-0.3.12.jar`, 186630 bytes, SHA256 `45fade0581b3ddfa7e5903a5251d796a8f9d2fc7f92cc764c3fd042ba0f042a2`.
+- **Текущая версия исходников:** 0.3.17 (GitHub Actions build success; in-game runtime test pending).
+- **Последний HEAD:** `b15dd07889f732e2b195e166d8f1c98e1ba4e76b`.
+- **Последний подтверждённый build/artifact:** 0.3.17, run [43091757637](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/43091757637), успешен для exact HEAD `b15dd07889f732e2b195e166d8f1c98e1ba4e76b`.
+- **Artifact 0.3.17:** ID `13890200194`, name `minecraft-ai-agent-1.20.1`, size 270735 bytes; JAR hash/size не проверялись в этом аудите.
 - **0.3.12:** Actions run #315 completed successfully; artifact and JAR verified. Runtime test pending.
 - **Основная архитектура:** client AI provider + UI; server networking/tools; server Log4j → log bridge → client disk archive + independent HUD Logs panel.
 - **Log panel 0.3.3:** independent HUD; initial 360 × 210; archive/COPY persisted. Этот build собран успешно.
@@ -378,7 +381,7 @@ Workflow:
 - **Токены:** быстрые локальные команды, selective tools, локальный поиск чата; UI статистики API расходов пока нет.
 - **Free cursor 0.3.7:** default G key (`GLFW_KEY_G`); upgrades a saved 0.3.6 apostrophe/Э binding to G once, persists with `options.write()`; other custom key bindings are retained. Unlock/lock cursor toggle, suspend to vanilla Screen and restore on return to world; prevent camera look and world click-through while enabled; Logs HUD remains interactive. Build verified; runtime pending.
 - **GitHub repo:** актуальный slug Mortylovelly/Minecraft-AI-Agent; main — неактивная линия 1.21.1 и не является рабочей 1.20.1 веткой.
-- **Проверка в Minecraft:** предыдущий log excerpt относится к Minecraft 1.20.1, Fabric Loader 0.19.5, Java 17 и mod 0.3.3; посторонние warnings Faunify/Mojang auth/Man of Many Planes не являются ошибками Agent. Runtime-тест 0.3.12 ещё не выполнен.
+- **Проверка в Minecraft:** предыдущий log excerpt относится к Minecraft 1.20.1, Fabric Loader 0.19.5, Java 17 и mod 0.3.3; посторонние warnings Faunify/Mojang auth/Man of Many Planes не являются ошибками Agent. Runtime-тест 0.3.17 ещё не выполнен.
 
 ### Открытый roadmap
 
