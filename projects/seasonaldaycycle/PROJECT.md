@@ -55,6 +55,7 @@ README активной ветки устарел: он описывает Fabri
 - `config/seasonaldaycycle.json` — общие/default значения ModConfig; default cycle length 72 000 ticks, допустимый диапазон 20–1 728 000 ticks, шаг 20.
 - `.seasonaldaycycle.json` в корне каждого world save — фактическое per-world значение cycleLengthTicks, которым управляет `DayCycleWorldConfig`.
 - GUI отправляет `SetDayCycleLengthPayload`; сервер валидирует доступ и рассылает синхронизированное значение всем игрокам.
+- **Ограничение текущего config-кода:** `ModConfig.Config` содержит `spring/summer/autumn/winter` day/night поля и санитизирует их, но getters `getSpringDayTicks` / `getSummerDayTicks` / `getAutumnDayTicks` / `getWinterDayTicks` сейчас используют жёстко заданные константы. Поэтому редактирование этих сезонных полей в `config/seasonaldaycycle.json` не меняет пропорции; фактически используется per-world `cycleLengthTicks` и фиксированные сезонные соотношения.
 
 ## Ключевые исходники
 
