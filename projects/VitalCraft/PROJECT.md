@@ -1,12 +1,18 @@
 # VitalCraft
 
 - **Репозиторий:** [Mortylovelly/VitalCraft](https://github.com/Mortylovelly/VitalCraft)
-- **Статус документации:** начальная запись; функциональность не восстановлена из доступного контекста.
-- **Версия Minecraft / Loader / Java:** не установлено, проверить актуальные файлы.
-- **Mod ID, команды, конфиги, механики:** пока не установлены.
+- **Функциональность:** не установлена; не выводить её из названия.
+- **Версия Minecraft / Loader / Java:** не установлена.
+- **Mod ID, команды, конфиги:** не установлены.
 
-## Правило
-Не придумывать описание по названию. При начале работы инвентаризировать корень репозитория, branches, последние commits, build.gradle, gradle.properties, fabric.mod.json/metadata и исходники.
+## Статус ветки на 2026-11-14
+
+GitHub API показал только одну ветку: `main`. В Knowledge Base нет подтверждения, что это Minecraft 1.20.1 Fabric / Java 17. По VERSION_POLICY.md ветка `main` не выбирается автоматически, поэтому build files, metadata, исходники, commits, Actions и artifacts не проверялись.
+
+<badge-placeholder/>
+
+**Требуется уточнить у владельца:** подтвердить, что `main` — целевая линия Minecraft 1.20.1 Fabric / Java 17, либо указать нужную ветку.
 
 ## История
-Пока нет сохранённых update-записей.
+
+- [001 — Ветка проекта обнаружена, target 1.20.1 не подтверждён](updates/001-branch-target-unconfirmed.md)
