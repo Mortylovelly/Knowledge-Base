@@ -5,78 +5,60 @@
 - **Тип проекта:** datapack / конфигурация генерации мира.
 - **Основной генератор:** Big Globe.
 - **Цель:** большие биомы, высокие горы и согласованная вертикальная генерация.
-- **Общий рабочий стандарт базы:** Minecraft Java 1.20.1 + Fabric + Java 17; точную runtime-связку конкретной сборки перепроверять по логам.
-- **Связанные моды, замеченные в последней диагностике:** Distant Horizons и C2ME; точные версии из данного лога неизвестны.
-- **Репозиторий datapack:** пока не установлен. До этой записи в Knowledge Base не было паспорта или ссылки на его точные файлы.
-- **Статус:** повторяющаяся ошибка Big Globe Script; условие некорректного диапазона определено, конкретные значения traits и исходный файл ещё не найдены.
+- **Общий стандарт:** Minecraft Java 1.20.1 + Fabric + Java 17; точную runtime-связку проверять по логу.
+- **Репозиторий datapack:** пока не установлен; реальные ZIP обнаружены в Library и перечислены в update 002.
+- **Текущее состояние:** самый новый найденный Clean Overworld архив имеет подтверждённую несогласованность traits с новым min_y=-208 и не содержит bedrock override. Если именно он включён, он объясняет ошибку `bound must be greater than origin` и отсутствие core/mantle. Какой ZIP активен в мире пока не подтверждено.
 
-## История и контекст
+## История и цели
 
-Владелец сообщал о работе над custom worldgen: datapack менял структуру гор; отдельно обсуждались высота мира, острова и большие биомы. Владелец замечал, что одна из правок изменила структуру гор, но не высоту.
+Владелец хочет крупные биомы и высокие горы, без Overworld Skylands, но с полноценной нижней частью мира — molten-rock mantle/core и бедроком. Высота поверхности, нижняя граница измерения и верхняя build limit — независимые настройки и должны проверяться отдельно.
 
-**Ограничение восстановленной истории:** точные прежние JSON/скрипты datapack, их пути, commit SHA и конечное содержимое не обнаружены в Knowledge Base при создании этого паспорта. Эта запись не восстанавливает сам datapack. Не придумывать прежние значения высоты и не переписывать datapack вслепую.
+Требования:
+1. Сохранять ранее одобренную горизонтальную компоновку биомов, островов и форму гор.
+2. Не путать высоту гор с max_y измерения.
+3. Сохранять core/mantle, lava level, deep-dark layer и bedrock при изменении min_y.
+4. Сохранять совместимость с Distant Horizons; Vertigo нельзя использовать вместе с DH.
+5. Для тестов worldgen использовать новый временный мир; старые чанки не перестраиваются datapack-ом.
 
-## Связанные репозитории и разграничение
+## Проверенные архивы
 
-- [Knowledge Base](https://github.com/Mortylovelly/Knowledge-Base) — журнал решений и диагностики.
-- [SkyLimitless](https://github.com/Mortylovelly/SkyLimitless) — отдельный Fabric-мод для изменения верхней границы Overworld. Линия 1.20.1 по паспорту использует ветку minecraft-1.20.1-fabric; это не сам datapack Big Globe.
-- Репозиторий Big Globe datapack владельца пока не установлен.
-- Не считать extremedifficulty репозиторием datapack: последние найденные commits этого репозитория относятся к Java-файлу MobAIHandler.java.
+| Архив | Big Globe | Диапазон Overworld | Рельеф | Core/bedrock |
+|---|---|---|---|---|
+| `BigGlobe_Clean_Overworld_1.20.1.zip` | 5.2.0 | -208 … 1024 (max exclusive); height 1232 | стандартный | **ошибка:** traits core/lava остались ниже нового min_y; bedrock override отсутствует |
+| `BigGlobe_Tall_Mountains_x4_No_Skylands_1.20.1_v2.zip` | 5.3.2 | -512 … 2000 (max exclusive); height 2512 | ×4 положительная суша | traits core/deep-dark/lava согласованы; bedrock -512/-496 |
+| `BigGlobe_Tall_Mountains_x4_No_Skylands_1.20.1.zip` | 5.3.2 | -512 … 2000 | ×4, custom erosion template | core+bedrock имеются; пользовательский template runtime pending |
+| `BigGlobe_Tall_Mountains_1500_No_Skylands_1.20.1.zip` | 5.3.2 | -512 … 2000 | ×2.5, target around Y1500 for prior ~Y600 terrain | core shifts есть; bedrock override отсутствует |
+| `BigGlobe_Mountains_1000_No_Skylands_1.20.1.zip` | 5.3.2 | -1024 … 2000 | native Big Globe height scale approx 1000, no multiplier | original core traits; bedrock override отсутствует |
 
-## Известные цели и требования
+Подробное сравнение, точные traits и анализ ошибки: [002 — аудит архивов](updates/002-datapack-height-core-bedrock-audit.md).
 
-1. Сохранять ранее одобренные изменения генерации, не терять острова и желаемую форму/масштаб гор.
-2. Высота мира и форма рельефа — отдельные параметры; изменение формы гор само по себе не означает изменения границ мира.
-3. Сохранять совместимость с Distant Horizons, пока владелец не решит иначе.
-4. Проверять worldgen на новом тестовом мире/координатах; не выдавать успешную сборку datapack за тест в игре.
-5. Перед исправлениями читать актуальные datapack JSON, Big Globe traits и конфигурацию высоты SkyLimitless, если она задействована.
+## Диагностика ошибки molten_rocks
 
-## Известная ошибка (2026-11-15)
+Лог содержал `java.lang.IllegalArgumentException: bound must be greater than origin` внутри Big Globe Script. Скрипт вызывает `nextInt(min_y, core_max_y)` и `nextInt(lava_y, core_max_y)`.
 
-В логе повторяется:
+В Clean ZIP traits равны `min_y=-208`, `core_max_y=-784`, `lava_y=-896`. Первый вызов становится `nextInt(-208, -784)`, где верхняя граница меньше нижней. Это точное объяснение ошибки **если Clean ZIP активен**. C2ME/Distant Horizons в стеке — контекст вызова, не доказанная первопричина.
 
-    [ERROR] [Big Globe/Scripting]
-    java.lang.IllegalArgumentException: bound must be greater than origin
+Clean ZIP не содержит `configured_feature/overworld/bedrock.json`; generator продолжает ссылаться на встроенный `bigglobe:overworld/bedrock`, то есть pack не переместил bedrock к новому дну.
 
-Проблемный scripted feature обрабатывает блоки из тега #bigglobe:molten_rocks и выбирает Y двумя вызовами:
+## Структуры Big Globe
 
-    random.nextInt(world_traits.bigglobe:min_y(x, z), world_traits.bigglobe:core_max_y(x, z))
-    random.nextInt(world_traits.bigglobe:lava_y(x, z), world_traits.bigglobe:core_max_y(x, z))
+В версии 1.20.1 Big Globe 4.11.0 подтверждены giant obelisks и изменённые mega trees. Общая документация перечисляет Mega Dungeons, Geodes, Mega Trees, underground water/lava pockets, bigger desert pyramid, campfires/tents, small/medium/large houses, log cabins, lakes, surface mineshafts, wells, windmills, abandoned cities, obelisks, Nether Pillars, Soul Campfires, Portal Temples, End Fractals и Endelisk. Сверять конкретные доступные типы с версией мода и данными мира; V6 docs may include later changes.
 
-Для RandomGenerator.nextInt(origin, bound) требуется bound > origin. Следовательно, для хотя бы одного вызова на координатах ошибки выполняется одно из условий:
+## Совместимость и ограничения
 
-- core_max_y(x, z) <= min_y(x, z);
-- core_max_y(x, z) <= lava_y(x, z).
-
-Точные координаты и численные значения traits в предоставленном фрагменте отсутствуют.
-
-### Что показывает стек
-
-- Встречается c2me-threading-worldgen: генерация выполнялась через путь C2ME.
-- В некоторых повторах встречаются классы Distant Horizons world generation.
-- Исключение возникает при исполнении сгенерированного скрипта Big Globe.
-- Наличие C2ME/DH в стеке показывает контекст вызова, но не доказывает, что именно эти моды создают неправильные границы.
-- Не установлено, завершилась ли генерация чанка частично, пропустился ли feature pass, затронулся ли LOD или появились визуальные последствия.
-
-## Файлы и конфигурация
-
-| Источник | Путь / статус |
-|---|---|
-| Пользовательский datapack | Путь и содержимое пока не восстановлены |
-| Big Globe world traits | Точные JSON и значения пока не зафиксированы |
-| Big Globe config | Точный файл и значения пока не зафиксированы |
-| SkyLimitless 1.20.1 | Отдельный кодовый репозиторий, не подменяет datapack |
-| Лог ошибки | См. запись 001 |
+- Clean archive README требует Big Globe 5.2.0; x4 V2 README требует 5.3.2. Не смешивать JSON-структуры без проверки версии.
+- Высота мира из ZIP задаётся как max-exclusive: при max_y=2000 последний допустимый блок Y=1999.
+- Моды YUNG's Better* и Philip's Ruins также присутствуют в одном из сохранённых списков модпака; не каждое видимое здание считать структурой Big Globe.
+- Не удалять C2ME или DH на основании одного stack trace; сначала исправить/проверить traits.
 
 ## Текущее состояние
 
-- **Платформа:** общий стандарт базы — 1.20.1 Fabric / Java 17; фактические runtime-версии текущего лога требуют сверки.
-- **Datapack repository / branch / commit:** не установлены.
-- **Последняя ошибка:** Big Globe Script — bound must be greater than origin в feature, связанном с molten_rocks.
-- **Исправление:** не внесено; численные значения высот ещё не проверены.
-- **Тест после исправления:** не проводился.
-- **Следующий шаг:** установить точные файлы datapack и Big Globe traits, вычислить проблемные диапазоны, затем исправлять первопричину с сохранением предыдущих изменений генерации.
+- **Последняя найденная версия datapack:** Clean Overworld (2026-11-15 12:39 в ZIP), но факт его активности в текущем мире не проверен.
+- **Вариант с корректными core+bedrock среди архивов:** `BigGlobe_Tall_Mountains_x4_No_Skylands_1.20.1_v2.zip` (цель Big Globe 5.3.2); runtime test в точном модпаке не выполнялся.
+- **Исправление игрового мира:** ещё не сделано.
+- **Следующий шаг:** получить из текущего мира `/datapack list` и точную версию Big Globe, затем подготовить корректный архив под эту конкретную конфигурацию.
 
 ## История
 
 - [001 — Повторяющаяся ошибка Big Globe: недопустимый диапазон случайной высоты](updates/001-bigglobe-invalid-random-range.md)
+- [002 — Аудит сохранённых datapack: высота, мантия и бедрок](updates/002-datapack-height-core-bedrock-audit.md)
