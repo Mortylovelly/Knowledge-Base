@@ -5,6 +5,7 @@
 | Проект | Документация | Код | Активная линия по умолчанию | Что известно | Статус документации |
 |---|---|---|---|---|---|
 | SkyLimitless | [PROJECT.md](projects/SkyLimitless/PROJECT.md) · [история](projects/SkyLimitless/updates/README.md) | [GitHub](https://github.com/Mortylovelly/SkyLimitless) | Fabric 1.20.1: `minecraft-1.20.1-fabric` | Увеличение высоты Overworld; команды; Tectonic; registry fix 0.3.4 | Подробно; server runtime тест ещё нужен |
+| Big Globe / Worldgen | [PROJECT.md](projects/BigGlobe-Worldgen/PROJECT.md) · [история](projects/BigGlobe-Worldgen/updates/README.md) | Репозиторий datapack пока не установлен | Контекст 1.20.1 Fabric; требуется сверка | Big Globe, datapack для формы гор/высот; повторяющаяся ошибка invalid random range в molten_rocks | Добавлен паспорт; исходный datapack ещё не найден |
 | MinecartPlus | [PROJECT.md](projects/MinecartPlus/PROJECT.md) · [история](projects/MinecartPlus/updates/README.md) | [GitHub](https://github.com/Mortylovelly/MinecartPlus) | Fabric 1.20.1: `minecraft-1.20.1-fabric` | Traction/Tailwind, DataTracker, self-propelling vehicles, GeckoLib 4.8.4 | Build success exact HEAD; runtime pending; README ветки устарел (1.21.1) |
 | Fauna- / Fix | [PROJECT.md](projects/Fauna/PROJECT.md) · [история](projects/Fauna/updates/README.md) | [GitHub](https://github.com/Mortylovelly/Fauna-) | Fabric 1.20.1: `main` | Compatibility/fauna dedup, Faunify attributes, loot fixes; активная main не меняет биомы/terrain | Build 0.4.10 success; runtime pending; CI JDK21 / bytecode 17 |
 | Minecraft AI Agent | [PROJECT.md](projects/Minecraft-AI-Agent/PROJECT.md) · [история](projects/Minecraft-AI-Agent/updates/README.md) | [GitHub](https://github.com/Mortylovelly/Minecraft-AI-Agent) | Fabric 1.20.1: `minecraft-1.20.1-fabric` | AI tools, server logs HUD, chat archive, NPC/mob navigation; исходники 0.3.17 | Actions run 43091757637 success exact HEAD; artifact есть; runtime pending; `/aiagent status` всё ещё пишет 0.3.3 |
@@ -26,4 +27,4 @@
 
 - Этот список не означает, что каждый проект активно поддерживается.
 - Точные версии, названия веток и статус каждого проекта перепроверять через GitHub.
-- Если target/branch не очевидны — спросить владельца до внесения изменений.
+- Если target/branch не очевиден — спросить владельца до внесения изменений.
