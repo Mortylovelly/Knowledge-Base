@@ -5,4 +5,6 @@
 1. [001 — Повторяющаяся ошибка Big Globe: недопустимый диапазон случайной высоты](001-bigglobe-invalid-random-range.md)
 2. [002 — Аудит сохранённых datapack: высота, мантия и бедрок](002-datapack-height-core-bedrock-audit.md)
 
-Следующая запись: 003.
+3. [003 — Отдельное отключение структур и оценка поверхностных предметов](003-selective-structures-surface-materials.md)
+
+Следующая запись: 004.
