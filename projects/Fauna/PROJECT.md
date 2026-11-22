@@ -79,20 +79,20 @@ Update 001 сохраняет историческое состояние на 2
 
 ## GitHub Actions
 
-- HEAD SHA: `ecadeb503f1e3d1eaaa3b2f6a472ae861088437d`.
-- Commit: [Fix Big Globe ore generation and record current modpack inventory](https://github.com/Mortylovelly/Fauna-/commit/ecadeb503f1e3d1eaaa3b2f6a472ae861088437d), 2026-11-18.
+- HEAD SHA: `2427d98e726d035112badd199a7e8ec7250a85c7`.
+- Commit: [Remove BetterNether worldgen compatibility](https://github.com/Mortylovelly/Fauna-/commit/2427d98e726d035112badd199a7e8ec7250a85c7), 2026-11-22.
 - [Actions run 45036701275](https://github.com/Mortylovelly/Fauna-/actions/runs/45036701275): `completed / success`, exact HEAD.
-- Artifact `fix-build`, ID `14475569247`, присутствует и не истёк на момент update 004.
+- Artifact `fix-build`, ID `14759399821`, присутствует и не истёк.
 
 ## Текущее состояние
 
 - Активная подтверждённая линия: Minecraft 1.20.1 Fabric, `main`.
-- Активная версия исходников Fix: 0.4.12.
-- Build 0.4.12 проходит на exact HEAD; CI использует JDK 21 при Java 17 bytecode target.
-- Текущий список сборки: 95 позиций, update 004; считать его актуальным до сообщения владельца об изменениях.
-- BetterNether/Create Nuclear ore-generation fixes добавлены, но распределение руд ещё не проверялось в игре.
+- Активная версия исходников Fix: 0.4.13.
+- Build 0.4.13 проходит на exact HEAD `2427d98`; CI использует JDK 21 при Java 17 bytecode target.
+- Текущий список сборки: 145 позиций, update 005; update 004 — исторический снимок из 95 позиций.
+- В 0.4.13 BetterNether worldgen compatibility удалена; Big Globe ore compatibility остаётся для алмазов, редстоуна, Create Zinc и Create Nuclear. Распределение руд ещё не проверялось в игре.
 - Autunite deepslate replacement требует отдельной проверки/возможного дополнения.
-- Runtime-аудит update 003 нашёл проблемы в fauna-dedup и Faunify+C2ME; не считать их исправленными изменениями 0.4.12.
+- Runtime-аудит update 003 нашёл проблемы в fauna-dedup и Faunify+C2ME; не считать их исправленными изменениями 0.4.13.
 - Для возвращения биомного алгоритма нужно сначала выбрать целевую feature-ветку вместе с владельцем.
 
 ## История
@@ -100,4 +100,5 @@ Update 001 сохраняет историческое состояние на 2
 - [001 — Уточнение назначения репозитория и расположения биомного фикса](updates/001-biome-fix-repository.md) — историческое состояние на 2026-11-08.
 - [002 — Текущее состояние Fix: биомный алгоритм отсутствует в main](updates/002-main-branch-worldgen-removal-and-current-build.md)
 - [003 — Аудит fauna-модов и реальной работы Fix](updates/003-fauna-modpack-overlap-and-fix-runtime-audit.md)
-- [004 — Актуальный состав модпака и исправления генерации руд Big Globe](updates/004-current-modpack-and-bigglobe-ore-fixes.md)
+- [004 — Состав модпака из 95 позиций и исправления генерации руд Big Globe](updates/004-current-modpack-and-bigglobe-ore-fixes.md) — исторический снимок от 19.11.2026.
+- [005 — Актуальный список модпака: 145 файлов](updates/005-current-modpack-145-files.md)
