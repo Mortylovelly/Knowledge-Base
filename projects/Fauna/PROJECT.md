@@ -5,11 +5,11 @@
 - **Mod ID:** `fix`.
 - **Целевая линия:** Minecraft 1.20.1 / Fabric / Java 17 bytecode.
 - **Подтверждённая ветка:** `main`.
-- **Текущая версия исходников:** `0.4.12`.
-- **Последний HEAD:** [`ecadeb503f1e3d1eaaa3b2f6a472ae861088437d`](https://github.com/Mortylovelly/Fauna-/commit/ecadeb503f1e3d1eaaa3b2f6a472ae861088437d).
-- **Последний Actions build:** [run 44410159862](https://github.com/Mortylovelly/Fauna-/actions/runs/44410159862), `completed / success` для exact HEAD.
-- **Artifact:** `fix-build`, ID `14475569247`, не истёк на момент update 004.
-- **Runtime:** проверка руд в созданном мире и серверный тест после 0.4.12 не подтверждены.
+- **Текущая версия исходников:** `0.4.13`.
+- **Последний HEAD:** [`2427d98e726d035112badd199a7e8ec7250a85c7`](https://github.com/Mortylovelly/Fauna-/commit/ecadeb503f1e3d1eaaa3b2f6a472ae861088437d).
+- **Последний Actions build:** [run 45036701275](https://github.com/Mortylovelly/Fauna-/actions/runs/45036701275), `completed / success` для exact HEAD.
+- **Artifact:** `fix-build`, ID `14759399821`, не истёк на момент update 004.
+- **Runtime:** проверка руд в созданном мире и серверный тест после 0.4.13 не подтверждены.
 
 ## Среда сборки
 
@@ -23,7 +23,7 @@
 | Gradle в workflow | 9.5.0 |
 | JDK в workflow | 21 |
 | Java source/target/release | 17 |
-| mod_version | 0.4.12 |
+| mod_version | 0.4.13 |
 
 Runtime/bytecode target остаётся Java 17, но CI запускает Gradle/Loom на JDK 21.
 
@@ -80,7 +80,7 @@ Update 001 сохраняет историческое состояние на 2
 
 - HEAD SHA: `ecadeb503f1e3d1eaaa3b2f6a472ae861088437d`.
 - Commit: [Fix Big Globe ore generation and record current modpack inventory](https://github.com/Mortylovelly/Fauna-/commit/ecadeb503f1e3d1eaaa3b2f6a472ae861088437d), 2026-11-18.
-- [Actions run 44410159862](https://github.com/Mortylovelly/Fauna-/actions/runs/44410159862): `completed / success`, exact HEAD.
+- [Actions run 45036701275](https://github.com/Mortylovelly/Fauna-/actions/runs/45036701275): `completed / success`, exact HEAD.
 - Artifact `fix-build`, ID `14475569247`, присутствует и не истёк на момент update 004.
 
 ## Текущее состояние
