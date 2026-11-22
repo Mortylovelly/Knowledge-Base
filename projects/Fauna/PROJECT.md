@@ -34,7 +34,7 @@ Runtime/bytecode target остаётся Java 17, но CI запускает Gra
 - Регистрирует правила удаления отдельных дублирующих natural-spawn entries между fauna-модами; сами entity registrations, spawn eggs, ручной summon и уже существующие сущности не удаляются.
 - Содержит targeted compatibility loot-table data для YUNG's Cave Biomes / Cave Biomes Delight.
 - Логирует наличие ряда модов модпака для диагностики.
-- С версии 0.4.12 содержит целевые Big Globe ore-generation compatibility data для BetterNether и Create Nuclear.
+- С версии 0.4.13 содержит Big Globe ore-generation compatibility data для алмазов, редстоуна, Create Zinc и Create Nuclear (Uranium, Lead, Autunite). Интеграция генерации BetterNether намеренно исключена: в текущем resource pack нет ссылок на блоки или биомы BetterNether.
 
 ## Биомы и генерация мира — важно
 
@@ -46,15 +46,16 @@ Update 001 сохраняет историческое состояние на 2
 
 ## Состав сборки
 
-- Актуальный список модпака на 19 ноября 2026 года — **95 позиций**, полностью сохранён в [update 004](updates/004-current-modpack-and-bigglobe-ore-fixes.md).
-- Этот список является текущим ориентиром до тех пор, пока владелец сам не сообщит об изменениях.
+- Актуальный список модпака на 22 ноября 2026 года — **145 позиций**, полностью сохранён в [update 005](updates/005-current-modpack-145-files.md).
+- Update 004 с 95 позициями остаётся историческим снимком от 19 ноября, а не текущим перечнем.
 - Владелец может добавлять/удалять отдельные моды; не считать это автоматической сменой версии или полной заменой сборки.
-- Повторы и обрезанные имена исходного списка сохранены без изменений.
-- В update 003 отдельно описан исторический лог от 8 ноября с 292 загруженными модами. Не объединять тот лог с актуальным 95-позиционным списком без подтверждения, что это одна и та же установка.
+- Порядок, написание, повторы и предупреждение о дубликате Fabric API сохранены по переданному перечню.
+- В новом списке указаны кастомные установленные файлы: Fix 0.4.13, Minecraft AI Agent 0.3.20 и Seasonal Day Cycle 1.5.0-mc1.20.1.
+- В update 003 отдельно описан исторический лог от 8 ноября с 292 загруженными модами. Не объединять тот лог с текущим списком из 145 файлов: это разные снимки и источники.
 
 ## Fauna: исторический runtime audit
 
-В сохранённом 292-модовом логе 2026-11-08 подтверждены девять mob/fauna модов: Alex's Mobs Continued 2.2.2, Naturalist 5.0pre5, Wildlife 1.19.2-2.2, Critters and Companions 2.7.1, Faunify 1.3.3, Friends&Foes 3.0.9, Ecologics 2.2.7, Hybrid Birds 1.3.0 и YUNG's Cave Biomes 2.0.5. Naturalist Delight — аддон, не отдельный mob pack. Это исторический runtime audit, а не полный roster текущего списка из 95 файлов.
+В сохранённом 292-модовом логе 2026-11-08 подтверждены девять mob/fauna модов: Alex's Mobs Continued 2.2.2, Naturalist 5.0pre5, Wildlife 1.19.2-2.2, Critters and Companions 2.7.1, Faunify 1.3.3, Friends&Foes 3.0.9, Ecologics 2.2.7, Hybrid Birds 1.3.0 и YUNG's Cave Biomes 2.0.5. Naturalist Delight — аддон, не отдельный mob pack. Это исторический runtime audit, а не полный roster текущего списка из 145 файлов.
 
 Важные ограничения текущего Fix, выявленные в update 003:
 - `FaunaDeduplicator` удаляет только natural spawn entries.
