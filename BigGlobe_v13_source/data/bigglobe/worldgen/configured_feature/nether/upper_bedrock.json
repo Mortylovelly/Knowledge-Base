@@ -1,1 +1,8 @@
-{"type":"bigglobe:bedrock","config":{"state":"minecraft:bedrock","full_y":511,"empty_y":495}}
+{
+  "type": "bigglobe:bedrock",
+  "config": {
+    "state": "minecraft:bedrock",
+    "full_y": 607,
+    "empty_y": 591
+  }
+}
