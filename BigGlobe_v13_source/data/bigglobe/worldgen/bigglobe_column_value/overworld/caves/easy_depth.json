@@ -1,0 +1,9 @@
+{
+  "type": "script",
+  "params": {
+    "type": "double",
+    "is_3d": false
+  },
+  "script": "min(world_traits.`bigglobe:exact_surface_y` - (world_traits.`bigglobe:min_y` + 16.0L), 256.0L)",
+  "cache": false
+}
