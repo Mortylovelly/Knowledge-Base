@@ -1,8 +1,8 @@
 {
   "bigglobe:biome": "`bigglobe:nether/bubble`.biome",
   "bigglobe:lava_y": "`bigglobe:nether/bubble`.lava_level",
-  "bigglobe:max_y": "512I",
+  "bigglobe:max_y": "608I",
   "bigglobe:min_y": "0I",
-  "bigglobe:y_level_in_surface": "511I",
-  "bigglobe:y_level_on_surface": "512I"
+  "bigglobe:y_level_in_surface": "607I",
+  "bigglobe:y_level_on_surface": "608I"
 }
