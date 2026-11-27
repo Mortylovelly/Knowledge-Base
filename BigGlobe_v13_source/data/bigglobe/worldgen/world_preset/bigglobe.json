@@ -74,7 +74,7 @@
         "reload_dimension": "minecraft:the_nether",
         "height": {
           "min_y": 0,
-          "max_y": 512
+          "max_y": 608
         },
         "nether_overrides": {
           "place_portal_at_high_y_level": true,
@@ -134,11 +134,7 @@
         "overriders": "#bigglobe:end",
         "end_overrides": {
           "spawning": {
-            "location": [
-              96,
-              67,
-              0
-            ],
+            "location": [96, 67, 0],
             "obsidian_platform": false
           },
           "inner_gateways": {
