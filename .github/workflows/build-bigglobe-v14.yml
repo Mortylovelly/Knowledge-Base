@@ -1,0 +1,35 @@
+name: Build Big Globe v14 datapack
+on:
+  push:
+    paths:
+      - "BigGlobe_v13_source/**"
+      - ".github/workflows/build-bigglobe-v14.yml"
+  workflow_dispatch:
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate datapack JSON and package
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path("BigGlobe_v13_source")
+          assert (root / "pack.mcmeta").is_file(), "pack.mcmeta missing"
+          assert (root / "data").is_dir(), "data folder missing"
+          files = list(root.rglob("*.json")) + list(root.rglob("*.mcmeta"))
+          for path in files:
+              with path.open(encoding="utf-8") as f:
+                  json.load(f)
+          print(f"Validated {len(files)} JSON/MCMeta files")
+          PY
+          mkdir -p dist
+          cd BigGlobe_v13_source
+          zip -qr ../dist/BigGlobe_VanillaPlus_1.20.1_v14_Fixed.zip .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BigGlobe_VanillaPlus_1.20.1_v14_Fixed
+          path: dist/BigGlobe_VanillaPlus_1.20.1_v14_Fixed.zip
+          if-no-files-found: error
+          retention-days: 7
