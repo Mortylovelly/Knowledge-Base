@@ -22,8 +22,38 @@
 - Branch: main
 - Mod ID: optimizationfix
 - Display name: Optimization Fix
-- Current version: 0.5.0
-- Current HEAD (2026-11-28): d154e76da67afbfe2506ec9c71e62e1884124276
+- Current version: 0.6.0
+- Current HEAD (2026-11-28): a15a4e39264423cf8b5555d522b39edfe7796349
+
+## Реализовано в 0.6.0 — GC Heap Usage Trend
+
+### 1. История heap usage после GC
+
+JFR-анализатор теперь обрабатывает `jdk.GCHeapSummary` с привязкой к `gcId`:
+- собирает строки `Before GC` и `After GC` отдельно;
+- связывает обе фазы только внутри одного и того же GC ID, не по соседству строк;
+- хранит не более 128 последних GC ID;
+- считает количество before/after записей и полных пар;
+- выводит первое и последнее post-GC значение, знаковую дельту, минимум и максимум в ограниченном окне;
+- функция доступна и в обычном allocation профиле, и в retained профиле.
+
+Обработка выполняется при анализе .jfr в служебном worker thread. Никакого дополнительного постоянного мониторинга в server tick не добавлено.
+
+### 2. Границы интерпретации
+
+Отчёт показывает общий `heapUsed` после конкретных сборок GC, а не только old-generation и не чистый old-gen live set. Молодые, смешанные и полные сборки могут давать различные уровни post-GC heap usage. Поэтому дельта первого и последнего значения в одном коротком профиле не доказывает утечку памяти. Сравнивать только повторные профили при одинаковом мире, нагрузке, маршруте, времени и конфигурации.
+
+Профайлер не вызывает GC, не выгружает чанки, не меняет настройки JVM или мир.
+
+### 3. Проверка
+
+Добавлен `GcHeapTrendTest`:
+- pairing перемешанных before/after событий по GC ID;
+- сохранение неполных GC пар без смешивания разных коллекций;
+- ограничение 128 последних GC ID;
+- пропуск некорректных ID, значений и неизвестных фаз.
+
+Проверка наличия JFR-событий в Java 17 дополнена `jdk.GCHeapSummary`. CI run #15 для commit `a15a4e39264423cf8b5555d522b39edfe7796349` был запущен; итог сборки и artifact upload фиксируются после завершения Actions.
 
 ## Реализовано в 0.5.0 — Retained Heap Class Census
 
@@ -101,7 +131,7 @@ JFR recording ограничен:
 - суммарный JFR sample weight по классам объектов;
 - top allocation sites по первому frame вне JDK;
 - количество GC, суммарную длительность и максимальную паузу;
-- последние зарегистрированные heap usage Before GC / After GC;
+- GCHeapSummary Before/After snapshots, связанные по одному GC ID; первое/последнее post-GC значение, знаковая дельта, минимум/максимум за ограниченное окно;
 - количество ThreadAllocationStatistics events.
 
 **Критичная интерпретация:** `ObjectAllocationSample.weight` — статистический вес выборки, представляющий allocation pressure, а не точная запись каждого `new`, не retained heap и не объём объектов, всё ещё живых в памяти. Сравнивать распределение/горячие стеки, а не выдавать его за точную сумму удерживаемой RAM. Профиль со stack traces имеет overhead, поэтому не измерять по нему FPS/TPS.
@@ -332,12 +362,12 @@ logs/minecraft-ai-agent/custom/latest.log
 
 ## Следующий этап
 
-1. Установить 0.5.0 на отдельном тестовом профиле/копии мира, удалить предыдущий Optimization Fix JAR, не держать две версии одного Mod ID.
+1. Установить 0.6.0 на отдельном тестовом профиле Minecraft 1.20.1 Fabric, удалить предыдущий Optimization Fix JAR и не держать две версии одного Mod ID.
 2. Проверить startup, Mixin application и обычную игру с текущим ModernFix 5.25.2 и остальными модами.
-3. Запустить /optimizationfix stats и проверить custom RAM WARN log.
-4. Для аллокаций запустить /optimizationfix profile start 60, в течение минуты исследовать новые чанки либо выполнять один повторяемый игровой сценарий, затем /optimizationfix profile stop.
-5. Для retained census запустить /optimizationfix profile retained 60; продолжить обычную игровую сессию до завершения записи, чтобы в её окне произошёл обычный GC. Не вызывать System.gc() специально.
-6. Забрать .jfr и .txt из logs/optimizationfix/profiles. Отправить их вместе с logs/latest.log и кастомным RAM-логом для разбора. Не использовать профилирование как FPS/TPS benchmark.
-7. В retained отчёте сравнивать последний post-GC snapshot между одинаковыми игровыми сценариями/сессиями. Классовая сводка JVM глобальная и не доказывает утечку без устойчивого роста live-set при одинаковой нагрузке.
-8. Если heap растёт, а class census не объясняет удержание, следующим отдельным этапом может стать ограниченный OldObjectSample/GC-root investigation — только после анализа текущих записей, поскольку это более тяжёлая диагностика.
-9. Полный runtime-тест всей пользовательской сборки и фактическая работа ObjectCountAfterGC в её JVM остаются pending. CI success не доказывает in-game совместимость.
+3. Выполнить `/optimizationfix stats`, проверить обычный WARN log и AI Agent custom RAM log.
+4. Для allocation-профиля выполнить `/optimizationfix profile start 60`; для class census — `/optimizationfix profile retained 60`. В обоих отчётах теперь есть GCHeapSummary trend, если во время записи были GC events.
+5. Не вызывать System.gc() специально. Дождаться нормальной игровой активности и завершения профиля.
+6. Забрать .jfr и .txt из logs/optimizationfix/profiles, отправить вместе с logs/latest.log и кастомным RAM log для анализа.
+7. Сравнивать post-GC heap usage только при сопоставимой нагрузке и GC-паттерне. Общий heapUsed после молодых/смешанных/полных GC не является old-generation-only live set; одиночная положительная дельта не доказывает утечку.
+8. Сопоставлять allocation top, retained class census, post-GC heap trend, GC pauses, native/direct memory, loaded chunks и Xmx; не смешивать эти величины и не заявлять измеренное снижение RAM без A/B теста.
+9. Полный runtime-тест всей пользовательской сборки и реальное поведение JFR внутри игрового процесса остаются pending до проверки на стороне владельца. CI success не доказывает in-game совместимость.
