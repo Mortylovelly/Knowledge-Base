@@ -30,7 +30,7 @@
 - Tested source/test commit: `62007079586fbb0af828efb8a8c4ead065230ef5`.
 - GitHub Actions run #6 / ID `46089594257`: exact latest HEAD, success.
 - Build, compileTestJava, test, remapJar and upload artifact successful.
-- Artifact ID `15240482782`; ZIP SHA256 `06671e8bff8136bd51aec655ebc76b74e23143f388f18cb6819e7a9047320cda`.
+- Artifact ID `15240592435`; ZIP SHA256 `cc469ab39d189cf721351c824e915db8e5053fb68b651ab3fa97ab928accd1f9`.
 - JAR `optimization-fix-0.1.0.jar`, size 15420 bytes, SHA256 `28c48d294bdd0d673acc45a3db1610a21e981414f85d9ee75c5e16b2dfcd093f`.
 - JAR content checked: expected classes, Fabric metadata, Mixin config and refmap present; intermediary field/method mappings inspected.
 
