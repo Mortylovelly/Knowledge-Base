@@ -12,17 +12,54 @@
 - **Archive name:** `minecraft-ai-agent`.
 - **Активная версия для нашей работы:** Minecraft 1.20.1 Fabric, Java 17.
 - **Активная ветка:** `minecraft-1.20.1-fabric`.
-- **mod_version:** `0.3.22` (GitHub Actions run #366 completed successfully).
-- **Текущий HEAD:** `ccf5b0a34b4f30276e541c9d8117f1dbb90d31b7` в `minecraft-1.20.1-fabric`.
+- **mod_version:** `0.3.23` (GitHub Actions verification pending for the current 0.3.23 HEAD).
+- **Текущий HEAD:** `b72f82dd40cb540dc8523cac44d1a37f02902827` в `minecraft-1.20.1-fabric`.
 - **Восстановление структуры:** commit `10c0ccf05f377435f6eb5c668bffe644befad66f` восстановил полный 63-entry tree из последнего целого коммита 0.3.3; все последующие изменения применяются поверх него. После 0.3.12 в recursive tree активной ветки 45 файлов, структура сохранена.
-- **UI/mouse 0.3.12:** сохранены G free cursor, шестерёнка SETTINGS и единственный переключатель DIAGNOSTICS. Панель и стиль графиков не переделывались: увеличена только нижняя область, чтобы в ней поместились четыре компактные диаграммы. Вместо диаграммы PING теперь TPS; PING остаётся текстовым показателем. Графики расположены 2×2: FPS и TPS в первом ряду, GPU и CPU во втором. Все четыре используют прежний стиль и общий scale/resize панели.
-- **AI Agent ↔ Logs HUD 0.3.12:** добавлены клиентские function tools `search_agent_logs` и `get_agent_diagnostics`, доступны через общий tool loop Gemini/DeepSeek/Groq/OpenRouter. Первый ищет по сохранённому архиву Logs HUD (`latest.log`, `.1`, `.2`) с фильтрами текста/уровня/CUSTOM, limit и offset pagination; совпадения возвращаются от новых к старым, секреты редактируются. Второй передаёт текущие FPS/AVG/MAX, ping, TPS/tick ms, GPU/CPU/RAM, разрешение, статус log stream и все четыре истории графиков (52 точки, шаг 500 мс, oldest-to-newest). Tool selector включает соответствующие функции для вопросов о логах, ошибках, крашах, лагах и производительности; для общих вопросов о состоянии агента получает и логи, и метрики.
+- **UI/mouse 0.3.12:** сохранены G free cursor, шестерёнка SETTINGS и единственный переключатель DIAGNOSTICS. Панель и стиль графиков не переделывались: увеличена только нижняя область, чтобы в ней поместились пять компактных диаграмм. Вместо диаграммы PING теперь TPS; PING остаётся текстовым показателем. Графики расположены 2×2: FPS и TPS в первом ряду, GPU и CPU во втором. Все четыре используют прежний стиль и общий scale/resize панели.
+- **AI Agent ↔ Logs HUD 0.3.12:** добавлены клиентские function tools `search_agent_logs` и `get_agent_diagnostics`, доступны через общий tool loop Gemini/DeepSeek/Groq/OpenRouter. Первый ищет по сохранённому архиву Logs HUD (`latest.log`, `.1`, `.2`) с фильтрами текста/уровня/CUSTOM, limit и offset pagination; совпадения возвращаются от новых к старым, секреты редактируются. Второй передаёт текущие FPS/AVG/MAX, ping, TPS/tick ms, GPU/CPU/RAM, разрешение, статус log stream и все шесть историй графиков (FPS, TPS, GPU, CPU, системная RAM и Minecraft heap; 52 точки, шаг 500 мс, oldest-to-newest). Tool selector включает соответствующие функции для вопросов о логах, ошибках, крашах, лагах и производительности; для общих вопросов о состоянии агента получает и логи, и метрики.
 - **Ограничение доступа к логам:** агенту доступен полный сохранённый архив, который собирает и показывает именно Logs HUD (до трёх файлов по 4 MiB), а не произвольные файлы vanilla Minecraft или логи любых сторонних клиентских модов. Приход серверных строк сохраняет прежние требования log bridge / подписки / OP2. Логовые строки считаются недоверенными диагностическими данными, не командами для агента.
 - **Сбор метрик:** FPS history собирается и пока открыт AI chat screen; CPU/RAM и GPU sampling продолжается даже при выключенном отображении DIAGNOSTICS, поэтому агент может читать показатели без открытого графического блока. GPU по-прежнему берётся через локальный NVIDIA `nvidia-smi`; при недоступности показывается unknown (`-1` внутри телеметрии / `—` в HUD). CPU и RAM — системные показатели ОС.
 - **Последний успешный build:** run [46088228739](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/46088228739), run #366, conclusion `success`, exact HEAD `ccf5b0a34b4f30276e541c9d8117f1dbb90d31b7`.
 - **Artifact 0.3.22:** ID `15240261099`, name `minecraft-ai-agent-1.20.1`, ZIP size 350911 bytes; ZIP SHA256 `4c69497faf2be2cb6436da10ab557e3eb91599b0089de35055aecc6f99299c11`; JAR `minecraft-ai-agent-0.3.22.jar`, 252483 bytes, SHA256 `5f1c310a98b089c7e791d6dd7b94711a571f14399c24350fcecc089345eb62c1`.
 - **JAR metadata/content:** 0.3.12 / Minecraft 1.20.1 / Java >=17. Verified `AiAgentService`, `AiDiagnostics`, `AiLogFile`, `AiLogOverlay`, `AiServerDiagnostics`, `MinecraftAiAgentClient`; bytecode inspection confirms four graph render calls, both agent tools, archive search/pagination and four metric histories.
 - **Проверка в игре:** GitHub Actions build и JAR verification успешны, но runtime-тест 0.3.12 непосредственно в Minecraft ещё не выполнялся.
+
+## Диагностика и раздельный учёт RAM (0.3.23)
+
+В версии 0.3.23 восстановлен первоначальный ряд индикаторов RES / GPU / CPU / RAM. Значения не заменяются диагностикой heap.
+
+Новые отдельные поля следующей строки:
+- PROC — Working Set процесса Minecraft Java (вся resident-память процесса).
+- HEAP — занятый Java heap / Xmx, выделенный лаунчером.
+- NHEAP — Non-Heap JVM (Metaspace, code cache и другие non-heap pools).
+
+Нижний график переименован в MINECRAFT HEAP и отображает heapUsed / heapMax в процентах, с отдельным live sample каждые 500 мс. Это именно заполнение выделенного JVM heap Minecraft, не потребление всей оперативки ПК. Текущая общая RAM ПК остаётся отдельным индикатором RAM в старой строке.
+
+Истории и agent tool:
+- charts.gpu и charts.cpu сохранены.
+- charts.system_ram — история нагрузки физической памяти всего ПК.
+- charts.minecraft_heap — история загрузки Java heap Minecraft относительно Xmx.
+- Новое поле java_heap_used_percent дополняет java_heap_used_bytes и java_heap_max_bytes.
+
+Windows memory probe:
+- Удалён WMI/PerfProc filter path, который в клиентском логе возвращал Get-CimInstance exit code 3 и переводил метрики в tasklist-working-set-only.
+- Available/Total physical RAM теперь читаются через Win32 GlobalMemoryStatusEx.
+- Minecraft process Working Set, Private Bytes и Virtual Bytes читаются через .NET System.Diagnostics.Process.GetProcessById; private working set остаётся -1, если надёжного счётчика нет.
+- Process/System memory probe обновляется раз в 5 секунд; heap graph читает текущий JVM HeapMemoryUsage каждые 500 мс.
+- systemUsed = totalPhysical - availablePhysical; не подменять AvailableBytes значением MXBean Free Pages.
+
+### Анализ пользовательского лога от 28.11.2026
+
+В файле от 20:26:48 до 20:32:27:
+- JVM arg -Xmx13250M.
+- Java heap в заключительной части был примерно 4.9–5.5 GiB; Old Gen — около 4.48 GiB.
+- Java Working Set — около 8.9 GiB.
+- javaPrivateWorkingSet, javaPrivateBytes и system AvailableBytes были n/a; старый PowerShell/WMI-запрос завершался с exit code 3.
+- JFR allocation/TLAB event counters оставались нулевыми, но ThreadMXBean fallback работал: один из интервалов показывал около 9.14 GiB cumulative thread allocations за 15 секунд. В top threads попадали Distant Horizons world-gen/render и render thread; это объём выделений по потокам, не размер удерживаемой ими памяти и не доказательство утечки.
+- NMT был disabled; его можно включить только до запуска JVM через -XX:NativeMemoryTracking=summary.
+- В этом логе нет Optimization Fix initialized, mod ID optimizationfix или вывода /optimizationfix stats. Этот конкретный файл не позволяет подтвердить, что Optimization Fix загружен или выполнил NBT deduplication; для этого нужен latest.log при старте и результат команды /optimizationfix stats.
+
+CI/runtime status for 0.3.23 must be updated after the current GitHub Actions run completes. Successful compilation does not replace the in-game test.
 
 ## Что это за мод
 
@@ -50,7 +87,7 @@
 - Fabric Loom: `1.9.2`
 - Gradle Wrapper: `8.12`
 - Java compile/source/target: `17`
-- mod_version: `0.3.22`; Actions run [46088228739](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/46088228739) completed successfully for HEAD `ccf5b0a34b4f30276e541c9d8117f1dbb90d31b7`; artifact and JAR verified. In-game runtime test remains pending.
+- mod_version: `0.3.23`; current branch HEAD `b72f82dd40cb540dc8523cac44d1a37f02902827`; GitHub Actions verification is pending. Previous 0.3.22 build [46088228739](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/46088228739) completed successfully for HEAD `ccf5b0a34b4f30276e541c9d8117f1dbb90d31b7`.
 - mod id: `minecraft_ai_agent`
 - root project: `minecraft-ai-agent`
 
