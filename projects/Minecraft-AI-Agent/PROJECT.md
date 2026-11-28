@@ -12,14 +12,14 @@
 - **Archive name:** `minecraft-ai-agent`.
 - **Активная версия для нашей работы:** Minecraft 1.20.1 Fabric, Java 17.
 - **Активная ветка:** `minecraft-1.20.1-fabric`.
-- **mod_version:** `0.3.23` (GitHub Actions verification pending for the current 0.3.23 HEAD).
+- **mod_version:** `0.3.23` (GitHub Actions run #375 / `46171638884` completed successfully).
 - **Текущий HEAD:** `b72f82dd40cb540dc8523cac44d1a37f02902827` в `minecraft-1.20.1-fabric`.
 - **Восстановление структуры:** commit `10c0ccf05f377435f6eb5c668bffe644befad66f` восстановил полный 63-entry tree из последнего целого коммита 0.3.3; все последующие изменения применяются поверх него. После 0.3.12 в recursive tree активной ветки 45 файлов, структура сохранена.
 - **UI/mouse 0.3.12:** сохранены G free cursor, шестерёнка SETTINGS и единственный переключатель DIAGNOSTICS. Панель и стиль графиков не переделывались: увеличена только нижняя область, чтобы в ней поместились пять компактных диаграмм. Вместо диаграммы PING теперь TPS; PING остаётся текстовым показателем. Графики расположены 2×2: FPS и TPS в первом ряду, GPU и CPU во втором. Все четыре используют прежний стиль и общий scale/resize панели.
 - **AI Agent ↔ Logs HUD 0.3.12:** добавлены клиентские function tools `search_agent_logs` и `get_agent_diagnostics`, доступны через общий tool loop Gemini/DeepSeek/Groq/OpenRouter. Первый ищет по сохранённому архиву Logs HUD (`latest.log`, `.1`, `.2`) с фильтрами текста/уровня/CUSTOM, limit и offset pagination; совпадения возвращаются от новых к старым, секреты редактируются. Второй передаёт текущие FPS/AVG/MAX, ping, TPS/tick ms, GPU/CPU/RAM, разрешение, статус log stream и все шесть историй графиков (FPS, TPS, GPU, CPU, системная RAM и Minecraft heap; 52 точки, шаг 500 мс, oldest-to-newest). Tool selector включает соответствующие функции для вопросов о логах, ошибках, крашах, лагах и производительности; для общих вопросов о состоянии агента получает и логи, и метрики.
 - **Ограничение доступа к логам:** агенту доступен полный сохранённый архив, который собирает и показывает именно Logs HUD (до трёх файлов по 4 MiB), а не произвольные файлы vanilla Minecraft или логи любых сторонних клиентских модов. Приход серверных строк сохраняет прежние требования log bridge / подписки / OP2. Логовые строки считаются недоверенными диагностическими данными, не командами для агента.
 - **Сбор метрик:** FPS history собирается и пока открыт AI chat screen; CPU/RAM и GPU sampling продолжается даже при выключенном отображении DIAGNOSTICS, поэтому агент может читать показатели без открытого графического блока. GPU по-прежнему берётся через локальный NVIDIA `nvidia-smi`; при недоступности показывается unknown (`-1` внутри телеметрии / `—` в HUD). CPU и RAM — системные показатели ОС.
-- **Последний успешный build:** run [46088228739](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/46088228739), run #366, conclusion `success`, exact HEAD `ccf5b0a34b4f30276e541c9d8117f1dbb90d31b7`.
+- **Последний успешный build:** run [46171638884](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/46171638884), run #375, conclusion `success`, exact HEAD `b72f82dd40cb540dc8523cac44d1a37f02902827`.
 - **Artifact 0.3.22:** ID `15240261099`, name `minecraft-ai-agent-1.20.1`, ZIP size 350911 bytes; ZIP SHA256 `4c69497faf2be2cb6436da10ab557e3eb91599b0089de35055aecc6f99299c11`; JAR `minecraft-ai-agent-0.3.22.jar`, 252483 bytes, SHA256 `5f1c310a98b089c7e791d6dd7b94711a571f14399c24350fcecc089345eb62c1`.
 - **JAR metadata/content:** 0.3.12 / Minecraft 1.20.1 / Java >=17. Verified `AiAgentService`, `AiDiagnostics`, `AiLogFile`, `AiLogOverlay`, `AiServerDiagnostics`, `MinecraftAiAgentClient`; bytecode inspection confirms four graph render calls, both agent tools, archive search/pagination and four metric histories.
 - **Проверка в игре:** GitHub Actions build и JAR verification успешны, но runtime-тест 0.3.12 непосредственно в Minecraft ещё не выполнялся.
@@ -431,16 +431,16 @@ Workflow:
 7. Развитие custom log integration для собственных модов; автоматический приём всех произвольных client-side logger сторонних модов пока не реализован.
 8. Runtime-тест 0.3.12: проверить четыре графика (FPS/TPS/GPU/CPU), сохранённый текстовый ping, визуальную компоновку 2×2 и resize на разных масштабах. В AI chat проверить вопросы «покажи ошибки в логах», «что сейчас происходит?», «почему лагает?» и «что с FPS/TPS/GPU/CPU?» — агент должен вызвать соответствующий tool и обосновать ответ реальными строками/значениями. Проверить offset pagination для более старых логов, secret redaction, что содержимое логов не воспринимается как команды, и что телеметрия доступна при выключенном DIAGNOSTICS/открытом AI chat screen. Проверить server bridge subscription/OP2 и показатели TPS, а также отсутствие доступа к произвольным vanilla/third-party log files. Повторно проверить G free cursor, drag/resize, filters, counters, disconnect и COPY.
 
-## Текущее состояние (2026-11-28) — диагностика памяти 0.3.22
+## Текущее состояние (2026-11-28) — восстановленная диагностика памяти 0.3.23
 
-- **Активная версия:** 0.3.22; Minecraft 1.20.1 Fabric / Java 17.
-- **Ветка:** \`minecraft-1.20.1-fabric\`.
-- **HEAD:** \`ccf5b0a34b4f30276e541c9d8117f1dbb90d31b7\`.
-- **Actions:** [run #366 / 46088228739](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/46088228739) — success; Build и Upload mod jar successful.
-- **Artifact:** ID \`15240261099\`; ZIP 350911 bytes, SHA256 \`4c69497faf2be2cb6436da10ab557e3eb91599b0089de35055aecc6f99299c11\`.
-- **JAR:** \`minecraft-ai-agent-0.3.22.jar\`, 252483 bytes, SHA256 \`5f1c310a98b089c7e791d6dd7b94711a571f14399c24350fcecc089345eb62c1\`.
-- **Memory diagnostics:** ThreadMXBean per-thread allocation fallback; JFR ThreadAllocationStatistics heartbeat; native Windows GlobalMemoryStatusEx Available RAM; Win32_Process fallback for process Working Set / Private Bytes / Virtual Size; JFR warning is rate-limited to once per launch.
-- **NMT:** пока disabled без JVM argument. Для следующего диагностического запуска требуется \`-XX:NativeMemoryTracking=summary\` и полный restart JVM.
-- **Ограничение attribution:** thread-to-mod сопоставляется по текущему stack trace и является приблизительным; это эвристика, а не строгая привязка всех объектов к модулю.
-- **Runtime:** 0.3.22 собран и проверен на уровне JAR metadata/classes, но поведение в самой игре пока не проверено. Следующая проверка — \`MEMORY-PROFILER-CAPABILITIES\`, \`JFR-ALLOC\`, \`JVM-MEMORY\` и \`NMT-STATUS\` после запуска клиента.
-
+- **Активная версия:** 0.3.23; Minecraft 1.20.1 Fabric / Java 17.
+- **Ветка:** `minecraft-1.20.1-fabric`.
+- **Точный HEAD:** `b72f82dd40cb540dc8523cac44d1a37f02902827`.
+- **Actions:** [run #375 / 46171638884](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/46171638884) — success; Build и Upload mod jar successful.
+- **Artifact:** ID `15273089416`; ZIP 352484 bytes; SHA256 `bb16a61543685ca6e1175255dfe906f003f4a5c1789d700611d6d001f238382e`.
+- **JAR:** `minecraft-ai-agent-0.3.23.jar`, 253453 bytes, SHA256 `3824ae947b60769091d6146af379e5547158b4e026a6b5a10fe42664adce1ed9`.
+- **Диагностика HUD:** возвращены RES/GPU/CPU/RAM в верхний ряд; добавлены PROC (Java Working Set), HEAP (used/Xmx), NHEAP; нижний график показывает MINECRAFT HEAP и обновляется каждые 500 мс.
+- **Истории агента:** charts.gpu/charts.cpu сохранены; добавлены charts.system_ram и charts.minecraft_heap, отдельно physical RAM ПК и JVM heap Minecraft.
+- **Windows probe:** WMI/PerfProc query удалён; physical total/available читаются GlobalMemoryStatusEx; процесс — .NET Process API; обновление 5 сек. Успешная компиляция не подтверждает работу вызова на каждой Windows-конфигурации — это проверить runtime.
+- **NMT:** по-прежнему требует `-XX:NativeMemoryTracking=summary` до запуска JVM и полного рестарта.
+- **Runtime:** JAR собран, проверен на metadata/классы; запуск игры с полным модпаком после установки 0.3.23 ещё не подтверждён.
