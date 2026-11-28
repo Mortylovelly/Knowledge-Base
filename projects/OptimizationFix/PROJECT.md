@@ -2,7 +2,7 @@
 
 ## Назначение
 
-Отдельный Fabric-мод для снижения накладных расходов памяти на NBT в большой пользовательской сборке без изменения игровых механик, worldgen, мобов, рендера или тиков.
+Отдельный Fabric-мод для снижения безопасно устранимых накладных расходов памяти и диагностики heap/native allocation pressure в большой пользовательской сборке без изменения игровых механик, worldgen, мобов, рендера или тиков.
 
 ## Целевая платформа
 
@@ -22,8 +22,52 @@
 - Branch: main
 - Mod ID: optimizationfix
 - Display name: Optimization Fix
-- Current version: 0.4.0
-- Current HEAD (2026-11-28): 593103d924482fc687a7a07f39108879fc2dd5e5
+- Current version: 0.5.0
+- Current HEAD (2026-11-28): d154e76da67afbfe2506ec9c71e62e1884124276
+
+## Реализовано в 0.5.0 — Retained Heap Class Census
+
+### 1. Отдельный режим анализа живого набора объектов
+
+Команда (permission level 2):
+- `/optimizationfix profile retained` — 60 секунд по умолчанию;
+- `/optimizationfix profile retained 45` — длительность от 15 до 90 секунд;
+- `/optimizationfix profile status` — проверить состояние;
+- `/optimizationfix profile stop` — остановить досрочно.
+
+Режим сохраняет allocation/GC события 0.4.0 и дополнительно включает `jdk.ObjectCountAfterGC`. Это подробное JFR событие класса GC/Detailed, выключенное в стандартных настройках JFR. Оно выдаёт для каждого класса число экземпляров и суммарный размер после реальной сборки мусора.
+
+Пределы режима:
+- максимум 90 секунд;
+- JFR repository maxSize 128 MiB;
+- maxAge duration + 15 seconds;
+- последние пять завершённых профилей хранятся на диске.
+
+Профиль retained запускается только вручную. Событие может добавить CPU/GC pause overhead, поэтому короткая сессия не предназначена для измерения FPS/TPS.
+
+### 2. Что делает анализатор
+
+- потоково читает JFR file вне server tick;
+- считает строки ObjectCountAfterGC;
+- выбирает последний записанный GC id;
+- хранит только class groups этого последнего GC id, а не суммирует объекты с нескольких сборок;
+- ограничивает агрегацию 4096 группами классов;
+- выдаёт суммарные экземпляры/байты в последнем snapshot;
+- выводит top классов по байтам и по количеству instances.
+
+Если во время профиля не случилось подходящего GC или JVM не выдала census, отчёт пишет об отсутствии снимка. Никакой `System.gc()` не вызывается ради заполнения отчёта.
+
+Census включает классы всего JVM процесса: Minecraft, Fabric, моды и библиотеки. Он не распределяет память по Mod ID и не определяет, какой мод держит reference на объект. Большое число объектов класса не доказывает утечку.
+
+Это snapshot class histogram после настоящего GC, не GC-root/path-to-reference leak analysis. Heap dump, `OldObjectSample` и GC-root path в этой версии по-прежнему не включены.
+
+### 3. Проверка и тесты
+
+Добавлены unit tests для:
+- замены snapshot на более новый GC id;
+- игнорирования строк от старого GC id;
+- корректной агрегации и защиты от long overflow;
+- наличия JFR-событий `jdk.ObjectAllocationSample` и `jdk.ObjectCountAfterGC` в Java 17 runtime.
 
 ## Реализовано в 0.4.0 — JFR Allocation Profiler
 
@@ -121,6 +165,7 @@ Governor не вызывает `System.gc()`, не выгружает чанки
 - `/optimizationfix stats` — свежий NBT + memory budget snapshot; обычный WARN log и тот же `logs/minecraft-ai-agent/custom/latest.log`.
 - `/optimizationfix trim` — вручную очищает только собственные weak lookup indexes; запись также идёт в custom RAM log.
 - `/optimizationfix profile start [15-180]` / `stop` / `status` — короткая запись JFR и сводка по аллокациям/GC.
+- `/optimizationfix profile retained [15-90]` — дополнительно class count/bytes после реального GC.
 - `/optimizationfix reload` — перечитывает governor/NBT config, Mixin-решение по ModernFix остаётся startup-only.
 
 ### 5. Конфигурация 0.3.0
@@ -246,6 +291,16 @@ logs/minecraft-ai-agent/custom/latest.log
 
 Публичные комментарии разработчиков GTA VI описывают масштабную переработку LOD, распараллеливание систем и приоритизацию streaming ради работы в ограниченной памяти. Это engine-level asset/world streaming, которое нельзя прямо переносить в Java/Fabric мод как универсальный RAM-патч. Для Optimization Fix применены переносимые принципы: не удерживать объекты сильными ссылками бессрочно, переиспользовать повторяющиеся immutable values до создания wrapper, хранить малые структуры компактно и переходить к hash lookup для больших. Не заявлять, что это эквивалент движку Rockstar.
 
+## Сборка и артефакт 0.5.0
+
+- GitHub Actions run #14 / ID 46178610272: **success** для exact HEAD `d154e76da67afbfe2506ec9c71e62e1884124276`.
+- JDK 17, Gradle build, JUnit tests, JFR event availability test и artifact upload: success.
+- Artifact ID 15276058901; ZIP `optimization-fix-0.5.0-artifact.zip`, 91,687 bytes, SHA256 `d950c3c52a8d15b750a881f70ee176e31513253e00e5e1401a21ed3c654f7a44`.
+- Main JAR `optimization-fix-0.5.0.jar`, 66,123 bytes, SHA256 `401728fde5006fad012cb763a278bead3afffd961ffeee1b7edb8494c449dbf4`.
+- Sources JAR `optimization-fix-0.5.0-sources.jar`, 34,843 bytes, SHA256 `30ba7aba1f5701e1237b072281a11eec33cfe5777b7253f11e6a2efa2071aff0`.
+- ZIP и JAR скачаны и проверены локально. Metadata: id=optimizationfix, version=0.5.0, Minecraft 1.20.1, Java >=17, Fabric API >=0.92.12+1.20.1. Новые классы JFR profiler/ClassCensusSnapshot и команды присутствуют.
+- CI/unit tests successful. Реальное профилирование в полном пользовательском модпаке и in-game совместимость остаются pending.
+
 ## Сборка и артефакт 0.4.0
 
 - GitHub Actions run #13 / ID 46177975840: **success** для exact HEAD `593103d924482fc687a7a07f39108879fc2dd5e5`.
@@ -277,12 +332,12 @@ logs/minecraft-ai-agent/custom/latest.log
 
 ## Следующий этап
 
-1. Установить 0.4.0 на отдельном профиле/копии мира, не на единственном основном мире; удалить старые JAR Optimization Fix, не держать две версии Mod ID.
-2. Проверить startup и Mixin application с текущими ModernFix 5.25.2 и остальными модами.
-3. Проверить загрузку/сохранение NBT, инвентари, сундуки, entity data, chunk save/load и переходы между измерениями.
-4. Запустить /optimizationfix stats и проверить блок WARN в custom RAM log.
-5. Для профиля повторяемой нагрузки: /optimizationfix profile start 60; 60 секунд выполнять один одинаковый сценарий (например, пройти один и тот же маршрут в мире либо исследовать новые чанки), затем /optimizationfix profile stop.
-6. Забрать .jfr и .txt из logs/optimizationfix/profiles. Отправить оба файла для разбора allocation top classes/sites. Не использовать сам профиль как FPS/TPS benchmark.
-7. Для A/B сравнения использовать один мир, одинаковый маршрут/время сессии, те же настройки DH и одинаковый Xmx; сравнить heap/GC/direct/native/system RAM, loaded chunks и allocation rate.
-8. Отдельно проверить авто-реакцию на критическом heap-пороге в тестовом профиле; не провоцировать OOM в основном мире.
-9. Полный runtime-тест со всей пользовательской сборкой, включая фактическую работу JFR в игровом Java runtime, остаётся pending. CI success не означает, что in-game совместимость уже подтверждена. CI success не означает, что in-game совместимость уже подтверждена.
+1. Установить 0.5.0 на отдельном тестовом профиле/копии мира, удалить предыдущий Optimization Fix JAR, не держать две версии одного Mod ID.
+2. Проверить startup, Mixin application и обычную игру с текущим ModernFix 5.25.2 и остальными модами.
+3. Запустить /optimizationfix stats и проверить custom RAM WARN log.
+4. Для аллокаций запустить /optimizationfix profile start 60, в течение минуты исследовать новые чанки либо выполнять один повторяемый игровой сценарий, затем /optimizationfix profile stop.
+5. Для retained census запустить /optimizationfix profile retained 60; продолжить обычную игровую сессию до завершения записи, чтобы в её окне произошёл обычный GC. Не вызывать System.gc() специально.
+6. Забрать .jfr и .txt из logs/optimizationfix/profiles. Отправить их вместе с logs/latest.log и кастомным RAM-логом для разбора. Не использовать профилирование как FPS/TPS benchmark.
+7. В retained отчёте сравнивать последний post-GC snapshot между одинаковыми игровыми сценариями/сессиями. Классовая сводка JVM глобальная и не доказывает утечку без устойчивого роста live-set при одинаковой нагрузке.
+8. Если heap растёт, а class census не объясняет удержание, следующим отдельным этапом может стать ограниченный OldObjectSample/GC-root investigation — только после анализа текущих записей, поскольку это более тяжёлая диагностика.
+9. Полный runtime-тест всей пользовательской сборки и фактическая работа ObjectCountAfterGC в её JVM остаются pending. CI success не доказывает in-game совместимость.
