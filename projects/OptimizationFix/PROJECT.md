@@ -22,8 +22,70 @@
 - Branch: main
 - Mod ID: optimizationfix
 - Display name: Optimization Fix
-- Current version: 0.2.0
-- Current HEAD (2026-11-28): ea5118ab3240e78458f399a96279308e7200c982
+- Current version: 0.3.0
+- Current HEAD (2026-11-28): d0c1ff4b9efa9d9ebfcb70f837a88ee968c861f4
+
+## Реализовано в 0.3.0 — Memory Budget Governor
+
+### 1. Периодическая телеметрия памяти
+
+MemoryBudgetGovernor регистрируется через Fabric `ServerTickEvents.END_SERVER_TICK` и по умолчанию делает снимок раз в 200 server ticks (~10 секунд).
+
+Снимок включает:
+- JVM heap used / committed / max и процент от max;
+- отдельные MemoryPoolMXBean: young/old generation, Metaspace, Code Cache и прочие доступные пулы;
+- NIO direct и mapped BufferPoolMXBean;
+- total/free физической RAM через OperatingSystemMXBean;
+- JVM process committed virtual memory и process CPU load (если JVM/OS предоставляет их);
+- количество живых Java-потоков, GC count/time;
+- примерную скорость аллокаций по HotSpot ThreadMXBean per-thread allocation counters;
+- измерения: loaded chunks, vanilla ServerChunkManager pending tasks, minY/maxY exclusive, число вертикальных секций;
+- версии ModernFix, FerriteCore, C2ME, Distant Horizons и Big Globe, если установлены.
+
+Thread allocation tracking включён в конфиге по умолчанию и активирует доступные HotSpot counters. Сумма считается по живым потокам; если поток завершился между замерами, дельта может быть занижена. Это не allocation profiler и не показывает классы/stack traces.
+
+### 2. Memory pressure policy и безопасная реакция
+
+Дефолты: WARN при 85% max heap, CRITICAL при 92%, повторное взведение действия при падении до 80%.
+
+При первом CRITICAL-снимке в одном pressure episode опционально очищаются только bounded weak-value lookup indexes самого Optimization Fix. NBT values, мир, сущности, чанки и сохранения не модифицируются. Поскольку значения интернеров слабые, освобождается только метадата индексов; это ограниченный safety valve, а не способ высвободить гигабайты heap. После очистки индекс заново наполняется и временно даёт меньше dedup hits.
+
+Governor не вызывает `System.gc()`, не выгружает чанки/сущности, не меняет view/simulation distance, не меняет высоту измерений и не трогает кэши/очереди других модов.
+
+### 3. Диагностика высоких измерений и очередей
+
+Для каждого ServerWorld выводятся:
+- loadedChunks;
+- ServerChunkManager pendingTasks;
+- bottomY и topY exclusive;
+- verticalSectionsPerChunk;
+- loadedChunkSectionSlots = loadedChunks × verticalSectionsPerChunk.
+
+Последнее поле — потенциальный диапазон секций в загруженных чанках, а не точное число непустых/реально выделенных секций.
+
+Граница интеграции:
+- Vanilla ServerChunkManager pendingTasks не включает гарантированно все приватные очереди C2ME. В отчёте счётчик так и обозначен, C2ME внутреннюю очередь не изменяет.
+- Внутренний LOD cache Distant Horizons не очищается/не измеряется через неподтверждённый API. Мод лишь определяет наличие и версию DH.
+- Никакой автоподстройки worldgen, загрузки чанков, height limits или DH LOD не выполняется.
+
+### 4. Новые команды
+
+- `/optimizationfix stats` — свежий NBT + memory budget snapshot; обычный WARN log и тот же `logs/minecraft-ai-agent/custom/latest.log`.
+- `/optimizationfix trim` — вручную очищает только собственные weak lookup indexes; запись также идёт в custom RAM log.
+- `/optimizationfix reload` — перечитывает governor/NBT config, Mixin-решение по ModernFix остаётся startup-only.
+
+### 5. Конфигурация 0.3.0
+
+Добавлены:
+- `governor.enabled=true`
+- `governor.interval_ticks=200`
+- `governor.heap_warn_percent=0.85`
+- `governor.heap_critical_percent=0.92`
+- `governor.heap_rearm_percent=0.80`
+- `governor.trim_own_caches_on_critical=true`
+- `telemetry.track_thread_allocations=true`
+
+Конфиг мигрирует на version 3 без изменения target 1.20.1 / Fabric / Java 17.
 
 ## Реализовано в 0.2.0
 
@@ -98,15 +160,11 @@ logs/minecraft-ai-agent/custom/latest.log
 
 ## Команды и конфигурация
 
-- /optimizationfix stats — подробный отчёт в chat, WARN log и AI Agent custom RAM log.
-- /optimizationfix reload — перечитать конфиг и пересоздать interners; Mixin compatibility decisions фиксируются на старте и не меняются без перезапуска.
-- Config: config/optimizationfix.properties.
-- Default options:
-  nbt.deduplicate_strings=true,
-  nbt.deduplicate_compound_keys=true,
-  experimental.compact_compound_maps=true,
-  interner.max_entries_per_type=4096,
-  interner.max_string_length=128.
+- /optimizationfix stats — подробный NBT + Memory Budget Governor отчёт в chat, WARN log и AI Agent custom RAM log.
+- /optimizationfix trim — очистить собственные bounded weak lookup indexes.
+- /optimizationfix reload — перечитать конфиг и пересоздать interners; governor применяет настройки сразу, ModernFix Mixin compatibility остаётся startup-only.
+- Config: config/optimizationfix.properties, config.version=3.
+- Default options дополнительно: governor.enabled=true, interval_ticks=200, heap_warn=0.85, heap_critical=0.92, heap_rearm=0.80, trim_own_caches_on_critical=true, track_thread_allocations=true.
 
 ## Аудит существующего модпака и пересечения
 
@@ -148,12 +206,22 @@ logs/minecraft-ai-agent/custom/latest.log
 - ZIP contains remapped JAR and sources JAR. Fabric metadata verified as Minecraft 1.20.1 / Java >=17 / Fabric API >=0.92.12+1.20.1; expected Mixin config, plugin and classes are present.
 - CI/unit tests passed. In-game startup and full modpack runtime tests are pending.
 
+## Сборка и артефакт 0.3.0
+
+- GitHub Actions run #12 / ID 46177383315: **success** для exact HEAD `d0c1ff4b9efa9d9ebfcb70f837a88ee968c861f4`.
+- Checkout, JDK 17, Gradle build + JUnit tests, artifact upload: successful.
+- Artifact ID 15276211763, ZIP `optimization-fix-0.3.0-artifact.zip`, 65,451 bytes, SHA256 `838d1265b84e575aa7d4eaeb0f9b76d2c764b84c43d020b25390f1b13f04276b`.
+- Main JAR `optimization-fix-0.3.0.jar`, 47,629 bytes, SHA256 `b90201f16bf1eadff2d6a0448a5fcfbab525969ab556c3e829309973ffc004dd`.
+- Sources JAR `optimization-fix-0.3.0-sources.jar`, 26,043 bytes.
+- JAR metadata checked: mod ID optimizationfix, version 0.3.0, Minecraft 1.20.1, Java >=17, Fabric API >=0.92.12+1.20.1. New Governor/policy/command classes are present.
+- CI and unit tests passed. In-game startup and the complete user modpack runtime test remain pending; do not claim measured RAM savings before A/B tests.
+
 ## Следующий этап
 
-1. Установить на отдельном профиле/копии мира, не на единственном основном мире.
-2. Удалить старый optimization-fix-0.1.0.jar, не держать две версии одного Mod ID.
-3. Проверить startup, Mixin application, загрузку/сохранение NBT, инвентари, сундуки, entity data, chunk save/load и переходы между измерениями.
-4. Запустить /optimizationfix stats после обычной игры и после загрузки мира; проверить WARN-блок в custom RAM log.
-5. Снимать одинаковые heap/GC/native/process показатели до и после в сопоставимых сценариях.
-6. Не заявлять процент/объём экономии RAM без контролируемого A/B-измерения.
-7. Полный runtime-тест со всей пользовательской сборкой остаётся pending.
+1. Установить 0.3.0 на отдельном профиле/копии мира, не на единственном основном мире; удалить старые JAR Optimization Fix, не держать две версии Mod ID.
+2. Проверить startup и Mixin application с текущими ModernFix 5.25.2 и остальными модами.
+3. Проверить загрузку/сохранение NBT, инвентари, сундуки, entity data, chunk save/load и переходы между измерениями.
+4. Запустить /optimizationfix stats после обычной игры и после загрузки мира; проверить блок WARN в custom RAM log.
+5. Для A/B сравнения использовать один мир, одинаковый маршрут/время сессии, те же настройки DH и одинаковый Xmx; сравнить heap/GC/direct/native/system RAM, loaded chunks и allocation rate.
+6. Отдельно проверить авто-реакцию на критическом heap-пороге в тестовом профиле; не провоцировать OOM в основном мире.
+7. Полный runtime-тест со всей пользовательской сборкой остаётся pending. CI success не означает, что in-game совместимость уже подтверждена.
