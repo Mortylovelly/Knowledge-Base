@@ -17,5 +17,6 @@
 15. [015 — Minecraft AI Agent 0.3.17: актуальная сборка и проверка версии](015-build-0.3.17-and-version-audit.md)
 
 16. [016 — Расширенная диагностика памяти и JFR fallback (0.3.22)](016-memory-diagnostics-0.3.22.md)
+17. [017 — Восстановление GPU/CPU и отдельный график Minecraft heap (0.3.23)](017-restore-gpu-cpu-and-separate-minecraft-heap-0.3.23.md)
 
 Следующая запись — `017`. Номер не переиспользовать.
