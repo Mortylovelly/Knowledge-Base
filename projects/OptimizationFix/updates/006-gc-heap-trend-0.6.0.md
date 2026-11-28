@@ -30,9 +30,12 @@ Commit: `a15a4e39264423cf8b5555d522b39edfe7796349`
 
 ## CI / артефакт
 
-- GitHub Actions run #15 / ID 46179181658: запущен для exact commit выше.
-- Build/test и artifact upload: статус будет зафиксирован по фактическому завершению Actions.
-- JAR/ZIP и SHA256: добавить после скачивания и проверки артефакта.
+- GitHub Actions run #15 / ID 46179181658: **success** для exact commit выше.
+- JDK 17, Gradle build, JUnit tests и artifact upload: success; workflow завершился `BUILD SUCCESSFUL`.
+- Artifact ID 15276872650; ZIP `optimization-fix-0.6.0-artifact.zip`, 97,287 bytes, SHA256 `262fad5c655b8645e48119cc3fa76afb943dd61c7a59525b821a7f746fb0f0fd`.
+- Main JAR `optimization-fix-0.6.0.jar`, 70,387 bytes, SHA256 `accd616e9dca7dc91d9d395fc9c9e73a57c01844110f0fa23433885801db2e35`.
+- Sources JAR `optimization-fix-0.6.0-sources.jar`, 36,604 bytes, SHA256 `fa6637248fb5635187ddb6c8b8931b4085f8b159f08240c1d97d91ec273473d3`.
+- ZIP скачан и локально проверен; metadata и наличие классов `GcHeapTrend` / `JfrMemoryProfiler` подтверждены.
 - Полный запуск в пользовательском Minecraft-модпаке: pending.
 
 ## Первое применение

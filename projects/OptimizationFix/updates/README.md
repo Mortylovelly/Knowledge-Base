@@ -9,5 +9,5 @@
 
 Последняя зафиксированная версия: 0.6.0
 Minecraft: 1.20.1 Fabric / Java 17
-GitHub Actions run #15 / ID 46179181658: in progress
+GitHub Actions run #15 / ID 46179181658: success (artifact ID 15276872650)
 Runtime test в полном модпаке: pending

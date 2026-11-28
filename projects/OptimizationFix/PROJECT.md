@@ -53,7 +53,7 @@ JFR-анализатор теперь обрабатывает `jdk.GCHeapSummar
 - ограничение 128 последних GC ID;
 - пропуск некорректных ID, значений и неизвестных фаз.
 
-Проверка наличия JFR-событий в Java 17 дополнена `jdk.GCHeapSummary`. CI run #15 для commit `a15a4e39264423cf8b5555d522b39edfe7796349` был запущен; итог сборки и artifact upload фиксируются после завершения Actions.
+Проверка наличия JFR-событий в Java 17 дополнена `jdk.GCHeapSummary`. GitHub Actions run #15 / ID `46179181658` завершился **success** для exact commit `a15a4e39264423cf8b5555d522b39edfe7796349`; JDK 17 setup, Gradle build, JUnit tests и upload artifact прошли успешно.
 
 ## Реализовано в 0.5.0 — Retained Heap Class Census
 
@@ -320,6 +320,16 @@ logs/minecraft-ai-agent/custom/latest.log
 ## Сравнение с игровыми движками
 
 Публичные комментарии разработчиков GTA VI описывают масштабную переработку LOD, распараллеливание систем и приоритизацию streaming ради работы в ограниченной памяти. Это engine-level asset/world streaming, которое нельзя прямо переносить в Java/Fabric мод как универсальный RAM-патч. Для Optimization Fix применены переносимые принципы: не удерживать объекты сильными ссылками бессрочно, переиспользовать повторяющиеся immutable values до создания wrapper, хранить малые структуры компактно и переходить к hash lookup для больших. Не заявлять, что это эквивалент движку Rockstar.
+
+## Сборка и артефакт 0.6.0
+
+- GitHub Actions run #15 / ID 46179181658: **success** для exact HEAD `a15a4e39264423cf8b5555d522b39edfe7796349`.
+- JDK 17 setup, `./gradlew build --no-daemon`, JUnit tests и artifact upload: success; workflow log завершился строкой BUILD SUCCESSFUL.
+- Artifact ID 15276872650; ZIP `optimization-fix-0.6.0-artifact.zip`, 97,287 bytes, SHA256 `262fad5c655b8645e48119cc3fa76afb943dd61c7a59525b821a7f746fb0f0fd`.
+- Main JAR `optimization-fix-0.6.0.jar`, 70,387 bytes, SHA256 `accd616e9dca7dc91d9d395fc9c9e73a57c01844110f0fa23433885801db2e35`.
+- Sources JAR `optimization-fix-0.6.0-sources.jar`, 36,604 bytes, SHA256 `fa6637248fb5635187ddb6c8b8931b4085f8b159f08240c1d97d91ec273473d3`.
+- ZIP downloaded and locally inspected. JAR metadata verified: id `optimizationfix`, version `0.6.0`, Minecraft `1.20.1`, Java `>=17`, Fabric API `>=0.92.12+1.20.1`; `GcHeapTrend` and updated `JfrMemoryProfiler` classes present.
+- CI/tests success; real start in the full user modpack and live JFR capture remain pending.
 
 ## Сборка и артефакт 0.5.0
 
