@@ -6,7 +6,7 @@
 - Java: 17
 - mod_version: 0.3.23
 - Latest HEAD at documentation update: b72f82dd40cb540dc8523cac44d1a37f02902827
-- CI: pending for final HEAD at time this entry was created
+- CI: GitHub Actions run #375 / `46171638884` completed successfully for exact HEAD `b72f82dd40cb540dc8523cac44d1a37f02902827`
 - Runtime: pending
 
 ## Что исправлено в Logs HUD
@@ -67,4 +67,13 @@ Optimization Fix 0.1.0 нельзя подтвердить по этому фа�
 
 ## Проверка
 
-CI и точный JAR для версии 0.3.23 будут добавлены после завершения GitHub Actions для финального commit. Runtime-проверка GUI, NVIDIA GPU polling, Windows native probe и полного modpack остаётся обязательной после установки JAR.
+### Проверенная сборка и артефакт
+
+- GitHub Actions: [run #375 / 46171638884](https://github.com/Mortylovelly/Minecraft-AI-Agent/actions/runs/46171638884) — success для точного HEAD `b72f82dd40cb540dc8523cac44d1a37f02902827`.
+- Build и Upload mod jar завершились успешно.
+- Artifact ID: `15273089416`, name `minecraft-ai-agent-1.20.1`, ZIP 352484 bytes.
+- ZIP SHA256: `bb16a61543685ca6e1175255dfe906f003f4a5c1789d700611d6d001f238382e`.
+- JAR: `minecraft-ai-agent-0.3.23.jar`, 253453 bytes.
+- JAR SHA256: `3824ae947b60769091d6146af379e5547158b4e026a6b5a10fe42664adce1ed9`.
+
+CI подтверждает компиляцию и упаковку. Runtime-проверка GUI, NVIDIA GPU polling, Windows native probe и полного modpack остаётся обязательной после установки JAR.
