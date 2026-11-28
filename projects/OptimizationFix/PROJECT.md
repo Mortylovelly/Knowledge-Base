@@ -22,8 +22,56 @@
 - Branch: main
 - Mod ID: optimizationfix
 - Display name: Optimization Fix
-- Current version: 0.3.0
-- Current HEAD (2026-11-28): d0c1ff4b9efa9d9ebfcb70f837a88ee968c861f4
+- Current version: 0.4.0
+- Current HEAD (2026-11-28): 593103d924482fc687a7a07f39108879fc2dd5e5
+
+## Реализовано в 0.4.0 — JFR Allocation Profiler
+
+### 1. Короткие профили по запросу
+
+JFR-профайлер выключен по умолчанию. Запускать его может оператор с permission level 2:
+- `/optimizationfix profile start` — 60 секунд;
+- `/optimizationfix profile start 90` — заданная длительность от 15 до 180 секунд;
+- `/optimizationfix profile status` — состояние и оставшееся время;
+- `/optimizationfix profile stop` — досрочно остановить запись;
+- `/optimizationfix profile` — показать состояние.
+
+JFR recording ограничен:
+- временем профиля максимум 180 секунд;
+- disk repository max size 128 MiB;
+- max age около длительности + 15 секунд;
+- хранятся последние пять завершённых `.jfr`-файлов.
+
+Включённые события:
+- `jdk.ObjectAllocationSample` со stack trace и throttle 150 samples/s;
+- `jdk.GarbageCollection`;
+- `jdk.GCHeapSummary`;
+- `jdk.ThreadAllocationStatistics` раз в секунду.
+
+### 2. Анализ .jfr
+
+После остановки файл записывается в `logs/optimizationfix/profiles`, рядом создаётся текстовый отчёт. Потоковое чтение/агрегация запускается в отдельном служебном worker thread, не в server tick.
+
+Итог включает:
+- количество allocation samples;
+- суммарный JFR sample weight по классам объектов;
+- top allocation sites по первому frame вне JDK;
+- количество GC, суммарную длительность и максимальную паузу;
+- последние зарегистрированные heap usage Before GC / After GC;
+- количество ThreadAllocationStatistics events.
+
+**Критичная интерпретация:** `ObjectAllocationSample.weight` — статистический вес выборки, представляющий allocation pressure, а не точная запись каждого `new`, не retained heap и не объём объектов, всё ещё живых в памяти. Сравнивать распределение/горячие стеки, а не выдавать его за точную сумму удерживаемой RAM. Профиль со stack traces имеет overhead, поэтому не измерять по нему FPS/TPS.
+
+Не включены heap dump, OldObjectSample и трассировка GC roots. Для подозрения на утечку это отдельное, более тяжёлое расследование; пока не активируем его автоматически.
+
+### 3. Сохранение и анализ
+
+Пути:
+- `logs/optimizationfix/profiles/optimizationfix-*.jfr`
+- `logs/optimizationfix/profiles/optimizationfix-*.txt`
+- сводка также дописывается в `logs/minecraft-ai-agent/custom/latest.log` с WARN marker `[OPTIMIZATIONFIX-JFR]`.
+
+При завершении записи по времени или остановке сервера профайлер также закрывает запись. JFR file и summary ограничены по размеру/числу сохранённых профилей.
 
 ## Реализовано в 0.3.0 — Memory Budget Governor
 
@@ -72,6 +120,7 @@ Governor не вызывает `System.gc()`, не выгружает чанки
 
 - `/optimizationfix stats` — свежий NBT + memory budget snapshot; обычный WARN log и тот же `logs/minecraft-ai-agent/custom/latest.log`.
 - `/optimizationfix trim` — вручную очищает только собственные weak lookup indexes; запись также идёт в custom RAM log.
+- `/optimizationfix profile start [15-180]` / `stop` / `status` — короткая запись JFR и сводка по аллокациям/GC.
 - `/optimizationfix reload` — перечитывает governor/NBT config, Mixin-решение по ModernFix остаётся startup-only.
 
 ### 5. Конфигурация 0.3.0
@@ -197,6 +246,16 @@ logs/minecraft-ai-agent/custom/latest.log
 
 Публичные комментарии разработчиков GTA VI описывают масштабную переработку LOD, распараллеливание систем и приоритизацию streaming ради работы в ограниченной памяти. Это engine-level asset/world streaming, которое нельзя прямо переносить в Java/Fabric мод как универсальный RAM-патч. Для Optimization Fix применены переносимые принципы: не удерживать объекты сильными ссылками бессрочно, переиспользовать повторяющиеся immutable values до создания wrapper, хранить малые структуры компактно и переходить к hash lookup для больших. Не заявлять, что это эквивалент движку Rockstar.
 
+## Сборка и артефакт 0.4.0
+
+- GitHub Actions run #13 / ID 46177975840: **success** для exact HEAD `593103d924482fc687a7a07f39108879fc2dd5e5`.
+- JDK 17, Gradle build, JUnit tests и upload artifact: success.
+- Artifact ID 15276930103; ZIP `optimization-fix-0.4.0-artifact.zip`, 85,362 bytes, SHA256 `00a1f9bbc98b3159ff2059d90519eea53d0689ed2f98b26b4f2ca0586f9769ec`.
+- Main JAR `optimization-fix-0.4.0.jar`, 61,506 bytes, SHA256 `86d696ff431f9171d1f11133cdec648680ddb26513cb68241a84c035b370dbf3`.
+- Sources JAR `optimization-fix-0.4.0-sources.jar`, 32,623 bytes, SHA256 `268aad7de34df862df445f2c314a4a9eefe32bd7ae533498a303f6877cb04273`.
+- ZIP and JAR were downloaded and inspected locally. JAR metadata: id=optimizationfix, version=0.4.0, Minecraft 1.20.1, Java >=17, Fabric API >=0.92.12+1.20.1. Confirmed JFR profiler, bounded counter, Governor and command classes are packaged.
+- CI/unit tests passed. Actual JFR recording inside the user's complete modpack and live compatibility test remain pending.
+
 ## Сборка и артефакт 0.2.0
 
 - GitHub Actions run #11 / ID 46175808662: success для exact HEAD ea5118ab3240e78458f399a96279308e7200c982.
@@ -218,10 +277,12 @@ logs/minecraft-ai-agent/custom/latest.log
 
 ## Следующий этап
 
-1. Установить 0.3.0 на отдельном профиле/копии мира, не на единственном основном мире; удалить старые JAR Optimization Fix, не держать две версии Mod ID.
+1. Установить 0.4.0 на отдельном профиле/копии мира, не на единственном основном мире; удалить старые JAR Optimization Fix, не держать две версии Mod ID.
 2. Проверить startup и Mixin application с текущими ModernFix 5.25.2 и остальными модами.
 3. Проверить загрузку/сохранение NBT, инвентари, сундуки, entity data, chunk save/load и переходы между измерениями.
-4. Запустить /optimizationfix stats после обычной игры и после загрузки мира; проверить блок WARN в custom RAM log.
-5. Для A/B сравнения использовать один мир, одинаковый маршрут/время сессии, те же настройки DH и одинаковый Xmx; сравнить heap/GC/direct/native/system RAM, loaded chunks и allocation rate.
-6. Отдельно проверить авто-реакцию на критическом heap-пороге в тестовом профиле; не провоцировать OOM в основном мире.
-7. Полный runtime-тест со всей пользовательской сборкой остаётся pending. CI success не означает, что in-game совместимость уже подтверждена.
+4. Запустить /optimizationfix stats и проверить блок WARN в custom RAM log.
+5. Для профиля повторяемой нагрузки: /optimizationfix profile start 60; 60 секунд выполнять один одинаковый сценарий (например, пройти один и тот же маршрут в мире либо исследовать новые чанки), затем /optimizationfix profile stop.
+6. Забрать .jfr и .txt из logs/optimizationfix/profiles. Отправить оба файла для разбора allocation top classes/sites. Не использовать сам профиль как FPS/TPS benchmark.
+7. Для A/B сравнения использовать один мир, одинаковый маршрут/время сессии, те же настройки DH и одинаковый Xmx; сравнить heap/GC/direct/native/system RAM, loaded chunks и allocation rate.
+8. Отдельно проверить авто-реакцию на критическом heap-пороге в тестовом профиле; не провоцировать OOM в основном мире.
+9. Полный runtime-тест со всей пользовательской сборкой, включая фактическую работу JFR в игровом Java runtime, остаётся pending. CI success не означает, что in-game совместимость уже подтверждена. CI success не означает, что in-game совместимость уже подтверждена.
